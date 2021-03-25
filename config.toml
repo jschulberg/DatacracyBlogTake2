@@ -66,3 +66,8 @@ disqusShortname = "datacracy"
   recent_posts_number = 3
   show_reading_time = true
   commentoEnable = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
