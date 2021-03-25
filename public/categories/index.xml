@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Datacracy</title>
+    <link>http://datacracy.netlify.app/categories/</link>
+    <description>Recent content in Categories on Datacracy</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 10 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://datacracy.netlify.app/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>history</title>
+      <link>http://datacracy.netlify.app/categories/history/</link>
+      <pubDate>Wed, 10 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://datacracy.netlify.app/categories/history/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nlp</title>
+      <link>http://datacracy.netlify.app/categories/nlp/</link>
+      <pubDate>Wed, 10 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://datacracy.netlify.app/categories/nlp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>public policy</title>
+      <link>http://datacracy.netlify.app/categories/public-policy/</link>
+      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://datacracy.netlify.app/categories/public-policy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R</title>
+      <link>http://datacracy.netlify.app/categories/r/</link>
+      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://datacracy.netlify.app/categories/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>viz</title>
+      <link>http://datacracy.netlify.app/categories/viz/</link>
+      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://datacracy.netlify.app/categories/viz/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Data</title>
+      <link>http://datacracy.netlify.app/categories/data/</link>
+      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://datacracy.netlify.app/categories/data/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ETL</title>
+      <link>http://datacracy.netlify.app/categories/etl/</link>
+      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://datacracy.netlify.app/categories/etl/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

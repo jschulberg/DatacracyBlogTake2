@@ -1,0 +1,868 @@
+---
+title: U.S. Police-Caused Fatalities
+author: Justin S.
+date: '2020-06-15'
+slug: [us-police-caused-fatalities]
+categories:
+  - Data
+  - public policy
+  - R
+  - viz
+tags:
+  - EDA
+  - public policy
+comments: yes
+featured_image: 'images/blm_dc.jpg'
+menu: ''
+share: yes
+---
+
+George Floyd. Eric Garner. Tamir Rice.   
+
+Those names, among thousands of others, are emblematic of fatal police violence in the United States. The protest movement that has spread like wildfire across the U.S. has brought police brutality to the forefront of everyone’s minds. 
+
+Following the deluge of information from news stations and social media, I can’t help but wonder, what does the data say? Are these new trends or longstanding realities? How disproportionate is police brutality against black Americans? What role does mental health play? To ignite change, we need a strong empirical grasp of the issue at hand. *Looking at the data makes that possible.*
+
+In this post, I will analyze twenty years of U.S. police-caused killings data. I will use a variety of exploratory and modeling techniques to answer the following questions:
+- How many people have been killed by police over time?
+- What is the race/age/gender of these people?
+- What are the demographics of the general population in which the incident occurred? - How does mental health status affect the likelihood of a police-caused killing?
+
+
+```{r fig.align='center', fig.height=6, fig.width=6, message=FALSE, warning=FALSE, include=FALSE}
+# Set our plot specifications for the rest of the document.
+knitr::opts_chunk$set(fig.width = 9,
+                      fig.height = 6,
+                      fig.align = "center",
+                      # Set our code specifications for the rest of the document
+                      echo = F,
+                      warning = F,
+                      message = F)
+```
+
+
+```{r set_up}
+###########################################################################
+# Set Up ------------------------------------------------------------------
+###########################################################################
+# Bring in packages
+suppressMessages(library("tidyverse")) # Used for data wrangling
+suppressMessages(library("tidyr")) # Used for data cleaning
+suppressMessages(library("ggplot2")) # Used for visualizations
+suppressMessages(library("readxl")) # Used for loading excel files
+suppressMessages(library("readr")) # Used for working with files
+suppressMessages(library("pander")) # Used for pretty tables
+suppressMessages(library("lubridate")) # Used for fixing dates
+suppressMessages(library("praise")) # Used for positive reinforcement
+suppressMessages(library("lemon")) # Used for printing data frames prettily
+suppressMessages(library("kableExtra")) # Used for printing data frames prettily
+suppressMessages(library("knitr")) # Used for printing data frames prettily
+knit_print.data.frame <- lemon_print
+knit_print.tbl_df <- lemon_print
+
+# Bring in the data, taking advantage of the project structure
+police_data_first <- readr::read_csv(here::here("Data/police_killings_2000-2015.csv"))
+police_data_second <- readr::read_csv(here::here("Data/police_killings_2015-2020.csv"))
+census_data <- readr::read_csv(here::here("Data/censusStatePopulations2014.csv"))
+county_data <- readr::read_csv(here::here("Data/HighSchoolCompletionPovertyRate.csv"))
+race_demographics <- readr::read_csv(here::here("Data/race_demographics.csv"),
+                                     # define our NAs
+                                     na = c("<.01", "N/A"))
+
+# Convert to a tibble, my preferred data structure
+police_data_first <- as_tibble(police_data_first)
+police_data_second <- as_tibble(police_data_second)
+census_data <- as_tibble(census_data)
+county_data <- as_tibble(county_data)
+race_demographics <- as_tibble(race_demographics)
+
+```
+
+
+## Police-caused Fatalities Data  
+In this analysis, I'll be working with a few datasets. Different datasets include 2000-2020 killings of individuals by police. On top of that, I have some census, incident, and subject-level data. The data runs from **2000-2020**, which makes it an extremely expansive dataset of police-caused fatalities/killings over the *past 20 years*.
+
+```{r Join_Data}
+
+# Start by cleaning our 2000-2015 data
+police_data_first_date <- police_data_first %>%
+  # Use lubridate to fix up the dates
+  mutate(Date = mdy(Date),
+         # Change the flee column to be a character
+         Flee = as.character(if_else(T, "Flee", "Not fleeing")),
+         Race = if_else(is.na(Race), "Unknown", Race),
+         # Make the weapon with which the victim was armed all lowercase
+         Armed = tolower(Armed)) %>%
+  # Order by Date
+  arrange(Date) %>%
+  # Make all the column names lower case
+  janitor::clean_names()
+
+# Repeat for our other dataset
+police_data_second_date <- police_data_second %>%
+  # Use lubridate to fix up the dates
+  # In general, we need to fix up a bunch of the columns in this other
+  # dataset so we can match it up with our first dataset
+  mutate(date = mdy(date),
+         # Clean up uor gender column
+         gender = case_when(
+           gender == "M" ~ "Male",
+           gender == "F" ~ "Female",
+           gender == "NA" ~ "Unknown"
+         ),
+         race = case_when(
+           race == "W" ~ "White",
+           race == "B" ~ "Black",
+           race == "A" ~ "Asian",
+           race == "N" ~ "Native American",
+           race == "H" ~ "Hispanic",
+           race == "O" ~ "Other"
+         ),
+         race = if_else(is.na(race), "Unknown", race),
+         manner_of_death = case_when(
+           manner_of_death == "shot" ~ "Shot",
+           manner_of_death == "shot and Tasered" ~ "Shot and Tasered"
+         ),
+         # Make the weapon with which the victim was armed all lowercase
+         armed = tolower(armed)
+         ) %>%
+  # Rename our mental illness column
+  rename(mental_illness = signs_of_mental_illness) %>%
+  # Order by Date
+  arrange(date)
+
+# Before cleaning our demographics dataset, let's just find the USA totals
+usa_demographics <- race_demographics %>% 
+  filter(Location == "United States")
+
+# Clean our race demographics dataset
+race_dem_clean <- race_demographics %>% 
+  janitor::clean_names() %>%
+  # Get rid of unnecessary columns
+  select(-c(total, footnotes)) %>%
+  # Let's pivot the dataset so we can join on it properly later
+  pivot_longer(cols = "white":"two_or_more_races",
+               names_to = "race",
+               values_to = "race_percent") %>% 
+  # Change the name of our races to match what we have above
+  mutate(race = case_when(
+    race == "white" ~ "White",
+    race == "black" ~ "Black",
+    race == "asian" ~ "Asian",
+    race == "american_indian_alaska_native" ~ "Native American",
+    race == "hispanic" ~ "Hispanic",
+    race == "two_or_more_races" ~ "Other",
+    race == "native_hawaiian_other_pacific_islander" ~ "Other"
+  )) %>% 
+  # Impute 0 into any NA's
+  tidyr::replace_na(list(race_percent = 0))
+
+# Split out our names that are not in the first dataset
+second_no_overlap <- police_data_second_date[!(police_data_second_date$name %in% police_data_first_date$name), ]
+
+# Before trying to de-dupe, there are a number of names listed as either 
+# "Name withheld by police" or "TK TK". I'm assuming both of these mean 
+# "name unknown", so let's pull these out before de-duping
+non_dupes <- police_data_first_date %>% 
+  filter(name == "Name withheld by police" | name == "TK TK")
+
+# Add in non_dupes from the second dataset
+non_dupes <- police_data_second_date %>% 
+  filter(name == "Name withheld by police" | name == "TK TK") %>% 
+  bind_rows(non_dupes) 
+
+
+# Join both datasets together
+police_all_dates <- police_data_first_date %>%
+  # There are a lot of duplicates, so let's try to remove these
+  # We'll look for duplicative names + dates, since there are naturally
+  # some repeat common names
+  distinct(name, age, .keep_all = T) %>%
+  # Bring back our non overlaps from the second dataset plus the rows
+  # we specifically pulled out because they didn't have names
+  bind_rows(second_no_overlap, non_dupes) %>%
+  # Get rid of previous ID column and make our ID row unique
+  select(-id) %>%
+  mutate(uid = row_number()) %>%
+  rename(id = uid) %>%
+  distinct() 
+
+police_compare <- police_data_first_date %>%
+  # There are a lot of duplicates, so let's try to remove these
+  distinct(name, .keep_all = T) %>%
+  bind_rows(second_no_overlap) %>%
+  # Get rid of previous ID column and make our ID row unique
+  select(-id) %>%
+  mutate(uid = row_number()) %>%
+  rename(id = uid) 
+
+# Where's the overlap?
+compare <- police_all_dates[duplicated(police_all_dates$name), ]
+
+### Clean county/census data
+# Before joining in our county/census data, let's clean it up a bit
+county_cleaned <- county_data %>%
+  # Clean up our column names
+  janitor::clean_names() %>%
+  # Super annoying, but the dataset I imported from Kaggle has an extra word
+  # after every single city name, so we need to split on the final space
+  mutate(city = gsub(" [^ ]*$", "", city)) 
+
+# We have our full dataset now! Let's bring in a few more columns
+# that will eventually help us immensely.
+police_joined <- police_all_dates %>%
+  rename(stateCode = state) %>%
+  # Join in our census data
+  left_join(census_data) %>%
+  # Join in our county data
+  left_join(county_cleaned, by = c("city" = "city", "stateCode" = "geographic_area")) %>%
+  # Join in our race demographic data on location and race
+  left_join(race_dem_clean, by = c("state" = "location", "race" = "race")) %>% 
+  # Make our numeric columns not characters
+  mutate(percent_completed_hs = as.numeric(percent_completed_hs),
+         poverty_rate = as.numeric(poverty_rate))
+
+```
+
+
+```{r print_data}
+police_joined %>% 
+  head() %>% 
+  kable() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                full_width = F,
+                font_size = 10) %>% 
+  scroll_box(height = "100%", width = "100%")
+
+```
+
+After joining and binding together five disparate datasets, we get the dataset, seen above, that will drive most of this article's analysis. We can see that we're working with **`r nrow(police_joined)`** rows of data that shows the individual who died at the hands of police, some demographic information about them and about the city/state where they're from, as well as information about the killing. It's worth pointing out that demographic data is pulled from the 2014 Census  Bureau data, which should serve solely as an *estimation* of the actual demographics of a city/state, mainly because some of the killings in this dataset occurred as early as 2000.
+
+Now that we know what data we are working with, let's start exploring it further.  
+
+What is the trend in police-caused fatalities over the past 20 years? As we can see below, the number of fatalities caused by police has grown significantly over the past 20 years, with a peak in 2015.
+
+
+### Police-caused Fatalities over Time
+```{r fatalities_over_time}
+########################################################################
+## Analysis Time  ------------------------------------------------------
+########################################################################
+# Let's start by checking out the number of fatalities over time.
+
+# Visualization time
+fatalities_over_time <- police_joined %>%
+  # Create our month and year variables
+  mutate(month = month(date),
+         year = year(date)) %>%
+  # Start by grouping by month AND year of dates
+  group_by(year) %>%
+  # Count up our sums
+  summarise(fatalities = n()) %>%
+  # Bring our dates back together
+  mutate(date = as.Date(paste(year, "01", "01", sep = "-"))) %>% 
+  filter(year != 2020)
+
+fatalities_over_time %>% 
+  # run our visualization
+  ggplot(aes(x = date, y = fatalities)) + 
+    # Let's make it a column graph and change the color
+    geom_line(color = "slateblue") +
+    # Change the theme to classic
+    theme_classic() +
+    # Let's change the names of the axes and title
+    xlab("") +
+    ylab("Number of Fatalities") +
+    labs(title = "Number of Police-caused Fatalities over Time",
+         subtitle = "Data runs from 2000-2019",
+       caption = "Post available at www.datacracy.us\nData gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+    # format our title and subtitle
+    theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+          plot.subtitle = element_text(hjust = 0, color = "slateblue2", size = 10),
+          plot.caption = element_text(color = "dark gray", face = "italic", size = 10))
+
+
+```
+
+This is alarming and despite seeing a general decrease from peak in **`r as.numeric(fatalities_over_time[which.max(fatalities_over_time$fatalities), 1])`** on, shows a change in approach by police in the way that they handle these situations. This is alarming and despite seeing a general decrease from 2015 on, shows a change in approach by police in the way that they handle these situations. The low number in 2020 is likely due to incomplete data from the year as well as less police-caused killings due to COVID-19. What may be causing this rise and subsequent fall? I'm no expert and would love to hear your thoughts. Here are my guesses:  
+
+1. 2014-15 showed some of the worst cases of police brutality (Tamir Rice, Ferguson unrest, etc.). It seems plausible that people who were protesting police brutality may have been killed while protesting. With more attention, police officers may have been more careful after 2015.  
+2. After these incidences, more substantive policies may have been put in place (police use of force policies, bystander intervention policies, de-escaltion training, etc.). Obviously this is not enough, but may have attributed to some decrease since 2015.  
+3. Data collection! It looks like the Washington Post's collection methodology changed in 2015, which *may* have an effect on the trends we're seeing. More info on this is included at the bottom of my original post.  
+
+
+
+### Police-caused Fatalities by Race  
+
+```{r race_totals}
+# To do this, first we'll pivot our USA total demographic data
+usa_dem_pivoted <- race_dem_clean %>% 
+  filter(location == "United States") %>% 
+  group_by(race) %>% 
+  # Do this to combine our two Other categories which are being counted differently
+  summarise(race_percent = sum(race_percent))
+
+# Save our dataset
+race_killings <- police_joined %>%
+  # Take out our null values
+  filter(!is.na(race)) %>%
+  # Start by grouping by state
+  group_by(race) %>%
+  # Count up our sums
+  summarise(fatalities = n()) %>%
+  # Bring in our country populations
+  left_join(usa_dem_pivoted, by = "race") %>% 
+  # Calculate the proportion
+  mutate(fatalities_percent = round(100*fatalities/sum(fatalities), 0),
+         race_percent = 100*race_percent)
+
+# Print a pretty table
+race_killings %>% 
+  mutate(race_percent = paste(race_percent, "%", sep = ""),
+         fatalities_percent = paste(fatalities_percent, "%", sep = "")) %>% 
+  rename(population_percent = race_percent) %>%
+  pander()
+
+race_killings %>%
+  ggplot(aes(x = race_percent, y = fatalities), label = race) +
+  # Let's make it a column graph and change the color/transparency
+  geom_point(color = "slateblue") +
+  geom_text(aes(label = if_else(fatalities > 1000, race, "")), nudge_y = 400) +
+  # Change the theme to classic
+  theme_classic() +
+  # Let's change the names of the axes and title
+  xlab("Population (%)") +
+  ylab("Number of Fatalities") +
+  labs(title = "Number of Police-caused Fatalities by Race and Percent of U.S. Population",
+       subtitle = "Data runs from 2000-2020",
+       caption = "Data is gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+  # format our title and subtitle
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(hjust = 0, color = "slateblue2", size = 10),
+        plot.caption = element_text(color = "dark gray", size = 10, face = "italic"))
+
+```
+
+Interestingly enough, more White Americans have been killed by police than Black Americans, according to the dataset. This seems surprising to me, especially with everything going on in the news lately. To help explain this, I have added in the proportion of each race within the USA. From this, we can clearly see that Black Americans make up the second most targeted group by police, but **only comprise `r as.numeric(race_killings[which(race_killings$race == "Black"), 3])`% of the U.S. population**. On the other hand, White Americans make up a bit more killings by police but comprise **`r as.numeric(race_killings[which(race_killings$race == "White"), 3])`%** of the U.S. population. 
+
+Another way of looking at this is that, in the U.S., non-Hispanic Black Americans make up every 1 in 8 people. White Americans make up every 5 in 8 people. Of Americans killed by police, every 2.3 in 8 people are black and every 3.7 in 8 people are white. By just looking at the table presented, Black Americans are the only race whose percentage of fatalities caused by police represents a **significant increase** from their share of the population. On top of that, if you combine Black and Hispanic Americans, they comprise half the population of White Americans; however, they constitute more fatalities by police.
+
+Let's show this in a fairer sense, by normalizing by each race's proportion in the population.
+
+```{r race_over_time}
+# What's the breakout over time by race?
+police_joined %>%
+  # Create our month and year variables
+  mutate(month = month(date),
+         year = year(date)) %>%
+  # Start by grouping by month AND year of dates
+  group_by(year, race) %>%
+  # Count up our sums
+  summarise(fatalities = n()) %>%
+  # Normalize our fatalities data by population
+  left_join(usa_dem_pivoted, by = "race") %>% 
+  mutate(fatalities_normalized = fatalities / race_percent) %>% 
+  # Get rid of anything from 2020, which is unhelpful for analysis purposes
+  filter(year < 2020) %>% 
+  filter(!is.na(race)) %>% 
+  # Bring our dates back together
+  mutate(date = as.Date(paste(year, "01", "01", sep = "-"))) %>%
+  # run our visualization
+  ggplot(aes(x = date, y = fatalities_normalized, color = race)) +
+  # Let's make it a line graph 
+  geom_line(lwd = 1) +
+  # Change the color of the lines
+  # scale_color_brewer(palette = "PRGn") +
+  # Change the theme to classic
+  theme_classic() +
+  # Let's change the names of the axes and title
+  xlab("") +
+  ylab("Number of Fatalities*") +
+  labs(title = "Number of Police-caused Fatalities by Race",
+       subtitle = "*Data, which runs from 2000-2019, is normalized by percent of population",
+       caption = "Data is gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+  # format our title and subtitle
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(hjust = 0, color = "slateblue2", size = 10),
+        plot.caption = element_text(color = "dark gray", size = 10, face = "italic"))
+```
+
+Now we can clearly see that in almost every year in our dataset, Black Americans were killed at a higher rate for their population than any other race. One thing I've noticed here is the spike in killings of Black and White people in 2015. That spike drops precipitously by 2016, but the spike is not nearly as significant as it is for other races.
+
+### Police-caused Fatalities by Age
+```{r age_totals}
+# How old are people likely to be who are killed by police officers?
+police_joined %>%
+  # Take out any null values
+  filter(!is.na(age)) %>%
+  # run our visualization
+  ggplot(aes(x = age, fill = race)) +
+  # Let's make it a histogram with 25 bins, a slateblue filling,
+  # and a white border
+  # geom_histogram(bins = 25, color = "white") +
+  geom_histogram(bins = 25, fill = "slateblue", color = "white") +
+  # Change the theme to classic
+  theme_classic() +
+  # Let's change the names of the axes and title
+  xlab("Age") +
+  ylab("Number of Fatalities") +
+  labs(title = "Age of Individuals Killed by Police",
+       subtitle = "Data runs from 2000-2020",
+       caption = "Post available at www.datacracy.us\nData gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+  # format our title and subtitle
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(hjust = 0, color = "slateblue2", size = 10),
+        plot.caption = element_text(color = "dark gray", size = 10, face = "italic"))
+```
+
+It looks like a pretty normal distribution by age, with possibly a right skew in the data. Most people who are killed are on the younger side, with the median age in our dataset being **`r median(police_joined$age, na.rm = T)`**.
+
+### Police-caused Fatalities by State
+```{r state_totals}
+# Which states had the most fatalities?
+police_joined %>%
+  # Start by grouping by state
+  group_by(state) %>%
+  # Count up our sums
+  summarise(fatalities = n()) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(state, fatalities), y = fatalities), label = fatalities) +
+  # Let's make it a column graph and change the color/transparency
+  geom_col(fill = "slateblue") +
+  # Add a label by recreating our data build from earlier
+  geom_label(data = police_joined %>%
+               # Start by grouping by state
+               group_by(state) %>%
+               # Count up our sums
+               summarise(fatalities = n()) %>%
+               top_n(10),
+             aes(label = fatalities),
+             size = 2.5) +
+  # Change the theme to classic
+  theme_classic() +
+  # Let's change the names of the axes and title
+  xlab("") +
+  ylab("Number of Fatalities") +
+  labs(title = "Number of Police-caused Fatalities by State",
+       subtitle = "Data runs from 2000-2020",
+       caption = "Post available at www.datacracy.us\nData gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+  # format our title and subtitle
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(hjust = 0, color = "slateblue2", size = 10),
+        plot.caption = element_text(color = "dark gray", size = 10, face = "italic")) +
+  # flip the axes
+  coord_flip()
+```
+
+This isn't helpful since the populations are so different. For example, some of our biggest states by population, like California and Texas, are showing up here. I have a hunch that if we normalize by the state population using some of our census data from 2014, we'll get a better sense of fatalities.
+
+```{r state_normalized}
+# Let's normalize by state population
+police_joined %>%
+  # Start by grouping by state
+  group_by(state) %>%
+  # Count up our sums
+  summarise(fatalities = n()) %>%
+  # To normalize by state population, let's rejoin this data in
+  left_join(census_data, by = "state") %>%
+  # Create our normalized data and multiply by 1,000,000 so we get the number
+  # of fatalities per 1,000,000 people
+  mutate(fatalities_normalized = 1000000*fatalities/popEst2014) %>%
+  top_n(10, fatalities_normalized) %>%
+  ggplot(aes(x = reorder(state, fatalities_normalized), 
+             y = fatalities_normalized), 
+         label = fatalities_normalized) +
+  geom_col(fill = "slateblue") +
+  # Add a label by recreating our data build from earlier
+  geom_label(data = police_joined %>%
+               # Start by grouping by state
+               group_by(state) %>%
+               # Count up our sums
+               summarise(fatalities = n()) %>%
+               # To normalize by state population, let's rejoin this data in
+               left_join(census_data, by = "state") %>%
+               # Create our normalized data and multiply by 1,000,000 so we get the number
+               # of fatalities per 1,000,000 people
+               mutate(fatalities_normalized = 1000000*fatalities/popEst2014) %>%
+               top_n(10, fatalities_normalized),
+             aes(label = round(fatalities_normalized, 0)),
+             size = 2.5) +  # Change the theme to classic
+  theme_classic() +
+  # Let's change the names of the axes and title
+  xlab("") +
+  ylab("Number of Fatalities*") +
+  labs(title = "Number of Police-caused Fatalities by State",
+       subtitle = "*Fatalities per 1,000,000 population",
+       caption = "Post available at www.datacracy.us\nData gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+  # format our title and subtitle
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(hjust = 0, color = "slateblue2", size = 10),
+        plot.caption = element_text(color = "dark gray", size = 10, face = "italic")) +
+  # flip the axes
+  coord_flip()
+```
+
+Super interesting! We now have a lot of new states in the visualization, showing that just because a state, like Texas, has a lot of police-caused fatalities, it doesn't mean that it's as high as other states proportionately to state population. It is worth exploring in a future iteration what these states have in common.
+
+
+### High School Completion Rate Analysis  
+I'd like to analyze the number of shootings against the average city population which completed high school. My hypothesis here is that there will be more shootings in cities with low high school completion rates.
+
+The first thing to do is to fill out our data a bit more. There is a lot of geographic data that wasn't brought in earlier. To fill out this data, I plan to *impute* it by finding the average rate for each state and using that. Afterwards, let's look at a boxplot of the high school completion rate to get a better sense of the data distribution.
+
+```{r hs_impute}
+# Start by computing the average high school completion rates by state
+hs_averages <- police_joined %>%
+  group_by(state) %>%
+  summarise(percent_completed_hsavg = mean(percent_completed_hs, na.rm = T))
+
+# Split our dataset on those with NA values and those without
+police_hs_na <- police_joined %>%
+  # Only keep our nas for the first one
+  filter(is.na(percent_completed_hs)) %>%
+  left_join(hs_averages, by = "state") %>%
+  # now get rid of the percent_completed_hs field and rename the other one to match
+  select(-percent_completed_hs) %>%
+  rename(percent_completed_hs = percent_completed_hsavg)
+
+police_hs_nona <- police_joined %>%
+  # Only keep our non-nas for the second one
+  filter(!(is.na(percent_completed_hs)))
+
+# Now bring both datasets back together
+police_hs <- bind_rows(police_hs_na, police_hs_nona)
+
+police_hs_analysis <- police_hs %>%
+  group_by(state) %>%
+  summarise(avg_hs = mean(percent_completed_hs))
+
+```
+
+```{r hs_boxplot}
+# Let's look at a boxplot of the data
+police_hs_analysis %>% 
+ggplot(aes(y = avg_hs)) +
+  geom_boxplot(outlier.colour="slateblue4",
+               outlier.size=2,
+               color = "slateblue3") +
+  theme_classic() +
+  # Let's change the names of the axes and title
+  labs(title = "High School Completion Rate by State",
+       subtitle = "Data is collected from 2014 Census data.",
+       caption = "Post available at www.datacracy.us\nData gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+  ylab("Percentage (%)") +
+  # Center the title and format the subtitle/caption
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(color = "slateblue1", size = 10),
+        plot.caption = element_text(hjust = 1, face = "italic", color = "dark gray"),
+        # remove the x axis labels because they don't mean much for us
+        axis.text.x = element_blank()) +
+  # I thought the boxplot was too thick, so let's make it a little skinnier
+  xlim(-1.25, 1.25)
+```
+
+The boxplot shows the data distribution; that is, within the box above, we can see the middle 50% of data (25th percentile to 75th percentile lay). It looks like most of the areas have pretty high high school completion rates, with a median of **`r median(police_hs_analysis$avg_hs)`** and an average of **`r round(mean(police_hs_analysis$avg_hs), 1)`**.
+
+```{R hs_correlation_plot}
+### Correlation
+# Let's now look to see if there's any correlation between high school
+# completion rate and number of police-related fatalities.
+police_hs %>%
+  # Start by grouping by state
+  group_by(state) %>%
+  # Count up our sums
+  summarise(fatalities = n(),
+            hs_completionavg = mean(percent_completed_hs)) %>%
+  ggplot(aes(x = hs_completionavg, y = fatalities)) +
+  # Make it a scatter plot
+  geom_point(color = "slateblue", alpha = .8) +
+  geom_text(aes(label = state), # label by state
+            color = "slateblue", # Make our color match
+            size = 3, # shrink the size
+            alpha = .8, # add some transparency
+            check_overlap = T, # avoid overlabelling
+            nudge_y = 150) + # nudge the text a bit off center
+  theme_classic() +
+  # Let's change the names of the axes and title
+  labs(title = "Police-caused Fatalities by High School Completion Rate",
+       subtitle = "Data is broken out by state and uses 2014 Census data.",
+       caption = "Post available at www.datacracy.us\nData gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+  xlab("High School Completion Rate (%)") +
+  ylab("Police-caused Fatalities") +
+  # Center the title and format the subtitle/caption
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(color = "slateblue1", size = 10),
+        plot.caption = element_text(hjust = 1, face = "italic", color = "dark gray"))
+```
+
+Again, this doesn't account for normalizing our data by population. Let's see how that changes things.
+
+```{r hs_state_normalized}
+police_hs %>%
+  # Start by grouping by state
+  group_by(state) %>%
+  # Count up our sums
+  summarise(fatalities = n(),
+            hs_completionavg = mean(percent_completed_hs)) %>%
+  # To normalize by state population, let's rejoin this data in
+  left_join(census_data, by = "state") %>%
+  # Create our normalized data and multiply by 1,000,000 so we get the number
+  # of fatalities per 1,000,000 people
+  mutate(fatalities_normalized = 1000000*fatalities/popEst2014) %>%
+  ggplot(aes(x = hs_completionavg, y = fatalities_normalized)) +
+  # Make it a scatter plot
+  geom_point(color = "slateblue", alpha = 1) +
+  theme_classic() +
+  # Let's change the names of the axes and title
+  labs(title = "Normalized Police-caused Fatalities by High School Completion Rate",
+       subtitle = "Police-caused fatalities are per 1,000,000 population using 2014 Census data.",
+       caption = "*per 1,000,000 population") +
+  xlab("High School Completion Rate (%)") +
+  ylab("Police-caused Fatalities*") +
+  # Center the title and format the subtitle/caption
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(color = "slateblue1", size = 10),
+        plot.caption = element_text(hjust = 1, face = "italic", color = "dark gray"))
+```
+
+Between both of these graphs, I can't see any correlation in the data. It's reassuring to know that my original hypothesis, that police-caused fatalities would drastically increase in areas with lower high school completion rates, was **wrong**. To add some more statistical rigor to our analysis, let's quickly look at the correlation between high school completion rate and number of police-caused fatalities.
+
+```{r hs_correlation}
+#What's the actual correlation?
+police_hs %>%
+  # Start by grouping by state
+  group_by(state) %>%
+  # Count up our sums
+  summarise(fatalities = n(),
+            hs_completionavg = mean(percent_completed_hs)) %>%
+  # To normalize by state population, let's rejoin this data in
+  left_join(census_data) %>%
+  # Create our normalized data and multiply by 1,000,000 so we get the number
+  # of fatalities per 1,000,000 people
+  mutate(fatalities_normalized = 1000000*fatalities/popEst2014) %>%
+  select(-state, -stateCode) %>%
+  cor() %>%
+  pander()
+```
+
+What does this mean? Well, when two variables are highly correlated we would expect the value in the above table to be close to +/-1. On the other hand, when two variables have no demonstrable relationship (no correlation) we would see a value very close to 0. From this we can see that the correlation is highest between population and fatalities (.88), which makes sense - we saw earlier that a larger population corresponds to more deaths. But the correlation we care about here, between high school completion rate and fatalities normalized for population, is only .1233, which is rather low. Overall, I would say that there is little correlation between fatalities and high school completion rate.
+
+
+### Poverty Rate Analysis  
+I'd like to analyze the number of shootings against the average city poverty rate. My hypothesis here is that there will be more shootings in cities with high poverty rates, although my hypothesis earlier
+was debunked, so we will see!
+
+First, let's see if there's correlation between poverty rate and number of police-caused killings.
+
+```{r poverty_correlation}
+police_hs %>%
+  # First, filter out all of our NAs, which is 90% of our data
+  filter(!is.na(poverty_rate)) %>%
+  group_by(state) %>%
+  summarise(fatalities = n(),
+            avg_poverty = mean(poverty_rate)) %>%
+  ungroup() %>%
+  left_join(census_data) %>%
+  mutate(fatalities_normalized = 1000000*fatalities/popEst2014) %>%
+  # Get rid of unneeded columns
+  select(-stateCode, -state, - popEst2014) %>%
+  cor() %>%
+  pander()
+```
+
+There's a bit of correlation here (-.1845) which is slightly larger than what we saw with high school completion rate. The interesting thing to note is the negative in the correlation. This means that as poverty rates generally increase, the number of police-caused fatalities per 1,000,000 population goes down, which is exactly opposite of what I originally thought. Again, the negative correlation is rather weak, so I would not read too much into it.
+
+Let's take a quick look at a scatterplot to see this negative relationship. I'll super-impose a regression line to help show the relationship.
+
+```{r poverty_graph}
+police_hs %>%
+  # First, filter out all of our NAs, which is 90% of our data
+  filter(!is.na(poverty_rate)) %>%
+  group_by(state) %>%
+  summarise(fatalities = n(),
+            avg_poverty = mean(poverty_rate)) %>%
+  ungroup() %>%
+  left_join(census_data) %>%
+  mutate(fatalities_normalized = 1000000*fatalities/popEst2014) %>%
+  ggplot(aes(x = avg_poverty, y = fatalities_normalized)) +
+  geom_point(color = "slateblue", alpha = 1) +
+  geom_smooth(method = "lm", se = F, color = "black") +
+  theme_classic() +
+  # Let's change the names of the axes and title
+  labs(title = "Normalized Police-caused Fatalities by Poverty Rate",
+       subtitle = "Police-caused fatalities are per 1,000,000 population using 2014 Census data.",
+       caption = "*per 1,000,000 population") +
+  xlab("Poverty Rate (%)") +
+  ylab("Police-caused Fatalities*") +
+  # Center the title and format the subtitle/caption
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(color = "slateblue1", size = 10),
+        plot.caption = element_text(hjust = 1, face = "italic", color = "dark gray"))
+```
+
+Again, while there is a slightly negative relationship, it doesn't look to be a strong trend.
+
+
+### Mental Health Analysis  
+One thing that I often don't hear covered in the media is the presence of mental health issues amongst victims of police-caused fatalities. Let's take a look at what the data shows.
+
+```{r mh_donut}
+# Let's see where our overlap lies by creating a donut chart
+donut_inputs <- round(prop.table(table(police_hs$mental_illness)), 2)*100
+donut_inputs <- donut_inputs %>%
+  as.data.frame() %>%
+  # Create the cumulative percentages, which represent the top of each rectangle
+  mutate(ymax = cumsum(Freq)) %>%
+  # Create the bottom of each rectangle
+  mutate(ymin = c(0, head(cumsum(Freq), n = -1))) %>%
+  # Rename Var1 to Source
+  rename("Source" = "Var1") %>%
+  # Compute label position
+  mutate(labelPosition = (ymax + ymin) / 2) %>%
+  # Compute what our label will display
+  mutate(label = paste0(Freq, "%", sep = ""),
+         Source = if_else(Source == TRUE, "Mental Health Issue", "No Mental Health Issue"))
+
+# Donut Chart
+ggplot(donut_inputs, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = Source)) +
+  geom_rect() +
+  # A donut chart is just a rectangle charge pivoted to a polar-coordinate plane
+  coord_polar(theta = "y") +
+  # Add labels in
+  geom_label(x = 3.5, aes(y = labelPosition, label = label), size = 3) +
+  xlim(c(-1, 4)) +
+  # Take out all the plot background which is cluttering the view
+  theme_void() +
+  # Let's change the names of the axes and title
+  labs(title = "Mental Health of Victims of Police-caused Fatalities",
+       subtitle = "Data runs from 2000-2020.",
+       caption = "Post available at www.datacracy.us\nData gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+  # Center the title and format the subtitle/caption
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(color = "slateblue1", size = 10),
+        plot.caption = element_text(hjust = 1, face = "italic", color = "dark gray")) +
+  # Change the colors we're working with
+  scale_fill_manual(values = c("slateblue", "gray")) +
+  # add text to the center of the donut, making the first one bold
+  annotate(geom = 'text', x = -.25, y = 0, label = "Number of Fatalities:", size = 4.5, fontface = 2) +
+  # and the second one normal font
+  annotate("text", x = -1, y = 0, label = nrow(police_hs), size = 4)
+```
+
+About 1 in 5 of the `r nrow(police_joined)` victims suffered from a mental health issue. Our data runs back to 2000 when, frankly, the conversation around mental health was not nearly as progressive as it is now. Thus, I would expect the proportion of victims who have mental health issues to **decrease** over time. Let's check this out.
+
+```{r mh_area_time}
+# How does the prevalence of mental illness amongst victims of police-caused
+# fatalities change over time?
+police_hs %>%
+  # Create our month and year variables
+  mutate(year = year(date)) %>%
+  # Start by grouping by month AND year of dates
+  group_by(year, mental_illness) %>%
+  # Count up our sums
+  summarise(fatalities = n()) %>%
+  mutate(mental_ill_prop = 100*fatalities/sum(fatalities)) %>%
+  # Create our proportions and bring our dates back together
+  mutate(date = as.Date(paste(year, "01", "01", sep = "-"))) %>%
+  # run our visualization
+  ggplot(aes(x = date, y = mental_ill_prop, fill = mental_illness)) +
+  # Let's make it a column graph and change the color
+  geom_area(alpha = .9, color = "gray") +
+  # Change the theme to classic
+  theme_classic() +
+  # Change the colors we're working with
+  scale_fill_manual(values = c("gray", "slateblue")) +
+  # Let's change the names of the axes and title
+  xlab("") +
+  ylab("Percentage of Fatalities (%)") +
+  labs(title = "Number of Police-caused Fatalities over Time",
+       subtitle = "Data runs from 2000-2020",
+       caption = "Post available at www.datacracy.us\nData gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+  # format our title and subtitle
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(hjust = 0, color = "slateblue2", size = 10),
+        plot.caption = element_text(color = "dark gray", face = "italic", size = 10))
+```
+
+Let's zoom in on the purple section of this graph.
+
+```{r mh_over_time}
+police_hs %>%
+  # Create our month and year variables
+  mutate(year = year(date)) %>%
+  # Start by grouping by month AND year of dates
+  group_by(year, mental_illness) %>%
+  # Count up our sums
+  summarise(fatalities = n()) %>%
+  mutate(mental_ill_prop = 100*fatalities/sum(fatalities)) %>%
+  # Create our proportions and bring our dates back together
+  mutate(date = as.Date(paste(year, "01", "01", sep = "-"))) %>%
+  # Filter our data a bit
+  filter(mental_illness == T) %>% 
+  filter(year < 2020) %>% 
+  # run our visualization
+  ggplot(aes(x = date, y = mental_ill_prop)) +
+  # Let's make it a column graph and change the color
+  geom_line(color = "slateblue") +
+  geom_smooth(method = "lm") +
+  # Change the theme to classic
+  theme_classic() +
+  # Let's change the names of the axes and title
+  xlab("") +
+  ylab("Percentage of Fatalities (%)") +
+  labs(title = "Number of Police-caused Fatalities over Time",
+       subtitle = "Data runs from 2000-2020",
+       caption = "Data is gathered from the Washington Post at\nhttps://github.com/washingtonpost/data-police-shootings") +
+  # format our title and subtitle
+  theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+        plot.subtitle = element_text(hjust = 0, color = "slateblue2", size = 10),
+        plot.caption = element_text(color = "dark gray", face = "italic", size = 10))
+```
+
+Interestingly enough, it seems that there is a slight upward trend in the percentage of victims of police-caused fatalities who were struggling with mental health at the time. However, starting in 2016, there seems to be a sharp decrease in police-caused killings of individuals with mental health issues. This seems to suggest that police officers started responding differently to those with mental health issues, likely due to the increased national discourse around mental health. 
+
+```{r mh_linreg}
+mental_health_victims <- police_hs %>%
+  # Create our month and year variables
+  mutate(year = year(date)) %>%
+  # Start by grouping by month AND year of dates
+  group_by(year, mental_illness) %>%
+  # Count up our sums
+  summarise(fatalities = n()) %>%
+  mutate(mental_ill_prop = 100*fatalities/sum(fatalities)) %>%
+  # Create our proportions and bring our dates back together
+  mutate(date = as.Date(paste(year, "01", "01", sep = "-"))) %>%
+  # Filter our data a bit
+  filter(mental_illness == T) %>% 
+  filter(year < 2020)
+
+men_health_linreg <- lm(mental_ill_prop ~ date, data = mental_health_victims)
+pander(summary(men_health_linreg))
+
+```
+
+Although it's relatively small, we can see a strong trend between date and the proportion of victims who had mental health issues.
+
+### Conclusion  
+Thanks for reading! I hope you were able to learn a bit more about the data behind police-caused killings in the United States. If you felt like the article was educational, interesting, or if you just want to support me, feel free to follow me on any social media platform (all are listed as icons on the homepage) and stay tuned for the next post. If you have ideas on public policy/political topics that could use some data expertise, please send me your suggestions -- the more ideas, the better!
+
+
+### Additional Resources    
+The original blog post can be found here:  
+**https://jschulberg.medium.com/exploratory-data-analysis-of-u-s-police-caused-fatalities-fce47a2b7198**  
+
+Interested in seeing my original code? Go to my GitHub repository here:  
+**https://github.com/jschulberg/U.S.-Police-Fatalities**  
+
+Interested in learning more on the subject? Go to:  
+**https://mappingpoliceviolence.org/**  
+
+Interested in seeing the Washington Post's GitHub repository and source data? Go to:  
+**https://github.com/washingtonpost/data-police-shootings**   
+
+
+### Notes on Data  
+*Is the data trustworthy?* For the most part, yes. The data is used in this analysis has been collected thanks to extensive work by the [Washington Post](https://github.com/washingtonpost/data-police-shootings). Despite their best efforts, there are a few potential issues with the data (and all data related to police-caused killings) that arise:  
+**1. Data Collection** | The post gathered this data by analyzing "local news reports, law enforcement websites and social media" and has tried to enhance the data quality by submitting requests to each individual police department. While their work has been extensive, the process is imperfect.  
+**2. Government Tracking of Data** | Although the FBI and CDC log fatal shootings by police, this data is well understood to be incomplete. The FBI is currently in a process of overhauling how they collect this data.  
+**3. Data Under-reporting** | It has been [well documented](https://scholar.princeton.edu/sites/default/files/jmummolo/files/klm.pdf?fbclid=IwAR3x9W6mTybcnkst7s4UHDkki93g7ItLJ-ak0-Ukul0tkib7zNBy4hxO59o) the bias that exists in administrative record-keeping of police brutality. This would lead us to think that the data presented in my article under-reports the severity of the issue.

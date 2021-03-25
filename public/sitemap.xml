@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>http://datacracy.netlify.app/categories/</loc>
+    <lastmod>2021-03-10T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/</loc>
+    <lastmod>2021-03-10T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/categories/history/</loc>
+    <lastmod>2021-03-10T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/categories/nlp/</loc>
+    <lastmod>2021-03-10T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/post/</loc>
+    <lastmod>2021-03-10T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/</loc>
+    <lastmod>2021-03-10T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/tags/public-policy/</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/categories/public-policy/</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/categories/r/</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/tags/</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/categories/viz/</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/categories/data/</loc>
+    <lastmod>2020-12-20T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/categories/etl/</loc>
+    <lastmod>2020-12-20T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</loc>
+    <lastmod>2020-12-20T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/tags/eda/</loc>
+    <lastmod>2020-09-12T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/post/2021-01-26-women-in-politics/</loc>
+    <lastmod>2020-09-12T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/</loc>
+    <lastmod>2020-06-15T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/aboutme/</loc>
+    <lastmod>2020-05-25T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://datacracy.netlify.app/about/</loc>
+    <lastmod>2016-05-05T21:48:51-07:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+</urlset>

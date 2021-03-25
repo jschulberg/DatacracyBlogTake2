@@ -1,0 +1,1503 @@
+---
+title: Reading Multiple CSVs into Merged R Dataframe
+author: Justin Schulberg
+date: '2020-12-20'
+slug: [reading-multiple-csvs-into-merged-r-dataframe]
+categories:
+  - R
+  - ETL
+  - Data
+tags: []
+comments: yes
+featured_image: 'images/excel_sheets.png'
+menu: ''
+share: yes
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+<p>The purpose of this script is to load and clean all of the various <em>.csv</em> files containing polling place data into R. The data, which is available for download <strong><a href="https://publicintegrity.org/politics/elections/ballotboxbarriers/data-release-sheds-light-on-past-polling-place-changes">here</a></strong>, is structured as follows:<br />
+- Each state (32 in total) has its own folder<br />
+- Within each state (folder), there are a variable number of CSV files, one for each year that polling place data is available</p>
+<p>Here is what the folder structure looks like:<br />
+<img src="folder_structure.PNG" /></p>
+<p>Here is one example of the datasets that could be contained in a folder:<br />
+<img src="excel_files.PNG" /></p>
+<p>Generally, my approach to reading in these data files into 1 R Dataframe is to:<br />
+0. Initialize an empty dataframe to hold the results<br />
+1. Loop through each state folder<br />
+2. Determine the CSVs within that state folder</p>
+<p>As a precautionary measure, let’s determine how many state folders there are. We’ll assume that any object in our working directory that does NOT end in <em>.csv</em> is a state folder. Because there’s no direct regex to look for “un-matches”, let’s find the set difference between all of our files and those ending in <em>.csv</em>.</p>
+<pre class="r"><code># Determine the different state folders in our dataset and remove any already existing csv files
+all_files &lt;- list.files(here(&quot;Data/Polling-Places-Data/&quot;))
+csv_files &lt;- list.files(here(&quot;Data/Polling-Places-Data/&quot;), pattern = &quot;.csv$&quot;)
+(states &lt;- setdiff(all_files, csv_files))</code></pre>
+<pre><code>##  [1] &quot;Alaska&quot;         &quot;Arkansas&quot;       &quot;Connecticut&quot;    &quot;Delaware&quot;      
+##  [5] &quot;Georgia&quot;        &quot;Illinois&quot;       &quot;Iowa&quot;           &quot;Kentucky&quot;      
+##  [9] &quot;Louisiana&quot;      &quot;Maine&quot;          &quot;Maryland&quot;       &quot;Massachusetts&quot; 
+## [13] &quot;Michigan&quot;       &quot;Minnesota&quot;      &quot;Mississippi&quot;    &quot;Montana&quot;       
+## [17] &quot;Nebraska&quot;       &quot;New_Hampshire&quot;  &quot;New_Jersey&quot;     &quot;New_Mexico&quot;    
+## [21] &quot;North_Carolina&quot; &quot;North_Dakota&quot;   &quot;Ohio&quot;           &quot;Oklahoma&quot;      
+## [25] &quot;Pennsylvania&quot;   &quot;Rhode_Island&quot;   &quot;South_Carolina&quot; &quot;South_Dakota&quot;  
+## [29] &quot;Vermont&quot;        &quot;Virginia&quot;       &quot;West_Virginia&quot;  &quot;Wisconsin&quot;</code></pre>
+<div id="initialize-an-empty-dataframe" class="section level2">
+<h2>0. Initialize an Empty Dataframe</h2>
+<p>Next, we’ll set up the structure for our dataframe. These are the columns and associated data types for each column that we expect to get.</p>
+<pre class="r"><code>polling_places &lt;- data.frame(state_name = character(),
+                             state = character(),
+                             election_date = as.Date(character()),
+                             jurisdiction_type = character(),
+                             jurisdiction = character(),
+                             county_name = character(),
+                             precinct_name = character(),
+                             precinct_id = character(),
+                             polling_place_type = character(),
+                             municipality = character(),
+                             name = character(),
+                             address = character(),
+                             year = double(),
+                             stringsAsFactors=FALSE)</code></pre>
+</div>
+<div id="read-in-data" class="section level2">
+<h2>1. Read in Data</h2>
+<p>In this next section, which constitutes the major lift for reading in the data, we will:<br />
+1. <strong>Loop through each of the state folders</strong> we discovered earlier (outer loop) and determine the number of files in the folder<br />
+2. <strong>Loop through each of the <em>.csv</em> files</strong> (inner loop) to:<br />
+3a. Determine if it’s a <em>.csv</em><br />
+3b. If it is, read it in as a temporary dataframe<br />
+3. Create two new columns in the temporary dataframe:<br />
+- state_name &lt;- same as the folder name in the outer loop<br />
+- year &lt;- same as the year that appears in the name of the file<br />
+4. Append (union) the temporary dataframe created in Step 3 to the empty, initialized dataframe from earlier</p>
+<div id="loop-through-state-folders" class="section level3">
+<h3>1.1 Loop through State Folders</h3>
+<p>First, we start with the outer loop, which goes through all of the state folders, as defined above. Once in each state folder, we’ll identify all of the files that exist within it (usually a few <em>.csv</em> files and one <em>.md</em> file).</p>
+<pre class="r"><code>for (state_ in states) {
+  # Within each data folder, there are multiple .csv files, one for each election. Let&#39;s pull out each of these files
+  state_contents &lt;- list.files(paste(here(&quot;Data/Polling-Places-Data/&quot;), state_, sep = &quot;/&quot;))</code></pre>
+</div>
+<div id="loop-through-csv-files" class="section level3">
+<h3>1.2 Loop through CSV Files</h3>
+<p>Next, let’s loop through each of the states to read our .csv files in. Remember that in this step we will:<br />
+- Determine if the file is <em>.csv</em> (otherwise, it’s <em>.md</em>)<br />
+- Determine the name of the file (a combination of our file path, the state name from the outer loop, and the value from the inner loop)<br />
+- Read the file in as a temporary dataframe</p>
+<pre class="r"><code>  for (i in state_contents) {
+    # If the file is a csv file, then let&#39;s read it in
+    if (str_detect(i, &quot;.csv&quot;) ) {
+      # Find the file path name for the csv
+      csv_name &lt;- paste(&quot;Data/Polling-Places-Data&quot;, state_, i, sep = &quot;/&quot;)
+
+      # Let&#39;s read in the file as a temporary dataframe
+      temp_df &lt;- read_csv(csv_name, col_types = cols(
+        .default = col_character(),
+        election_date = col_date(format = &quot;&quot;),
+        state = col_character(),
+        jurisdiction = col_character(),
+        county_name = col_character(),
+        municipality = col_character(),
+        jurisdiction_type = col_character(),
+        polling_place_type = col_character(),
+        precinct_id = col_character(),
+        precinct_name = col_character(),
+        name = col_character(),
+        address = col_character()
+        )
+      )</code></pre>
+</div>
+<div id="create-new-features" class="section level3">
+<h3>1.3 Create New Features</h3>
+<p>Now that we’ve read in our dataset, we’ll create two new columns in the temporary dataframe:<br />
+<strong>1. state_name</strong> | From the outer loop<br />
+<strong>2. year</strong> | From the name of the csv (also available as the iterator, <em>i</em>)</p>
+<pre class="r"><code>  # We want the state name from earlier to be brought in as the column
+  temp_df &lt;- temp_df %&gt;%
+    mutate(state_name = state_,
+           year = as.integer(str_extract(i, &quot;\\d+&quot;))
+    )</code></pre>
+</div>
+<div id="union-to-master-dataframe" class="section level3">
+<h3>1.4 Union to Master Dataframe</h3>
+<p>Lastly, we’ll append the temporary dataframe to our master dataframe using a smart union (bind_rows), which doesn’t need all column headers to match.</p>
+<pre class="r"><code>  # Lastly, let&#39;s append this to the bottom of our master dataset
+  polling_places &lt;- bind_rows(polling_places, temp_df)</code></pre>
+</div>
+<div id="altogether-now" class="section level3">
+<h3>Altogether Now!</h3>
+<p>What does all of this look like together? Well, here it is:</p>
+<pre class="r"><code>for (state_ in states) {
+  # Within each data folder, there are multiple .csv files, one for each election. Let&#39;s pull out each of these files
+  state_contents &lt;- list.files(paste(here(&quot;Data/Polling-Places-Data/&quot;), state_, sep = &quot;/&quot;))
+
+  # Let&#39;s loop through each of the states to read and add our .csv files in
+  for (i in state_contents) {
+    # If the file is a csv file, then let&#39;s read it in
+    if (str_detect(i, &quot;.csv&quot;) ) {
+      # print(&quot;Parsing...&quot;)
+
+      # Find the file path name for the csv
+      csv_name &lt;- paste(&quot;Data&quot;, &quot;Polling-Places-Data&quot;, state_, i, sep = &quot;/&quot;)
+
+      # Let&#39;s read in the file as a temporary dataframe
+      temp_df &lt;- read_csv(csv_name, col_types = cols(
+        .default = col_character(),
+        election_date = col_date(format = &quot;&quot;),
+        state = col_character(),
+        jurisdiction = col_character(),
+        county_name = col_character(),
+        municipality = col_character(),
+        jurisdiction_type = col_character(),
+        polling_place_type = col_character(),
+        precinct_id = col_character(),
+        precinct_name = col_character(),
+        name = col_character(),
+        address = col_character()
+        )
+      )
+
+      # We want the state name from earlier to be brought in as the column
+      temp_df &lt;- temp_df %&gt;%
+        mutate(state_name = state_,
+               year = as.integer(str_extract(i, &quot;\\d+&quot;))
+        )
+
+      # Lastly, let&#39;s append this to the bottom of our master dataset
+      polling_places &lt;- bind_rows(polling_places, temp_df)
+    }
+  }
+  # cat(&quot;===========================\n===========================\n&quot;)
+}
+
+# WE&#39;RE DONE.
+cat(praise(), &quot;WE&#39;RE DONE!!!&quot;)</code></pre>
+<pre><code>## You are exceptional! WE&#39;RE DONE!!!</code></pre>
+<p>And that’s it! If you run the code above, make sure to uncomment the <em>print/cat</em> functions so you can get updates as the code runs. Let’s take a look at the final dataset:</p>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+State_name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+State
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Election_date
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Jurisdiction_type
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Jurisdiction
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+County_name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Precinct_name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Precinct_id
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Polling_place_type
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Municipality
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Address
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Year
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Polling_location_type
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Polling_place_id
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+County_fips
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Ward
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Ghost_precinct
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Notes
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Aurora
+</td>
+<td style="text-align:left;">
+01-446
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Agricultural Museum - Fairgrounds
+</td>
+<td style="text-align:left;">
+1800 College Road, Fairbanks, Ak 99101
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.1
+</td>
+<td style="text-align:left;">
+01-455
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fnsb Borough Offices
+</td>
+<td style="text-align:left;">
+809 Pioneer Road, Fairbanks, Ak 99707
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.2
+</td>
+<td style="text-align:left;">
+01-465
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Golden Towers
+</td>
+<td style="text-align:left;">
+330 3rd Avenue, Fairbanks, Ak 99701
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.3
+</td>
+<td style="text-align:left;">
+01-470
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Noel Wien Library
+</td>
+<td style="text-align:left;">
+1215 Cowles Street, Fairbanks, Ak 99701
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.4
+</td>
+<td style="text-align:left;">
+01-475
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+National Guard Armory
+</td>
+<td style="text-align:left;">
+202 Wien Street, Fairbanks, Ak 99701
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.5
+</td>
+<td style="text-align:left;">
+01-480
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Pioneer Park Centennial Center
+</td>
+<td style="text-align:left;">
+2300 Airport Way, Fairbanks, Ak 99707
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.6
+</td>
+<td style="text-align:left;">
+01-485
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Shopper’s Forum Mall
+</td>
+<td style="text-align:left;">
+1255 Airport Way, Fairbanks, Ak 99707
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.7
+</td>
+<td style="text-align:left;">
+01-490
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Jp Jones Community Dev Center
+</td>
+<td style="text-align:left;">
+2400 Rickert Street, Fairbanks, Ak 99707
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.10
+</td>
+<td style="text-align:left;">
+01-495
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Pioneer Park Centennial Center
+</td>
+<td style="text-align:left;">
+2300 Airport Way, Fairbanks, Ak 99707
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Badger No.2
+</td>
+<td style="text-align:left;">
+02-345
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Badger Plaza
+</td>
+<td style="text-align:left;">
+771 Badger Road, Fairbanks, Ak 99711
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.8
+</td>
+<td style="text-align:left;">
+02-355
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Frontier Outfitters/Gavora Mall
+</td>
+<td style="text-align:left;">
+250 Third Street, Suite 6, Fairbanks, Ak 99701
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.9
+</td>
+<td style="text-align:left;">
+02-365
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Tanana Middle School
+</td>
+<td style="text-align:left;">
+600 Trainor Gate Road, Fairbanks, Ak 99701
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fort Wainwright
+</td>
+<td style="text-align:left;">
+02-375
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Last Frontier Community Activity Center
+</td>
+<td style="text-align:left;">
+1044 Apple Street, Fort Wainwright, Ak 99703
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Badger No.1
+</td>
+<td style="text-align:left;">
+03-130
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+New Hope Methodist-Presbyterian Church
+</td>
+<td style="text-align:left;">
+2371 Bradway Road, North Pole, Ak 99705
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Chena Lakes
+</td>
+<td style="text-align:left;">
+03-135
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Santa Senior Center
+</td>
+<td style="text-align:left;">
+101 E 5th Avenue, North Pole, Ak 99705
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Newby
+</td>
+<td style="text-align:left;">
+03-165
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+North Pole Plaza Mall
+</td>
+<td style="text-align:left;">
+301 N Santa Claus Ln., North Pole, Ak 99707
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+North Pole
+</td>
+<td style="text-align:left;">
+03-175
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+North Pole City Hall
+</td>
+<td style="text-align:left;">
+125 Snowman Lane, North Pole, Ak 99705
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Plack
+</td>
+<td style="text-align:left;">
+03-183
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+North Pole Plaza Mall
+</td>
+<td style="text-align:left;">
+301 N Santa Claus Ln., North Pole, Ak 99707
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Ester
+</td>
+<td style="text-align:left;">
+04-230
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Ester Fire Station
+</td>
+<td style="text-align:left;">
+3570 Old Nenana Hwy, Ester, Ak 99725
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Farmers Loop
+</td>
+<td style="text-align:left;">
+04-240
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Seventh-Day Adventist Church - Gym
+</td>
+<td style="text-align:left;">
+1811 Farmer’s Loop Road, Fairbanks, Ak 99708
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Goldstream No.1
+</td>
+<td style="text-align:left;">
+04-250
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Chena Goldstream Fire Station 3
+</td>
+<td style="text-align:left;">
+1300 Goldstream Rd, Fairbanks, Ak 99709
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Goldstream No.2
+</td>
+<td style="text-align:left;">
+04-260
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Ken Kunkel Community Center
+</td>
+<td style="text-align:left;">
+2591a Goldstream Road, Fairbanks, Ak 99709
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Steese East/Gilmore
+</td>
+<td style="text-align:left;">
+04-265
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Bentley Mall
+</td>
+<td style="text-align:left;">
+32 College Road, Fairbanks, Ak 99701
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Steese West
+</td>
+<td style="text-align:left;">
+04-270
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Bentley Mall
+</td>
+<td style="text-align:left;">
+32 College Road, Fairbanks, Ak 99701
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+Ak
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+University Hills
+</td>
+<td style="text-align:left;">
+04-280
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Effie Kokrine Charter School
+</td>
+<td style="text-align:left;">
+601 Loftus Road, Fairbanks, Ak 99701
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Looks great!</p>
+</div>
+</div>
+<div id="alternative-methods" class="section level2">
+<h2>Alternative Methods</h2>
+<p>It shouldn’t go without saying that this is not the only way to read in multiple data files from different folders! More experienced R users usually use techniques from the purrr package (i.e. <em>map()</em> function) to more efficiently (in terms of time <em>and</em> lines of code) perform the same task as above. While the purrr package does provide much facility and readability in code, I usually prefer to write out the process using <em>for loops</em>, as it allows me to better understand what’s happening “under the hood”.</p>
+<p><em>Article also available here:</em><br />
+<em><a href="https://jschulberg.medium.com/reading-multiple-csvs-into-merged-r-dataframe-fe745d9e5b78" class="uri">https://jschulberg.medium.com/reading-multiple-csvs-into-merged-r-dataframe-fe745d9e5b78</a></em></p>
+</div>

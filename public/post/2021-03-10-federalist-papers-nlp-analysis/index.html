@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>The Federalist Papers | NLP Analysis (Part 1) | Datacracy</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.
+This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays.">
+    <meta name="generator" content="Hugo 0.80.0" />
+    
+    
+      <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+    
+
+    
+
+  
+  
+    <link rel="stylesheet" href="/ananke/dist/main.css_5c99d70a7725bacd4c701e995b969fea.css" >
+  
+
+
+
+
+    
+      
+<link rel="shortcut icon" href="/images/Datacracy_Logo.png" type="image/x-icon" />
+
+
+    
+
+    
+    
+    <meta property="og:title" content="The Federalist Papers | NLP Analysis (Part 1)" />
+<meta property="og:description" content="When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.
+This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/" />
+<meta property="article:published_time" content="2021-03-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-10T00:00:00+00:00" /><meta property="og:site_name" content="Datacracy" />
+<meta itemprop="name" content="The Federalist Papers | NLP Analysis (Part 1)">
+<meta itemprop="description" content="When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.
+This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays.">
+<meta itemprop="datePublished" content="2021-03-10T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2021-03-10T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2286">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="The Federalist Papers | NLP Analysis (Part 1)"/>
+<meta name="twitter:description" content="When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.
+This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays."/>
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  
+  
+  <header class="cover bg-top" style="background-image: url('http://datacracy.netlify.app/images/fed_authors.jpeg');">
+    <div class="pb3-m pb6-l bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        <img src="images/Datacracy_Logo.png" class="w100 mw5-ns" alt="Datacracy" />
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="/post" title="Posts page">
+              Posts
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="/aboutme" title="About Me page">
+              About Me
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="/about" title="About this site page">
+              About this site
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+
+
+
+<a href="https://www.facebook.com/jschulberg/" target="_blank" class="link-transition facebook link dib z-999 pt3 pt0-l mr1" title="Facebook link" rel="noopener" aria-label="follow on Facebook——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M28.765,50.32h6.744V33.998h4.499l0.596-5.624h-5.095  l0.007-2.816c0-1.466,0.14-2.253,2.244-2.253h2.812V17.68h-4.5c-5.405,0-7.307,2.729-7.307,7.317v3.377h-3.369v5.625h3.369V50.32z   M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://twitter.com/SchulbergJustin" target="_blank" class="link-transition twitter link dib z-999 pt3 pt0-l mr1" title="Twitter link" rel="noopener" aria-label="follow on Twitter——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M37.167,22.283c-2.619,0.953-4.274,3.411-4.086,6.101  l0.063,1.038l-1.048-0.127c-3.813-0.487-7.145-2.139-9.974-4.915l-1.383-1.377l-0.356,1.017c-0.754,2.267-0.272,4.661,1.299,6.271  c0.838,0.89,0.649,1.017-0.796,0.487c-0.503-0.169-0.943-0.296-0.985-0.233c-0.146,0.149,0.356,2.076,0.754,2.839  c0.545,1.06,1.655,2.097,2.871,2.712l1.027,0.487l-1.215,0.021c-1.173,0-1.215,0.021-1.089,0.467  c0.419,1.377,2.074,2.839,3.918,3.475l1.299,0.444l-1.131,0.678c-1.676,0.976-3.646,1.526-5.616,1.568  C19.775,43.256,19,43.341,19,43.405c0,0.211,2.557,1.397,4.044,1.864c4.463,1.377,9.765,0.783,13.746-1.568  c2.829-1.673,5.657-5,6.978-8.221c0.713-1.716,1.425-4.851,1.425-6.354c0-0.975,0.063-1.102,1.236-2.267  c0.692-0.678,1.341-1.419,1.467-1.631c0.21-0.403,0.188-0.403-0.88-0.043c-1.781,0.636-2.033,0.551-1.152-0.402  c0.649-0.678,1.425-1.907,1.425-2.267c0-0.063-0.314,0.042-0.671,0.233c-0.377,0.212-1.215,0.53-1.844,0.72l-1.131,0.361l-1.027-0.7  c-0.566-0.381-1.361-0.805-1.781-0.932C39.766,21.902,38.131,21.944,37.167,22.283z M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4  s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://www.instagram.com/schulbergjustin/" target="_blank" class="link-transition instagram link dib z-999 pt3 pt0-l mr1" title="Instagram link" rel="noopener" aria-label="follow on Instagram——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M42.271,26.578v-0.006c0.502,0,1.005,0.01,1.508-0.002  c0.646-0.017,1.172-0.57,1.172-1.217c0-0.963,0-1.927,0-2.89c0-0.691-0.547-1.24-1.236-1.241c-0.961,0-1.922-0.001-2.883,0  c-0.688,0.001-1.236,0.552-1.236,1.243c-0.001,0.955-0.004,1.91,0.003,2.865c0.001,0.143,0.028,0.291,0.073,0.426  c0.173,0.508,0.639,0.82,1.209,0.823C41.344,26.579,41.808,26.578,42.271,26.578z M33,27.817c-3.384-0.002-6.135,2.721-6.182,6.089  c-0.049,3.46,2.72,6.201,6.04,6.272c3.454,0.074,6.248-2.686,6.321-6.043C39.254,30.675,36.462,27.815,33,27.817z M21.046,31.116  v0.082c0,4.515-0.001,9.03,0,13.545c0,0.649,0.562,1.208,1.212,1.208c7.16,0.001,14.319,0.001,21.479,0  c0.656,0,1.215-0.557,1.215-1.212c0.001-4.509,0-9.02,0-13.528v-0.094h-2.912c0.411,1.313,0.537,2.651,0.376,4.014  c-0.161,1.363-0.601,2.631-1.316,3.803s-1.644,2.145-2.779,2.918c-2.944,2.006-6.821,2.182-9.946,0.428  c-1.579-0.885-2.819-2.12-3.685-3.713c-1.289-2.373-1.495-4.865-0.739-7.451C22.983,31.116,22.021,31.116,21.046,31.116z   M45.205,49.255c0.159-0.026,0.318-0.049,0.475-0.083c1.246-0.265,2.264-1.304,2.508-2.557c0.025-0.137,0.045-0.273,0.067-0.409  V21.794c-0.021-0.133-0.04-0.268-0.065-0.401c-0.268-1.367-1.396-2.428-2.78-2.618c-0.058-0.007-0.113-0.02-0.17-0.03H20.761  c-0.147,0.027-0.296,0.047-0.441,0.08c-1.352,0.308-2.352,1.396-2.545,2.766c-0.008,0.057-0.02,0.114-0.029,0.171V46.24  c0.028,0.154,0.05,0.311,0.085,0.465c0.299,1.322,1.427,2.347,2.77,2.52c0.064,0.008,0.13,0.021,0.195,0.03H45.205z M33,64  C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+
+<a href="https://www.linkedin.com/in/schulbergjustin/" target="_blank" class="link-transition linkedin link dib z-999 pt3 pt0-l mr1" title="LinkedIn link" rel="noopener" aria-label="follow on LinkedIn——Opens in a new window">
+  <svg  height="32px"  style="enable-background:new 0 0 65 65;" version="1.1" viewBox="0 0 65 65" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d="M50.837,48.137V36.425c0-6.275-3.35-9.195-7.816-9.195  c-3.604,0-5.219,1.983-6.119,3.374V27.71h-6.79c0.09,1.917,0,20.427,0,20.427h6.79V36.729c0-0.609,0.044-1.219,0.224-1.655  c0.49-1.22,1.607-2.483,3.482-2.483c2.458,0,3.44,1.873,3.44,4.618v10.929H50.837z M22.959,24.922c2.367,0,3.842-1.57,3.842-3.531  c-0.044-2.003-1.475-3.528-3.797-3.528s-3.841,1.524-3.841,3.528c0,1.961,1.474,3.531,3.753,3.531H22.959z M34,64  C17.432,64,4,50.568,4,34C4,17.431,17.432,4,34,4s30,13.431,30,30C64,50.568,50.568,64,34,64z M26.354,48.137V27.71h-6.789v20.427  H26.354z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://github.com/jschulberg" target="_blank" class="link-transition github link dib z-999 pt3 pt0-l mr1" title="Github link" rel="noopener" aria-label="follow on Github——Opens in a new window">
+  <svg  height="32px"  style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+  <path d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"/>
+</svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <h1 class="f2 f1-l fw2 white-90 mb0 lh-title">The Federalist Papers | NLP Analysis (Part 1)</h1>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked">
+          
+        POSTS
+      </aside>
+      
+
+
+
+
+  <div id="sharing" class="mt3">
+
+    
+    <a href="https://www.facebook.com/sharer.php?u=http://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/" class="facebook no-underline" aria-label="share on Facebook">
+      <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M28.765,50.32h6.744V33.998h4.499l0.596-5.624h-5.095  l0.007-2.816c0-1.466,0.14-2.253,2.244-2.253h2.812V17.68h-4.5c-5.405,0-7.307,2.729-7.307,7.317v3.377h-3.369v5.625h3.369V50.32z   M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;"/></svg>
+
+    </a>
+
+    
+    
+    <a href="https://twitter.com/share?url=http://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/&amp;text=The%20Federalist%20Papers%20%7c%20NLP%20Analysis%20%28Part%201%29" class="twitter no-underline" aria-label="share on Twitter">
+      <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M37.167,22.283c-2.619,0.953-4.274,3.411-4.086,6.101  l0.063,1.038l-1.048-0.127c-3.813-0.487-7.145-2.139-9.974-4.915l-1.383-1.377l-0.356,1.017c-0.754,2.267-0.272,4.661,1.299,6.271  c0.838,0.89,0.649,1.017-0.796,0.487c-0.503-0.169-0.943-0.296-0.985-0.233c-0.146,0.149,0.356,2.076,0.754,2.839  c0.545,1.06,1.655,2.097,2.871,2.712l1.027,0.487l-1.215,0.021c-1.173,0-1.215,0.021-1.089,0.467  c0.419,1.377,2.074,2.839,3.918,3.475l1.299,0.444l-1.131,0.678c-1.676,0.976-3.646,1.526-5.616,1.568  C19.775,43.256,19,43.341,19,43.405c0,0.211,2.557,1.397,4.044,1.864c4.463,1.377,9.765,0.783,13.746-1.568  c2.829-1.673,5.657-5,6.978-8.221c0.713-1.716,1.425-4.851,1.425-6.354c0-0.975,0.063-1.102,1.236-2.267  c0.692-0.678,1.341-1.419,1.467-1.631c0.21-0.403,0.188-0.403-0.88-0.043c-1.781,0.636-2.033,0.551-1.152-0.402  c0.649-0.678,1.425-1.907,1.425-2.267c0-0.063-0.314,0.042-0.671,0.233c-0.377,0.212-1.215,0.53-1.844,0.72l-1.131,0.361l-1.027-0.7  c-0.566-0.381-1.361-0.805-1.781-0.932C39.766,21.902,38.131,21.944,37.167,22.283z M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4  s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
+
+    </a>
+
+    
+    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/&amp;title=The%20Federalist%20Papers%20%7c%20NLP%20Analysis%20%28Part%201%29" class="linkedin no-underline" aria-label="share on LinkedIn">
+      <svg  height="32px"  style="enable-background:new 0 0 65 65;" version="1.1" viewBox="0 0 65 65" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d="M50.837,48.137V36.425c0-6.275-3.35-9.195-7.816-9.195  c-3.604,0-5.219,1.983-6.119,3.374V27.71h-6.79c0.09,1.917,0,20.427,0,20.427h6.79V36.729c0-0.609,0.044-1.219,0.224-1.655  c0.49-1.22,1.607-2.483,3.482-2.483c2.458,0,3.44,1.873,3.44,4.618v10.929H50.837z M22.959,24.922c2.367,0,3.842-1.57,3.842-3.531  c-0.044-2.003-1.475-3.528-3.797-3.528s-3.841,1.524-3.841,3.528c0,1.961,1.474,3.531,3.753,3.531H22.959z M34,64  C17.432,64,4,50.568,4,34C4,17.431,17.432,4,34,4s30,13.431,30,30C64,50.568,50.568,64,34,64z M26.354,48.137V27.71h-6.789v20.427  H26.354z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+
+    </a>
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">The Federalist Papers | NLP Analysis (Part 1)</h1>
+      
+      <p class="tracked">
+          By <strong>
+          
+              Justin Schulberg, Sabri Rafi
+          
+          </strong>
+      </p>
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2021-03-10T00:00:00Z">March 10, 2021</time>
+
+      
+      
+        <span class="f6 mv4 dib tracked"> - 11 minutes read</span>
+        <span class="f6 mv4 dib tracked"> - 2286 words</span>
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links nested-img mid-gray pr4-l w-two-thirds-l"><p>When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.</p>
+<p>This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays.</p>
+<p>In part one of our analysis, we perform an EDA (Exploratory Data Analysis) to create an overview of the main characteristics of these essays. We will showcase insightful visualizations that help us learn more about each individual author&rsquo;s writing style, word counts, and the frequency in which those words appear in the essays.</p>
+<p>In future parts of our analysis, we will perform a text summarization to allow readers to get a precursory understanding of the topics each essay discusses.</p>
+<p>Finally, we will transform this information into a data science application so you will have this information readily accessible to you!</p>
+<p>Here is part one of our analysis.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Load Data and import packages</span>
+<span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="color:#f92672">import</span> numpy <span style="color:#f92672">as</span> np
+<span style="color:#f92672">import</span> nltk
+<span style="color:#f92672">import</span> seaborn <span style="color:#f92672">as</span> sns
+<span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#f92672">as</span> plt
+
+<span style="color:#75715e">### NLTK Download</span>
+<span style="color:#75715e"># Note: To download nltk products, you need to run the nltk downloader. If you </span>
+<span style="color:#75715e"># just want to run this quickly, uncomment the following line and run:</span>
+<span style="color:#75715e"># nltk.download(&#39;popular&#39;)</span>
+
+<span style="color:#75715e"># Note that I created a Spyder prjoect in my federalist-papers-nlp folder so I</span>
+<span style="color:#75715e"># can just reference the &#34;Data&#34; folder without all the stuff that comes before it.</span>
+fed_papers <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#34;Data/full_fedpapers.csv&#34;</span>)
+
+<span style="color:#66d9ef">print</span>(fed_papers<span style="color:#f92672">.</span>head())
+
+</code></pre></div><pre><code>                                               lines     essay        word  \
+0  addition defects already enumerated existing f...  Essay 22    addition   
+1  addition defects already enumerated existing f...  Essay 22     defects   
+2  addition defects already enumerated existing f...  Essay 22     already   
+3  addition defects already enumerated existing f...  Essay 22  enumerated   
+4  addition defects already enumerated existing f...  Essay 22    existing   
+
+      Essay                                              Title    Author  \
+0  Essay 22  The Same Subject Continued: Other Defects of t...  Hamilton   
+1  Essay 22  The Same Subject Continued: Other Defects of t...  Hamilton   
+2  Essay 22  The Same Subject Continued: Other Defects of t...  Hamilton   
+3  Essay 22  The Same Subject Continued: Other Defects of t...  Hamilton   
+4  Essay 22  The Same Subject Continued: Other Defects of t...  Hamilton   
+
+                Publication        Date  
+0  From the New York Packet  1787-12-14  
+1  From the New York Packet  1787-12-14  
+2  From the New York Packet  1787-12-14  
+3  From the New York Packet  1787-12-14  
+4  From the New York Packet  1787-12-14  
+</code></pre>
+<p>First, we create a few data frames that can be used for analysis purposes later on. To generate these datasets, we have to get rid of some of the unnecessary words that don&rsquo;t signify very much to us.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># ----------------------------------------------------------------------------</span>
+<span style="color:#75715e">#                             Data Prep</span>
+<span style="color:#75715e"># ----------------------------------------------------------------------------</span>
+
+stop_words <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;would&#39;</span>, <span style="color:#e6db74">&#39;may&#39;</span>, <span style="color:#e6db74">&#39;yet&#39;</span>, <span style="color:#e6db74">&#39;must&#39;</span>, <span style="color:#e6db74">&#39;shall&#39;</span>, <span style="color:#e6db74">&#39;not&#39;</span>, <span style="color:#e6db74">&#39;still&#39;</span>, <span style="color:#e6db74">&#39;let&#39;</span>, 
+              <span style="color:#e6db74">&#39;also&#39;</span>, <span style="color:#e6db74">&#39;ought&#39;</span>, <span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;the&#39;</span>, <span style="color:#e6db74">&#39;it&#39;</span>, <span style="color:#e6db74">&#39;i&#39;</span>, <span style="color:#e6db74">&#39;upon&#39;</span>, <span style="color:#e6db74">&#39;but&#39;</span>, <span style="color:#e6db74">&#39;if&#39;</span>, <span style="color:#e6db74">&#39;in&#39;</span>,
+              <span style="color:#e6db74">&#39;this&#39;</span>, <span style="color:#e6db74">&#39;might&#39;</span>, <span style="color:#e6db74">&#39;and&#39;</span>, <span style="color:#e6db74">&#39;us&#39;</span>, <span style="color:#e6db74">&#39;can&#39;</span>, <span style="color:#e6db74">&#39;as&#39;</span>, <span style="color:#e6db74">&#39;to&#39;</span>]
+
+fed_nonstop <span style="color:#f92672">=</span> fed_papers<span style="color:#f92672">.</span>copy()
+fed_nonstop <span style="color:#f92672">=</span> fed_nonstop[<span style="color:#f92672">~</span>fed_nonstop[<span style="color:#e6db74">&#39;word&#39;</span>]<span style="color:#f92672">.</span>isin(stop_words)]
+
+
+<span style="color:#75715e"># Start by creating a grouped dataframe of our word counts</span>
+word_counts <span style="color:#f92672">=</span> fed_nonstop<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;word&#39;</span>]) \
+    <span style="color:#f92672">.</span>size() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>) \
+    <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;count&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+
+</code></pre></div><p>Now that our data has been cleaned up and organized a bit, let&rsquo;s take a look at the top 20 words that appear in The Federalist Papers.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># ----------------------------------------------------------------------------</span>
+<span style="color:#75715e">#                             Viz 1: Top 20 Words</span>
+<span style="color:#75715e"># ----------------------------------------------------------------------------</span>
+<span style="color:#75715e">#%% Our first visualization counts the top 20 words across all documents.</span>
+<span style="color:#75715e"># Set the theme</span>
+sns<span style="color:#f92672">.</span>set_style(<span style="color:#e6db74">&#39;white&#39;</span>)
+sns<span style="color:#f92672">.</span>set_context(<span style="color:#e6db74">&#39;notebook&#39;</span>)
+
+<span style="color:#75715e"># Build the visualization</span>
+viz1 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>barplot(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>,
+            y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
+            data <span style="color:#f92672">=</span> word_counts[:<span style="color:#ae81ff">20</span>],
+            palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Purples_r&#34;</span>)
+
+<span style="color:#75715e"># Set our labels</span>
+viz1<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Number of Appearances&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Word&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Word Counts across all Federalist Papers&#39;</span>)
+plt<span style="color:#f92672">.</span>show()
+</code></pre></div><p><img src="EDA_files/EDA_6_0.png" alt="png"></p>
+<p>Unsurprisingly, the word <em>state/states</em> and <em>government</em> appear more than almost any others. At the time, Hamilton, Madison, and Jay were arguing for the dissolution of The Articles of Confederation, the governing document for early America, which ceded immense power to the states. Most of the purpose of the Constitution was to shift power from the states to the Federal Government.</p>
+<p>Next, we will look at the lengths of each document using a violin plot. Violin plots are similar to boxplots, but can be a bit more visually descriptive by helping show you volume of documents by length.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># ----------------------------------------------------------------------------</span>
+<span style="color:#75715e">#                          Viz 2: Document Lengths</span>
+<span style="color:#75715e"># ----------------------------------------------------------------------------</span>
+
+doc_lengths <span style="color:#f92672">=</span> fed_papers<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;essay&#39;</span>]) \
+    <span style="color:#f92672">.</span>size() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;length&#39;</span>) \
+    <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;length&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+
+viz2 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>violinplot(y <span style="color:#f92672">=</span> doc_lengths[<span style="color:#e6db74">&#39;length&#39;</span>], 
+               color <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Slateblue&#34;</span>)
+
+<span style="color:#75715e"># Set our labels</span>
+viz2<span style="color:#f92672">.</span>set(ylabel <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Number of Words&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Length of Federalist Papers &#39;</span>)
+plt<span style="color:#f92672">.</span>show()
+</code></pre></div><p><img src="EDA_files/EDA_8_0.png" alt="png"></p>
+<p>Most of the essays are somewhere between 500-1000 words, with some being <em>extremely</em> length. One essay is almost 2500 words!</p>
+<p>How do the lengths of the different essays vary by author? Is one author more verbose than the others? Let&rsquo;s take a look.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># ----------------------------------------------------------------------------</span>
+<span style="color:#75715e">#                      Viz 3: Document Lengths by Author</span>
+<span style="color:#75715e"># ----------------------------------------------------------------------------</span>
+doc_lengths <span style="color:#f92672">=</span> fed_papers<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;essay&#39;</span>, <span style="color:#e6db74">&#39;Author&#39;</span>]) \
+    <span style="color:#f92672">.</span>size() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;length&#39;</span>) \
+    <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;length&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+
+viz3 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>catplot(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Author&#39;</span>,
+                      y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;length&#39;</span>,
+                      data <span style="color:#f92672">=</span> doc_lengths,
+                      hue <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Author&#39;</span>,
+                      palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Purples_r&#39;</span>)
+                      <span style="color:#75715e"># color = &#34;Slateblue&#34;)</span>
+
+<span style="color:#75715e"># Set our labels</span>
+viz3<span style="color:#f92672">.</span>set(xlabel <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Author&#39;</span>, ylabel <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Number of Words&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Length of Federalist Papers by Author&#39;</span>)
+plt<span style="color:#f92672">.</span>show()
+</code></pre></div><p><img src="EDA_files/EDA_10_0.png" alt="png"></p>
+<p>A bit hard to tell from this visualization since Hamilton wrote <em>so</em> many essays. We can see that the lengthy essay (the 2500 word one) was written by Hamilton.</p>
+<p>Our next few visualization constitutes a bar chart of the top 10 words by word count of each author (John Jay, Alexander Hamilton, James Madison, or
+Unknown).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#Hamilton - Visualization 4------------------------------------------------------</span>
+
+doc_lengths <span style="color:#f92672">=</span> fed_nonstop<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;Author&#39;</span>,<span style="color:#e6db74">&#39;word&#39;</span>]) \
+    <span style="color:#f92672">.</span>Essay<span style="color:#f92672">.</span>count() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>) \
+    <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;count&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+
+Hamilton_words <span style="color:#f92672">=</span> doc_lengths<span style="color:#f92672">.</span>loc[doc_lengths<span style="color:#f92672">.</span>Author <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;Hamilton&#39;</span>]
+Hamilton_top_words <span style="color:#f92672">=</span> Hamilton_words<span style="color:#f92672">.</span>head(<span style="color:#ae81ff">17</span>)
+
+
+Hamilton_top_words <span style="color:#f92672">=</span> Hamilton_top_words<span style="color:#f92672">.</span>copy()
+Hamilton_top_words <span style="color:#f92672">=</span> Hamilton_top_words[<span style="color:#f92672">~</span>Hamilton_top_words[<span style="color:#e6db74">&#39;word&#39;</span>]<span style="color:#f92672">.</span>isin(stop_words)]
+
+<span style="color:#75715e"># Set the theme</span>
+sns<span style="color:#f92672">.</span>set_style(<span style="color:#e6db74">&#39;white&#39;</span>)
+sns<span style="color:#f92672">.</span>set_context(<span style="color:#e6db74">&#39;notebook&#39;</span>)
+
+<span style="color:#75715e"># Build the visualization</span>
+viz4 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>barplot(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
+            y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>,
+            data <span style="color:#f92672">=</span> Hamilton_top_words,
+            palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Purples_r&#34;</span>)
+
+<span style="color:#75715e">#Rotate X tick labels</span>
+viz4<span style="color:#f92672">.</span>set_xticklabels(viz4<span style="color:#f92672">.</span>get_xticklabels(), rotation<span style="color:#f92672">=</span><span style="color:#ae81ff">45</span> )
+
+<span style="color:#75715e"># Set our labels</span>
+viz4<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;count&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Hamilton Top Words&#39;</span>)
+plt<span style="color:#f92672">.</span>show()
+
+<span style="color:#75715e"># Save our plot to the Viz folder </span>
+viz4<span style="color:#f92672">.</span>figure<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;Viz/Hamilton_Top_Words.png&#34;</span>)
+
+</code></pre></div><p><img src="EDA_files/EDA_12_0.png" alt="png"></p>
+<p>Hamilton&rsquo;s ardent support in favor of a strong centralized government is evident here. 5 out of the top 6 words included &ldquo;power&rdquo;, &ldquo;one&rdquo;, &ldquo;government&rdquo;, &ldquo;national&rdquo;, and &ldquo;union&rdquo;.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#%% Madison - Visualization 5-------------------------------------------------------</span>
+
+doc_lengths <span style="color:#f92672">=</span> fed_nonstop<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;Author&#39;</span>,<span style="color:#e6db74">&#39;word&#39;</span>]) \
+    <span style="color:#f92672">.</span>Essay<span style="color:#f92672">.</span>count() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>) \
+    <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;count&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+
+Madison_top <span style="color:#f92672">=</span> doc_lengths<span style="color:#f92672">.</span>loc[doc_lengths<span style="color:#f92672">.</span>Author <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;Madison&#39;</span>]
+Madison_top_words <span style="color:#f92672">=</span> Madison_top<span style="color:#f92672">.</span>head(<span style="color:#ae81ff">15</span>)
+
+Madison_top_words <span style="color:#f92672">=</span> Madison_top_words<span style="color:#f92672">.</span>copy()
+Madison_top_words <span style="color:#f92672">=</span> Madison_top_words[<span style="color:#f92672">~</span>Madison_top_words[<span style="color:#e6db74">&#39;word&#39;</span>]<span style="color:#f92672">.</span>isin(stop_words)]
+
+<span style="color:#75715e"># Set the theme</span>
+sns<span style="color:#f92672">.</span>set_style(<span style="color:#e6db74">&#39;white&#39;</span>)
+sns<span style="color:#f92672">.</span>set_context(<span style="color:#e6db74">&#39;notebook&#39;</span>)
+
+<span style="color:#75715e"># Build the visualization</span>
+viz6 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>barplot(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
+            y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>,
+            data <span style="color:#f92672">=</span> Madison_top_words,
+            palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Purples_r&#34;</span>)
+
+<span style="color:#75715e">#Rotate X tick labels</span>
+viz6<span style="color:#f92672">.</span>set_xticklabels(viz6<span style="color:#f92672">.</span>get_xticklabels(), rotation<span style="color:#f92672">=</span><span style="color:#ae81ff">45</span> )
+
+<span style="color:#75715e"># Set our labels</span>
+viz6<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;count&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Madison Top Words&#39;</span>)
+plt<span style="color:#f92672">.</span>show()
+
+<span style="color:#75715e"># Save our plot to the Viz folder </span>
+viz6<span style="color:#f92672">.</span>figure<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;Viz/Madison_Top_Words.png&#34;</span>)
+
+</code></pre></div><p><img src="EDA_files/EDA_14_0.png" alt="png"></p>
+<p>Madison&rsquo;s top words shared some similarities with Hamilton&rsquo;s. Both authors had the word &ldquo;states&rdquo; and &ldquo;governments&rdquo; as their top words of choice. Additionally, out of their 15 top words, they shared 10 words in common, which indicates that the authors were thinking on a similar wavelength.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<span style="color:#75715e">#%% John Jay - Visualization 6--------------------------------------------------</span>
+
+doc_lengths <span style="color:#f92672">=</span> fed_nonstop<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;Author&#39;</span>,<span style="color:#e6db74">&#39;word&#39;</span>]) \
+    <span style="color:#f92672">.</span>Essay<span style="color:#f92672">.</span>count() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>) \
+    <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;count&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+
+Jay_top <span style="color:#f92672">=</span> doc_lengths<span style="color:#f92672">.</span>loc[doc_lengths<span style="color:#f92672">.</span>Author <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;Jay&#39;</span>]
+Jay_top_words <span style="color:#f92672">=</span> Jay_top<span style="color:#f92672">.</span>head(<span style="color:#ae81ff">17</span>)
+
+
+Jay_top_words <span style="color:#f92672">=</span> Jay_top_words<span style="color:#f92672">.</span>copy()
+Jay_top_words <span style="color:#f92672">=</span> Jay_top_words[<span style="color:#f92672">~</span>Jay_top_words[<span style="color:#e6db74">&#39;word&#39;</span>]<span style="color:#f92672">.</span>isin(stop_words)]
+
+<span style="color:#75715e"># Set the theme</span>
+sns<span style="color:#f92672">.</span>set_style(<span style="color:#e6db74">&#39;white&#39;</span>)
+sns<span style="color:#f92672">.</span>set_context(<span style="color:#e6db74">&#39;notebook&#39;</span>)
+
+<span style="color:#75715e"># Build the visualization</span>
+viz5 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>barplot(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
+            y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>,
+            data <span style="color:#f92672">=</span> Jay_top_words,
+            palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Purples_r&#34;</span>)
+
+<span style="color:#75715e">#Rotate X tick labels</span>
+viz5<span style="color:#f92672">.</span>set_xticklabels(viz5<span style="color:#f92672">.</span>get_xticklabels(), rotation<span style="color:#f92672">=</span><span style="color:#ae81ff">45</span> )
+
+<span style="color:#75715e"># Set our labels</span>
+viz5<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;count&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Jay Top Words&#39;</span>)
+plt<span style="color:#f92672">.</span>show()
+
+<span style="color:#75715e"># Save our plot to the Viz folder </span>
+viz5<span style="color:#f92672">.</span>figure<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;Viz/Jay_Top_Words.png&#34;</span>)
+</code></pre></div><p><img src="EDA_files/EDA_16_0.png" alt="png"></p>
+<p>In comparison, Jay&rsquo;s top words seem to strike a different tone with his top word being &ldquo;treaties&rdquo;. There isn&rsquo;t a strong cohesive theme that can be gathered from his top word choice alone. When compared to Hamilton and Madison however, it is clear that he took a different route to convey his support for having a centralized government.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#%% Unknown - Visualization 7-------------------------------------------------------</span>
+
+doc_lengths <span style="color:#f92672">=</span> fed_nonstop<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;Author&#39;</span>,<span style="color:#e6db74">&#39;word&#39;</span>]) \
+    <span style="color:#f92672">.</span>Essay<span style="color:#f92672">.</span>count() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>) \
+    <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;count&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+
+Unknown_top <span style="color:#f92672">=</span> doc_lengths<span style="color:#f92672">.</span>loc[doc_lengths<span style="color:#f92672">.</span>Author <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;Unknown&#39;</span>]
+Unknown_top_words <span style="color:#f92672">=</span> Unknown_top<span style="color:#f92672">.</span>head(<span style="color:#ae81ff">19</span>)
+
+
+Unknown_top_words <span style="color:#f92672">=</span> Unknown_top_words<span style="color:#f92672">.</span>copy()
+Unknown_top_words <span style="color:#f92672">=</span> Unknown_top_words[<span style="color:#f92672">~</span>Unknown_top_words[<span style="color:#e6db74">&#39;word&#39;</span>]<span style="color:#f92672">.</span>isin(stop_words)]
+
+<span style="color:#75715e"># Set the theme</span>
+sns<span style="color:#f92672">.</span>set_style(<span style="color:#e6db74">&#39;white&#39;</span>)
+sns<span style="color:#f92672">.</span>set_context(<span style="color:#e6db74">&#39;notebook&#39;</span>)
+
+<span style="color:#75715e"># Build the visualization</span>
+viz7 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>barplot(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
+            y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>,
+            data <span style="color:#f92672">=</span> Unknown_top_words,
+            palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Purples_r&#34;</span>)
+
+<span style="color:#75715e">#Rotate X tick labels</span>
+viz7<span style="color:#f92672">.</span>set_xticklabels(viz7<span style="color:#f92672">.</span>get_xticklabels(), rotation<span style="color:#f92672">=</span><span style="color:#ae81ff">45</span> )
+
+<span style="color:#75715e"># Set our labels</span>
+viz7<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;count&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Unknown Top Words&#39;</span>)
+plt<span style="color:#f92672">.</span>show()
+
+
+<span style="color:#75715e"># Save our plot to the Viz folder </span>
+viz7<span style="color:#f92672">.</span>figure<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;Viz/Unknown_Top_Words.png&#34;</span>)
+</code></pre></div><p><img src="EDA_files/EDA_18_0.png" alt="png"></p>
+<p>Let&rsquo;s dive a bit deeper into word usage throughout The Federalist Papers. We&rsquo;ll make a scatter plot of all the words
+that could reasonably appear in our dataset, measuring the number of times each one appears as well as the number of documents it appears in.</p>
+<p>The hope here is to take a look at what will eventually be the TF-IDF of each word: that way we can filter out words that appear many times but only in very few documents (i.e. &lsquo;Constitution&rsquo; appears 100 times in total but 95 times in Essay 100.)</p>
+<p>Now let&rsquo;s create a grouped dataframe that counts the number of documents a given word appears in (document frequency). This is important to help us identify words that may appear many times but in the same document. A word is considered more &ldquo;important&rdquo; if it is not just a frequently occuring word within a document, but a word that appears across many documents.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">doc_lengths <span style="color:#f92672">=</span> fed_nonstop[[<span style="color:#e6db74">&#39;word&#39;</span>, <span style="color:#e6db74">&#39;Essay&#39;</span>]]<span style="color:#f92672">.</span>drop_duplicates() \
+    <span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;word&#39;</span>]) \
+    <span style="color:#f92672">.</span>size() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;doc_count&#39;</span>) \
+    <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;doc_count&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+    
+    
+<span style="color:#75715e">#Looking at which essays government and other words appears more frequently </span>
+<span style="color:#75715e"># word_frequency = doc_lengths.loc[doc_lengths.word.isin([ &#39;one&#39;, &#39;government&#39;, &#39;people&#39;])]</span>
+
+<span style="color:#75715e">#If we wanted to look at the percentage in total papers</span>
+<span style="color:#75715e">##word_frequency[&#39;% of total papers&#39;] = word_frequency[&#39;count&#39;] / word_frequency[&#39;count&#39;].sum()</span>
+
+<span style="color:#75715e">#Remove &#34;Essay&#34; from the Essay columns so we are only left with the number - just so we can fit everything into the graph</span>
+<span style="color:#75715e"># word_frequency[&#39;Essay&#39;] = pd.to_numeric(word_frequency[&#39;Essay&#39;].astype(str).str[5:], errors=&#39;coerce&#39;)</span>
+
+<span style="color:#75715e"># word_frequency.head()</span>
+
+merged_counts <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>merge(word_counts, 
+                         doc_lengths, 
+                         left_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>, 
+                         right_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
+                         how <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;inner&#39;</span>)
+
+<span style="color:#75715e"># Resize the plot</span>
+plt<span style="color:#f92672">.</span>figure(figsize<span style="color:#f92672">=</span>(<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">5</span>))
+viz8 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>scatterplot(data <span style="color:#f92672">=</span> merged_counts, 
+                       x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;doc_count&#34;</span>, 
+                       y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;count&#34;</span>,
+                       alpha <span style="color:#f92672">=</span> <span style="color:#f92672">.</span><span style="color:#ae81ff">3</span>,
+                       color <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;slateblue&#34;</span>)
+
+<span style="color:#75715e"># Set our labels</span>
+viz8<span style="color:#f92672">.</span>set(ylabel <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Word Frequency&#39;</span>, 
+         xlabel <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Document Frequency&#39;</span>,
+         title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Word Frequency by Document Frequency&#39;</span>)
+
+plt<span style="color:#f92672">.</span>show()
+
+<span style="color:#75715e"># Save our plot to the Viz folder </span>
+viz8<span style="color:#f92672">.</span>figure<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;Viz/Word_Frequency_by_Document_Frequency.png&#34;</span>)
+</code></pre></div><p><img src="EDA_files/EDA_20_0.png" alt="png"></p>
+<p>Building on our analysis above, we&rsquo;ll now look into the TF-IDF for each word. Let&rsquo;s start by calculating term frequency. While we&rsquo;ve mostly been looking at the word counts across all documents, for term frequency, we care about the proportion of times the word appears in a given document. Ex: If a sentence is 10 words long and &lsquo;constitution&rsquo; appears 3 times, its term frequency is .3 (30%).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">fed_analysis <span style="color:#f92672">=</span> merged_counts<span style="color:#f92672">.</span>copy()
+
+<span style="color:#75715e"># Calculate the length of each essay</span>
+doc_lengths <span style="color:#f92672">=</span> fed_nonstop<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;Essay&#39;</span>]) \
+    <span style="color:#f92672">.</span>size() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;doc_length&#39;</span>) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+    
+<span style="color:#75715e"># Now let&#39;s figure out how many times a word appears in a given essay</span>
+word_frequency <span style="color:#f92672">=</span> fed_nonstop<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;word&#39;</span>, <span style="color:#e6db74">&#39;Essay&#39;</span>]) \
+    <span style="color:#f92672">.</span>size() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word_freq&#39;</span>) \
+    <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;word&#39;</span>) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+
+<span style="color:#75715e"># With these two dataframes, we can bring them together to calculate our tf score</span>
+merged_tf <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>merge(word_frequency, 
+                     doc_lengths, 
+                     left_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Essay&#39;</span>,
+                     right_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Essay&#39;</span>,
+                     how <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;inner&#39;</span>)
+
+merged_tf[<span style="color:#e6db74">&#39;tf&#39;</span>] <span style="color:#f92672">=</span> merged_tf[<span style="color:#e6db74">&#39;word_freq&#39;</span>] <span style="color:#f92672">/</span> merged_tf[<span style="color:#e6db74">&#39;doc_length&#39;</span>]
+
+
+<span style="color:#75715e"># We can pull the inverse document frequency from our merged_counts dataframe above</span>
+fed_analysis[<span style="color:#e6db74">&#39;idf&#39;</span>] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>log(<span style="color:#ae81ff">85</span> <span style="color:#f92672">/</span> fed_analysis[<span style="color:#e6db74">&#39;doc_count&#39;</span>])
+
+<span style="color:#75715e"># Let&#39;s merge these (again) into one big dataframe</span>
+tf_idf_df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>merge(merged_tf,
+                     fed_analysis,
+                     left_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
+                     right_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
+                     how <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;inner&#39;</span>)
+
+tf_idf_df[<span style="color:#e6db74">&#39;tf_idf&#39;</span>] <span style="color:#f92672">=</span> tf_idf_df[<span style="color:#e6db74">&#39;tf&#39;</span>] <span style="color:#f92672">*</span> tf_idf_df[<span style="color:#e6db74">&#39;idf&#39;</span>]
+
+</code></pre></div><p>Let&rsquo;s see which words have the highest TF-IDF scores by author. This will help us identify the style of each author by looking at the words that they use most uniquely.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># ----------------------------------------------------------------------------</span>
+<span style="color:#75715e">#                                Viz 9: Top TF-IDF</span>
+<span style="color:#75715e"># ----------------------------------------------------------------------------</span>
+
+authors <span style="color:#f92672">=</span> fed_nonstop[[<span style="color:#e6db74">&#39;essay&#39;</span>, <span style="color:#e6db74">&#39;Author&#39;</span>]]<span style="color:#f92672">.</span>drop_duplicates()
+
+merged_df <span style="color:#f92672">=</span> tf_idf_df<span style="color:#f92672">.</span>merge(authors,
+                            left_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Essay&#39;</span>,
+                            right_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;essay&#39;</span>)
+
+authors_tf <span style="color:#f92672">=</span> merged_df<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;tf_idf&#39;</span>, <span style="color:#e6db74">&#39;Author&#39;</span>, <span style="color:#e6db74">&#39;word&#39;</span>]) \
+    <span style="color:#f92672">.</span>size() \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;tfidf&#39;</span>) \
+    <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;tf_idf&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
+    <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
+    
+<span style="color:#75715e"># Find our top 10 words for each author</span>
+authors_top_tf <span style="color:#f92672">=</span> authors_tf<span style="color:#f92672">.</span>groupby(<span style="color:#e6db74">&#39;Author&#39;</span>)[<span style="color:#e6db74">&#39;tf_idf&#39;</span>] \
+    <span style="color:#f92672">.</span>nlargest(<span style="color:#ae81ff">10</span>, keep <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;first&#39;</span>) \
+    <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;tf_idf&#34;</span>)
+
+<span style="color:#75715e"># Unfortunately this drops the actual word, so let&#39;s merge it back on</span>
+authors_top_tf <span style="color:#f92672">=</span> authors_top_tf<span style="color:#f92672">.</span>merge(authors_tf,
+                                      left_on <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;Author&#39;</span>, <span style="color:#e6db74">&#39;tf_idf&#39;</span>],
+                                      right_on <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;Author&#39;</span>, <span style="color:#e6db74">&#39;tf_idf&#39;</span>])
+
+<span style="color:#75715e"># Set the theme</span>
+sns<span style="color:#f92672">.</span>set_style(<span style="color:#e6db74">&#39;white&#39;</span>)
+sns<span style="color:#f92672">.</span>set_context(<span style="color:#e6db74">&#39;notebook&#39;</span>)
+
+<span style="color:#75715e"># Build the visualization</span>
+viz9 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>FacetGrid(authors_top_tf, 
+                     col <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Author&#34;</span>, 
+                     sharex <span style="color:#f92672">=</span> False, 
+                     sharey <span style="color:#f92672">=</span> False)
+viz9<span style="color:#f92672">.</span>map(sns<span style="color:#f92672">.</span>barplot, <span style="color:#e6db74">&#34;tf_idf&#34;</span>, <span style="color:#e6db74">&#34;word&#34;</span>)
+
+<span style="color:#75715e"># Set our labels</span>
+viz9<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;tf_idf&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Hamilton Top Words&#39;</span>)
+plt<span style="color:#f92672">.</span>show()
+
+</code></pre></div><pre><code>/Users/Owner/opt/anaconda3/lib/python3.8/site-packages/seaborn/axisgrid.py:645: UserWarning: Using the barplot function without specifying `order` is likely to produce an incorrect plot.
+  warnings.warn(warning)
+</code></pre>
+<p><img src="EDA_files/EDA_24_1.png" alt="png"></p>
+<p>These TF-IDF scores give us a heightened sense of some of the most poignant words used by each author. For example, Hamilton seems wholly focused on the Judicial Branch of government (<em>courts</em>, <em>jury</em>, etc.). Although Madison similarly focused on the judiciary, he also cares quite a bit about the structure of government, referencing words like <em>faction</em> and <em>department(s)</em>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Thanks for reading! We hope you were able to learn a bit more about the Federalist Papers. If you feltlike the article was educational or interesting stay tuned for the next post, where we hope to provide text summarization, an interactive app, and a Tableau infographic. If you have ideas on other routes this could go, please send your suggestions &ndash; the more ideas, the better!</p>
+<h2 id="additional-resources">Additional Resources</h2>
+<p>Interested in seeing the original blog post and our other work?</p>
+<ol>
+<li>Justin&rsquo;s blog site: <a href="https://www.datacracy.us/">https://www.datacracy.us/</a></li>
+<li>Sabri&rsquo;s blog site: <a href="https://www.datascienceinnovators.com/">https://www.datascienceinnovators.com/</a></li>
+</ol>
+<p>Interested in seeing the original code? Go to the GitHub repository here:<br>
+<strong><a href="https://github.com/jschulberg/Federalist-Papers-NLP">https://github.com/jschulberg/Federalist-Papers-NLP</a></strong></p>
+<p>Interested in reading the original essays? Go to:<br>
+<strong><a href="https://guides.loc.gov/federalist-papers/text-1-10#s-lg-box-wrapper-25493264">https://guides.loc.gov/federalist-papers/text-1-10#s-lg-box-wrapper-25493264</a></strong></p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "datacracy" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      <div id="commento"></div>
+<script defer src="https://cdn.commento.io/js/commento.js"></script>
+
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-light-purple bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://datacracy.netlify.app/" >
+    &copy;  Datacracy 2021 
+  </a>
+    <div>
+
+
+
+<a href="https://www.facebook.com/jschulberg/" target="_blank" class="link-transition facebook link dib z-999 pt3 pt0-l mr1" title="Facebook link" rel="noopener" aria-label="follow on Facebook——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M28.765,50.32h6.744V33.998h4.499l0.596-5.624h-5.095  l0.007-2.816c0-1.466,0.14-2.253,2.244-2.253h2.812V17.68h-4.5c-5.405,0-7.307,2.729-7.307,7.317v3.377h-3.369v5.625h3.369V50.32z   M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://twitter.com/SchulbergJustin" target="_blank" class="link-transition twitter link dib z-999 pt3 pt0-l mr1" title="Twitter link" rel="noopener" aria-label="follow on Twitter——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M37.167,22.283c-2.619,0.953-4.274,3.411-4.086,6.101  l0.063,1.038l-1.048-0.127c-3.813-0.487-7.145-2.139-9.974-4.915l-1.383-1.377l-0.356,1.017c-0.754,2.267-0.272,4.661,1.299,6.271  c0.838,0.89,0.649,1.017-0.796,0.487c-0.503-0.169-0.943-0.296-0.985-0.233c-0.146,0.149,0.356,2.076,0.754,2.839  c0.545,1.06,1.655,2.097,2.871,2.712l1.027,0.487l-1.215,0.021c-1.173,0-1.215,0.021-1.089,0.467  c0.419,1.377,2.074,2.839,3.918,3.475l1.299,0.444l-1.131,0.678c-1.676,0.976-3.646,1.526-5.616,1.568  C19.775,43.256,19,43.341,19,43.405c0,0.211,2.557,1.397,4.044,1.864c4.463,1.377,9.765,0.783,13.746-1.568  c2.829-1.673,5.657-5,6.978-8.221c0.713-1.716,1.425-4.851,1.425-6.354c0-0.975,0.063-1.102,1.236-2.267  c0.692-0.678,1.341-1.419,1.467-1.631c0.21-0.403,0.188-0.403-0.88-0.043c-1.781,0.636-2.033,0.551-1.152-0.402  c0.649-0.678,1.425-1.907,1.425-2.267c0-0.063-0.314,0.042-0.671,0.233c-0.377,0.212-1.215,0.53-1.844,0.72l-1.131,0.361l-1.027-0.7  c-0.566-0.381-1.361-0.805-1.781-0.932C39.766,21.902,38.131,21.944,37.167,22.283z M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4  s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://www.instagram.com/schulbergjustin/" target="_blank" class="link-transition instagram link dib z-999 pt3 pt0-l mr1" title="Instagram link" rel="noopener" aria-label="follow on Instagram——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M42.271,26.578v-0.006c0.502,0,1.005,0.01,1.508-0.002  c0.646-0.017,1.172-0.57,1.172-1.217c0-0.963,0-1.927,0-2.89c0-0.691-0.547-1.24-1.236-1.241c-0.961,0-1.922-0.001-2.883,0  c-0.688,0.001-1.236,0.552-1.236,1.243c-0.001,0.955-0.004,1.91,0.003,2.865c0.001,0.143,0.028,0.291,0.073,0.426  c0.173,0.508,0.639,0.82,1.209,0.823C41.344,26.579,41.808,26.578,42.271,26.578z M33,27.817c-3.384-0.002-6.135,2.721-6.182,6.089  c-0.049,3.46,2.72,6.201,6.04,6.272c3.454,0.074,6.248-2.686,6.321-6.043C39.254,30.675,36.462,27.815,33,27.817z M21.046,31.116  v0.082c0,4.515-0.001,9.03,0,13.545c0,0.649,0.562,1.208,1.212,1.208c7.16,0.001,14.319,0.001,21.479,0  c0.656,0,1.215-0.557,1.215-1.212c0.001-4.509,0-9.02,0-13.528v-0.094h-2.912c0.411,1.313,0.537,2.651,0.376,4.014  c-0.161,1.363-0.601,2.631-1.316,3.803s-1.644,2.145-2.779,2.918c-2.944,2.006-6.821,2.182-9.946,0.428  c-1.579-0.885-2.819-2.12-3.685-3.713c-1.289-2.373-1.495-4.865-0.739-7.451C22.983,31.116,22.021,31.116,21.046,31.116z   M45.205,49.255c0.159-0.026,0.318-0.049,0.475-0.083c1.246-0.265,2.264-1.304,2.508-2.557c0.025-0.137,0.045-0.273,0.067-0.409  V21.794c-0.021-0.133-0.04-0.268-0.065-0.401c-0.268-1.367-1.396-2.428-2.78-2.618c-0.058-0.007-0.113-0.02-0.17-0.03H20.761  c-0.147,0.027-0.296,0.047-0.441,0.08c-1.352,0.308-2.352,1.396-2.545,2.766c-0.008,0.057-0.02,0.114-0.029,0.171V46.24  c0.028,0.154,0.05,0.311,0.085,0.465c0.299,1.322,1.427,2.347,2.77,2.52c0.064,0.008,0.13,0.021,0.195,0.03H45.205z M33,64  C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+
+<a href="https://www.linkedin.com/in/schulbergjustin/" target="_blank" class="link-transition linkedin link dib z-999 pt3 pt0-l mr1" title="LinkedIn link" rel="noopener" aria-label="follow on LinkedIn——Opens in a new window">
+  <svg  height="32px"  style="enable-background:new 0 0 65 65;" version="1.1" viewBox="0 0 65 65" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d="M50.837,48.137V36.425c0-6.275-3.35-9.195-7.816-9.195  c-3.604,0-5.219,1.983-6.119,3.374V27.71h-6.79c0.09,1.917,0,20.427,0,20.427h6.79V36.729c0-0.609,0.044-1.219,0.224-1.655  c0.49-1.22,1.607-2.483,3.482-2.483c2.458,0,3.44,1.873,3.44,4.618v10.929H50.837z M22.959,24.922c2.367,0,3.842-1.57,3.842-3.531  c-0.044-2.003-1.475-3.528-3.797-3.528s-3.841,1.524-3.841,3.528c0,1.961,1.474,3.531,3.753,3.531H22.959z M34,64  C17.432,64,4,50.568,4,34C4,17.431,17.432,4,34,4s30,13.431,30,30C64,50.568,50.568,64,34,64z M26.354,48.137V27.71h-6.789v20.427  H26.354z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://github.com/jschulberg" target="_blank" class="link-transition github link dib z-999 pt3 pt0-l mr1" title="Github link" rel="noopener" aria-label="follow on Github——Opens in a new window">
+  <svg  height="32px"  style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+  <path d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"/>
+</svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+
+
+
+
+
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

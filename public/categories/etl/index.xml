@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ETL on Datacracy</title>
+    <link>http://datacracy.netlify.app/categories/etl/</link>
+    <description>Recent content in ETL on Datacracy</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 20 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://datacracy.netlify.app/categories/etl/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Reading Multiple CSVs into Merged R Dataframe</title>
+      <link>http://datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</link>
+      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</guid>
+      <description>The purpose of this script is to load and clean all of the various .csv files containing polling place data into R. The data, which is available for download here, is structured as follows:
+- Each state (32 in total) has its own folder
+- Within each state (folder), there are a variable number of CSV files, one for each year that polling place data is available</description>
+    </item>
+    
+  </channel>
+</rss>

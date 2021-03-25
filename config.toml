@@ -1,0 +1,72 @@
+title = "Datacracy"
+baseURL = "http://datacracy.netlify.app/"
+languageCode = "en-us"
+theme = "gohugo-theme-ananke"
+themesDir = "../.."
+resourceDir = "../resources"
+
+DefaultContentLanguage = "en"
+SectionPagesMenu = "main"
+Paginate = 5 # this is set low for demonstrating with dummy content. Set to a higher number
+googleAnalytics = "UA-170127672-1"
+enableRobotsTXT = true
+disqusShortname = "datacracy"
+
+
+[[menu.main]]
+  name = "About this site"
+  weight = 3 # defines the order in which this menu item appears
+  pre = "<h4>Navigate to</h4>"
+  identifier = "about"
+  url = "/about"
+
+[[menu.main]]
+  name = "Posts"
+  weight = 1
+  identifier = "post"
+  url = "/post"
+
+[[menu.main]]
+  name = "About Me"
+  weight = 2
+  identifier = "aboutme"
+  url = "/aboutme"
+  
+
+[languages]
+  [languages.en]
+    title = "Datacracy"
+    weight = 1
+    contentDir = "content"
+
+[sitemap]
+  changefreq = "monthly"
+  priority = 0.5
+  filename = "sitemap.xml"
+  
+[params]
+  favicon = "images/Datacracy_Logo.png"
+  site_logo = "images/Datacracy_Logo.png"
+  description = "Welcome to Datacracy: A site showing the power of data as a defining force in the future of American politics and policy"
+  facebook = "https://www.facebook.com/jschulberg/"
+  twitter = "https://twitter.com/SchulbergJustin"
+  instagram = "https://www.instagram.com/schulbergjustin/"
+  # youtube = ""
+  github = "https://github.com/jschulberg"
+  # gitlab = ""
+  linkedin = "https://www.linkedin.com/in/schulbergjustin/"
+  # mastodon = ""
+  # slack = ""
+  # stackoverflow = ""
+  # rss = ""
+  # choose a background color from any on this page: http://tachyons.io/docs/themes/skins/ and preface it with "bg-"
+  background_color_class = "bg-light-purple"
+  featured_image = "/images/Datacracy_Cover.png"
+  recent_posts_number = 3
+  show_reading_time = true
+  commentoEnable = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
