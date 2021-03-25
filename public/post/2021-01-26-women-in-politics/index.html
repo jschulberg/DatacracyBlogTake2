@@ -1,0 +1,3139 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Women in Politics | Datacracy</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="It all started in Montana. In 1916, Jeannette Rankin, a peace activist and a strong advocate for women’s suffrage, broke down centuries-long barriers by becoming the first woman elected to Congress. Since then, 366 women have served in U.S. Congress, and thousands more in various elected and executive offices at the state-level.
+In this post, we will analyze the Women in Politics dataset published by the Eagleton Institute of Politics’ Center for American Women and Politics.">
+    <meta name="generator" content="Hugo 0.82.0" />
+    
+    
+      <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+    
+
+    
+
+  
+  
+    <link rel="stylesheet" href="/datacracy.netlify.app/ananke/dist/main.css_5c99d70a7725bacd4c701e995b969fea.css" >
+  
+
+
+
+
+    
+      
+<link rel="shortcut icon" href="/datacracy.netlify.app/images/Datacracy_Logo.png" type="image/x-icon" />
+
+
+    
+
+    
+    
+    <meta property="og:title" content="Women in Politics" />
+<meta property="og:description" content="It all started in Montana. In 1916, Jeannette Rankin, a peace activist and a strong advocate for women’s suffrage, broke down centuries-long barriers by becoming the first woman elected to Congress. Since then, 366 women have served in U.S. Congress, and thousands more in various elected and executive offices at the state-level.
+In this post, we will analyze the Women in Politics dataset published by the Eagleton Institute of Politics’ Center for American Women and Politics." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="datacracy.netlify.app/post/2021-01-26-women-in-politics/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-09-12T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-09-12T00:00:00&#43;00:00" /><meta property="og:site_name" content="Datacracy" />
+
+<meta itemprop="name" content="Women in Politics">
+<meta itemprop="description" content="It all started in Montana. In 1916, Jeannette Rankin, a peace activist and a strong advocate for women’s suffrage, broke down centuries-long barriers by becoming the first woman elected to Congress. Since then, 366 women have served in U.S. Congress, and thousands more in various elected and executive offices at the state-level.
+In this post, we will analyze the Women in Politics dataset published by the Eagleton Institute of Politics’ Center for American Women and Politics."><meta itemprop="datePublished" content="2020-09-12T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-09-12T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2761">
+<meta itemprop="keywords" content="public policy,EDA," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Women in Politics"/>
+<meta name="twitter:description" content="It all started in Montana. In 1916, Jeannette Rankin, a peace activist and a strong advocate for women’s suffrage, broke down centuries-long barriers by becoming the first woman elected to Congress. Since then, 366 women have served in U.S. Congress, and thousands more in various elected and executive offices at the state-level.
+In this post, we will analyze the Women in Politics dataset published by the Eagleton Institute of Politics’ Center for American Women and Politics."/>
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-light-purple">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="datacracy.netlify.app/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        <img src="images/Datacracy_Logo.png" class="w100 mw5-ns" alt="Datacracy" />
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="datacracy.netlify.app/post" title="Posts page">
+              Posts
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="datacracy.netlify.app/aboutme" title="About Me page">
+              About Me
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="datacracy.netlify.app/about" title="About this site page">
+              About this site
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+
+
+
+<a href="https://www.facebook.com/jschulberg/" target="_blank" class="link-transition facebook link dib z-999 pt3 pt0-l mr1" title="Facebook link" rel="noopener" aria-label="follow on Facebook——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M28.765,50.32h6.744V33.998h4.499l0.596-5.624h-5.095  l0.007-2.816c0-1.466,0.14-2.253,2.244-2.253h2.812V17.68h-4.5c-5.405,0-7.307,2.729-7.307,7.317v3.377h-3.369v5.625h3.369V50.32z   M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://twitter.com/SchulbergJustin" target="_blank" class="link-transition twitter link dib z-999 pt3 pt0-l mr1" title="Twitter link" rel="noopener" aria-label="follow on Twitter——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M37.167,22.283c-2.619,0.953-4.274,3.411-4.086,6.101  l0.063,1.038l-1.048-0.127c-3.813-0.487-7.145-2.139-9.974-4.915l-1.383-1.377l-0.356,1.017c-0.754,2.267-0.272,4.661,1.299,6.271  c0.838,0.89,0.649,1.017-0.796,0.487c-0.503-0.169-0.943-0.296-0.985-0.233c-0.146,0.149,0.356,2.076,0.754,2.839  c0.545,1.06,1.655,2.097,2.871,2.712l1.027,0.487l-1.215,0.021c-1.173,0-1.215,0.021-1.089,0.467  c0.419,1.377,2.074,2.839,3.918,3.475l1.299,0.444l-1.131,0.678c-1.676,0.976-3.646,1.526-5.616,1.568  C19.775,43.256,19,43.341,19,43.405c0,0.211,2.557,1.397,4.044,1.864c4.463,1.377,9.765,0.783,13.746-1.568  c2.829-1.673,5.657-5,6.978-8.221c0.713-1.716,1.425-4.851,1.425-6.354c0-0.975,0.063-1.102,1.236-2.267  c0.692-0.678,1.341-1.419,1.467-1.631c0.21-0.403,0.188-0.403-0.88-0.043c-1.781,0.636-2.033,0.551-1.152-0.402  c0.649-0.678,1.425-1.907,1.425-2.267c0-0.063-0.314,0.042-0.671,0.233c-0.377,0.212-1.215,0.53-1.844,0.72l-1.131,0.361l-1.027-0.7  c-0.566-0.381-1.361-0.805-1.781-0.932C39.766,21.902,38.131,21.944,37.167,22.283z M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4  s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://www.instagram.com/schulbergjustin/" target="_blank" class="link-transition instagram link dib z-999 pt3 pt0-l mr1" title="Instagram link" rel="noopener" aria-label="follow on Instagram——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M42.271,26.578v-0.006c0.502,0,1.005,0.01,1.508-0.002  c0.646-0.017,1.172-0.57,1.172-1.217c0-0.963,0-1.927,0-2.89c0-0.691-0.547-1.24-1.236-1.241c-0.961,0-1.922-0.001-2.883,0  c-0.688,0.001-1.236,0.552-1.236,1.243c-0.001,0.955-0.004,1.91,0.003,2.865c0.001,0.143,0.028,0.291,0.073,0.426  c0.173,0.508,0.639,0.82,1.209,0.823C41.344,26.579,41.808,26.578,42.271,26.578z M33,27.817c-3.384-0.002-6.135,2.721-6.182,6.089  c-0.049,3.46,2.72,6.201,6.04,6.272c3.454,0.074,6.248-2.686,6.321-6.043C39.254,30.675,36.462,27.815,33,27.817z M21.046,31.116  v0.082c0,4.515-0.001,9.03,0,13.545c0,0.649,0.562,1.208,1.212,1.208c7.16,0.001,14.319,0.001,21.479,0  c0.656,0,1.215-0.557,1.215-1.212c0.001-4.509,0-9.02,0-13.528v-0.094h-2.912c0.411,1.313,0.537,2.651,0.376,4.014  c-0.161,1.363-0.601,2.631-1.316,3.803s-1.644,2.145-2.779,2.918c-2.944,2.006-6.821,2.182-9.946,0.428  c-1.579-0.885-2.819-2.12-3.685-3.713c-1.289-2.373-1.495-4.865-0.739-7.451C22.983,31.116,22.021,31.116,21.046,31.116z   M45.205,49.255c0.159-0.026,0.318-0.049,0.475-0.083c1.246-0.265,2.264-1.304,2.508-2.557c0.025-0.137,0.045-0.273,0.067-0.409  V21.794c-0.021-0.133-0.04-0.268-0.065-0.401c-0.268-1.367-1.396-2.428-2.78-2.618c-0.058-0.007-0.113-0.02-0.17-0.03H20.761  c-0.147,0.027-0.296,0.047-0.441,0.08c-1.352,0.308-2.352,1.396-2.545,2.766c-0.008,0.057-0.02,0.114-0.029,0.171V46.24  c0.028,0.154,0.05,0.311,0.085,0.465c0.299,1.322,1.427,2.347,2.77,2.52c0.064,0.008,0.13,0.021,0.195,0.03H45.205z M33,64  C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+
+<a href="https://www.linkedin.com/in/schulbergjustin/" target="_blank" class="link-transition linkedin link dib z-999 pt3 pt0-l mr1" title="LinkedIn link" rel="noopener" aria-label="follow on LinkedIn——Opens in a new window">
+  <svg  height="32px"  style="enable-background:new 0 0 65 65;" version="1.1" viewBox="0 0 65 65" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d="M50.837,48.137V36.425c0-6.275-3.35-9.195-7.816-9.195  c-3.604,0-5.219,1.983-6.119,3.374V27.71h-6.79c0.09,1.917,0,20.427,0,20.427h6.79V36.729c0-0.609,0.044-1.219,0.224-1.655  c0.49-1.22,1.607-2.483,3.482-2.483c2.458,0,3.44,1.873,3.44,4.618v10.929H50.837z M22.959,24.922c2.367,0,3.842-1.57,3.842-3.531  c-0.044-2.003-1.475-3.528-3.797-3.528s-3.841,1.524-3.841,3.528c0,1.961,1.474,3.531,3.753,3.531H22.959z M34,64  C17.432,64,4,50.568,4,34C4,17.431,17.432,4,34,4s30,13.431,30,30C64,50.568,50.568,64,34,64z M26.354,48.137V27.71h-6.789v20.427  H26.354z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://github.com/jschulberg" target="_blank" class="link-transition github link dib z-999 pt3 pt0-l mr1" title="Github link" rel="noopener" aria-label="follow on Github——Opens in a new window">
+  <svg  height="32px"  style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+  <path d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"/>
+</svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked">
+          
+        POSTS
+      </aside>
+      
+
+
+
+
+  <div id="sharing" class="mt3">
+
+    
+    <a href="https://www.facebook.com/sharer.php?u=datacracy.netlify.app/datacracy.netlify.app/post/2021-01-26-women-in-politics/" class="facebook no-underline" aria-label="share on Facebook">
+      <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M28.765,50.32h6.744V33.998h4.499l0.596-5.624h-5.095  l0.007-2.816c0-1.466,0.14-2.253,2.244-2.253h2.812V17.68h-4.5c-5.405,0-7.307,2.729-7.307,7.317v3.377h-3.369v5.625h3.369V50.32z   M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;"/></svg>
+
+    </a>
+
+    
+    
+    <a href="https://twitter.com/share?url=datacracy.netlify.app/datacracy.netlify.app/post/2021-01-26-women-in-politics/&amp;text=Women%20in%20Politics" class="twitter no-underline" aria-label="share on Twitter">
+      <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M37.167,22.283c-2.619,0.953-4.274,3.411-4.086,6.101  l0.063,1.038l-1.048-0.127c-3.813-0.487-7.145-2.139-9.974-4.915l-1.383-1.377l-0.356,1.017c-0.754,2.267-0.272,4.661,1.299,6.271  c0.838,0.89,0.649,1.017-0.796,0.487c-0.503-0.169-0.943-0.296-0.985-0.233c-0.146,0.149,0.356,2.076,0.754,2.839  c0.545,1.06,1.655,2.097,2.871,2.712l1.027,0.487l-1.215,0.021c-1.173,0-1.215,0.021-1.089,0.467  c0.419,1.377,2.074,2.839,3.918,3.475l1.299,0.444l-1.131,0.678c-1.676,0.976-3.646,1.526-5.616,1.568  C19.775,43.256,19,43.341,19,43.405c0,0.211,2.557,1.397,4.044,1.864c4.463,1.377,9.765,0.783,13.746-1.568  c2.829-1.673,5.657-5,6.978-8.221c0.713-1.716,1.425-4.851,1.425-6.354c0-0.975,0.063-1.102,1.236-2.267  c0.692-0.678,1.341-1.419,1.467-1.631c0.21-0.403,0.188-0.403-0.88-0.043c-1.781,0.636-2.033,0.551-1.152-0.402  c0.649-0.678,1.425-1.907,1.425-2.267c0-0.063-0.314,0.042-0.671,0.233c-0.377,0.212-1.215,0.53-1.844,0.72l-1.131,0.361l-1.027-0.7  c-0.566-0.381-1.361-0.805-1.781-0.932C39.766,21.902,38.131,21.944,37.167,22.283z M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4  s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
+
+    </a>
+
+    
+    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=datacracy.netlify.app/datacracy.netlify.app/post/2021-01-26-women-in-politics/&amp;title=Women%20in%20Politics" class="linkedin no-underline" aria-label="share on LinkedIn">
+      <svg  height="32px"  style="enable-background:new 0 0 65 65;" version="1.1" viewBox="0 0 65 65" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d="M50.837,48.137V36.425c0-6.275-3.35-9.195-7.816-9.195  c-3.604,0-5.219,1.983-6.119,3.374V27.71h-6.79c0.09,1.917,0,20.427,0,20.427h6.79V36.729c0-0.609,0.044-1.219,0.224-1.655  c0.49-1.22,1.607-2.483,3.482-2.483c2.458,0,3.44,1.873,3.44,4.618v10.929H50.837z M22.959,24.922c2.367,0,3.842-1.57,3.842-3.531  c-0.044-2.003-1.475-3.528-3.797-3.528s-3.841,1.524-3.841,3.528c0,1.961,1.474,3.531,3.753,3.531H22.959z M34,64  C17.432,64,4,50.568,4,34C4,17.431,17.432,4,34,4s30,13.431,30,30C64,50.568,50.568,64,34,64z M26.354,48.137V27.71h-6.789v20.427  H26.354z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+
+    </a>
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">Women in Politics</h1>
+      
+      <p class="tracked">
+          By <strong>
+          
+              Justin S.
+          
+          </strong>
+      </p>
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2020-09-12T00:00:00Z">September 12, 2020</time>
+
+      
+      
+        <span class="f6 mv4 dib tracked"> - 13 minutes read</span>
+        <span class="f6 mv4 dib tracked"> - 2761 words</span>
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links nested-img mid-gray pr4-l w-two-thirds-l">
+<script src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/header-attrs/header-attrs.js"></script>
+<script src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/kePrint/kePrint.js"></script>
+<link href="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+<p>It all started in Montana. In 1916, Jeannette Rankin, a peace activist and a strong advocate for women’s suffrage, broke down centuries-long barriers by becoming the first woman elected to Congress. Since then, 366 women have served in U.S. Congress, and thousands more in various elected and executive offices at the state-level.</p>
+<p>In this post, we will analyze the Women in Politics dataset published by the <a href="https://cawpdata.rutgers.edu/">Eagleton Institute of Politics’ Center for American Women and Politics</a>. CAWP, the nation’s leading source of scholarly research and data related to women’s political participation in the United States, has gathered tens of thousands of records of women holding political (both elected and appointed) office across the United States, dating back to the late 1800s, and made them all available in their centralized Women in Political Office Database. We will use this data along with a variety of exploratory and modeling techniques to answer the following questions:</p>
+<ul>
+<li>How many women have held political office by level of Government?<br />
+</li>
+<li>Is one political party more apt to be represented by women?<br />
+</li>
+<li>Does race add a layer of complexity to gender representation for political office?<br />
+</li>
+<li>How long do women serve in office?<br />
+</li>
+<li>When will the U.S. House of Representatives and Senate achieve full gender parity?<br />
+</li>
+<li>Is there a geographic component to equitable gender representation? Are there more female officeholders in certain states?</li>
+</ul>
+<p>Let’s start by applying some basic data cleaning/manipulation techniques, dealing with missing (NA) values, and touching up our dataset.</p>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Id
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Year
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Min Year
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Max Year
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Years Of Service
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Years In Office
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+First Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Middle Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Last Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Full Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+State
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+State Abb
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Party
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Level
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Position
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Race Ethnicity
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Party Grouped
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1982
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1983
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1984
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1985
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1986
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1987
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1988
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1989
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17833g
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1995-1998
+</td>
+<td style="text-align:left;">
+Catherine
+</td>
+<td style="text-align:left;">
+M.
+</td>
+<td style="text-align:left;">
+Abate
+</td>
+<td style="text-align:left;">
+Catherine M. Abate
+</td>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:left;">
+NY
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Senator
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17833g
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1995-1998
+</td>
+<td style="text-align:left;">
+Catherine
+</td>
+<td style="text-align:left;">
+M.
+</td>
+<td style="text-align:left;">
+Abate
+</td>
+<td style="text-align:left;">
+Catherine M. Abate
+</td>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:left;">
+NY
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Senator
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17833g
+</td>
+<td style="text-align:right;">
+1997
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1995-1998
+</td>
+<td style="text-align:left;">
+Catherine
+</td>
+<td style="text-align:left;">
+M.
+</td>
+<td style="text-align:left;">
+Abate
+</td>
+<td style="text-align:left;">
+Catherine M. Abate
+</td>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:left;">
+NY
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Senator
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17833g
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1995-1998
+</td>
+<td style="text-align:left;">
+Catherine
+</td>
+<td style="text-align:left;">
+M.
+</td>
+<td style="text-align:left;">
+Abate
+</td>
+<td style="text-align:left;">
+Catherine M. Abate
+</td>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:left;">
+NY
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Senator
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13633h
+</td>
+<td style="text-align:right;">
+1927
+</td>
+<td style="text-align:right;">
+1927
+</td>
+<td style="text-align:right;">
+1928
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1927-1928
+</td>
+<td style="text-align:left;">
+Clara
+</td>
+<td style="text-align:left;">
+A.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Clara A. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13633h
+</td>
+<td style="text-align:right;">
+1928
+</td>
+<td style="text-align:right;">
+1927
+</td>
+<td style="text-align:right;">
+1928
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1927-1928
+</td>
+<td style="text-align:left;">
+Clara
+</td>
+<td style="text-align:left;">
+A.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Clara A. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15585h
+</td>
+<td style="text-align:right;">
+1957
+</td>
+<td style="text-align:right;">
+1957
+</td>
+<td style="text-align:right;">
+1958
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1957-1958
+</td>
+<td style="text-align:left;">
+Delila
+</td>
+<td style="text-align:left;">
+M. Richards
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Delila M. Richards Abbott
+</td>
+<td style="text-align:left;">
+Utah
+</td>
+<td style="text-align:left;">
+UT
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15585h
+</td>
+<td style="text-align:right;">
+1958
+</td>
+<td style="text-align:right;">
+1957
+</td>
+<td style="text-align:right;">
+1958
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1957-1958
+</td>
+<td style="text-align:left;">
+Delila
+</td>
+<td style="text-align:left;">
+M. Richards
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Delila M. Richards Abbott
+</td>
+<td style="text-align:left;">
+Utah
+</td>
+<td style="text-align:left;">
+UT
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13634h
+</td>
+<td style="text-align:right;">
+1971
+</td>
+<td style="text-align:right;">
+1971
+</td>
+<td style="text-align:right;">
+1972
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1971-1972
+</td>
+<td style="text-align:left;">
+Frances
+</td>
+<td style="text-align:left;">
+J.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Frances J. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13634h
+</td>
+<td style="text-align:right;">
+1972
+</td>
+<td style="text-align:right;">
+1971
+</td>
+<td style="text-align:right;">
+1972
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1971-1972
+</td>
+<td style="text-align:left;">
+Frances
+</td>
+<td style="text-align:left;">
+J.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Frances J. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13635h
+</td>
+<td style="text-align:right;">
+1929
+</td>
+<td style="text-align:right;">
+1929
+</td>
+<td style="text-align:right;">
+1930
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1929-1930
+</td>
+<td style="text-align:left;">
+Helen
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Helen S. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13635h
+</td>
+<td style="text-align:right;">
+1930
+</td>
+<td style="text-align:right;">
+1929
+</td>
+<td style="text-align:right;">
+1930
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1929-1930
+</td>
+<td style="text-align:left;">
+Helen
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Helen S. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+566417k
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+2017-2020
+</td>
+<td style="text-align:left;">
+Kim
+</td>
+<td style="text-align:left;">
+K.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Kim K. Abbott
+</td>
+<td style="text-align:left;">
+Montana
+</td>
+<td style="text-align:left;">
+MT
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+566417k
+</td>
+<td style="text-align:right;">
+2018
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+2017-2020
+</td>
+<td style="text-align:left;">
+Kim
+</td>
+<td style="text-align:left;">
+K.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Kim K. Abbott
+</td>
+<td style="text-align:left;">
+Montana
+</td>
+<td style="text-align:left;">
+MT
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+566417k
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+2017-2020
+</td>
+<td style="text-align:left;">
+Kim
+</td>
+<td style="text-align:left;">
+K.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Kim K. Abbott
+</td>
+<td style="text-align:left;">
+Montana
+</td>
+<td style="text-align:left;">
+MT
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+566417k
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+2017-2020
+</td>
+<td style="text-align:left;">
+Kim
+</td>
+<td style="text-align:left;">
+K.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Kim K. Abbott
+</td>
+<td style="text-align:left;">
+Montana
+</td>
+<td style="text-align:left;">
+MT
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+14772c
+</td>
+<td style="text-align:right;">
+2010
+</td>
+<td style="text-align:right;">
+2010
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+2010-2011
+</td>
+<td style="text-align:left;">
+Robin
+</td>
+<td style="text-align:left;">
+A.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Robin A. Abbott
+</td>
+<td style="text-align:left;">
+Virginia
+</td>
+<td style="text-align:left;">
+VA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+14772c
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:right;">
+2010
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+2010-2011
+</td>
+<td style="text-align:left;">
+Robin
+</td>
+<td style="text-align:left;">
+A.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Robin A. Abbott
+</td>
+<td style="text-align:left;">
+Virginia
+</td>
+<td style="text-align:left;">
+VA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2006
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2007
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2008
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2009
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2010
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7228c
+</td>
+<td style="text-align:right;">
+1999
+</td>
+<td style="text-align:right;">
+1999
+</td>
+<td style="text-align:right;">
+2002
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1999-2002
+</td>
+<td style="text-align:left;">
+Aisha
+</td>
+<td style="text-align:left;">
+W.
+</td>
+<td style="text-align:left;">
+Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Aisha W. Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Rhode Island
+</td>
+<td style="text-align:left;">
+RI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7228c
+</td>
+<td style="text-align:right;">
+2000
+</td>
+<td style="text-align:right;">
+1999
+</td>
+<td style="text-align:right;">
+2002
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1999-2002
+</td>
+<td style="text-align:left;">
+Aisha
+</td>
+<td style="text-align:left;">
+W.
+</td>
+<td style="text-align:left;">
+Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Aisha W. Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Rhode Island
+</td>
+<td style="text-align:left;">
+RI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7228c
+</td>
+<td style="text-align:right;">
+2001
+</td>
+<td style="text-align:right;">
+1999
+</td>
+<td style="text-align:right;">
+2002
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1999-2002
+</td>
+<td style="text-align:left;">
+Aisha
+</td>
+<td style="text-align:left;">
+W.
+</td>
+<td style="text-align:left;">
+Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Aisha W. Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Rhode Island
+</td>
+<td style="text-align:left;">
+RI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7228c
+</td>
+<td style="text-align:right;">
+2002
+</td>
+<td style="text-align:right;">
+1999
+</td>
+<td style="text-align:right;">
+2002
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1999-2002
+</td>
+<td style="text-align:left;">
+Aisha
+</td>
+<td style="text-align:left;">
+W.
+</td>
+<td style="text-align:left;">
+Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Aisha W. Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Rhode Island
+</td>
+<td style="text-align:left;">
+RI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15575c
+</td>
+<td style="text-align:right;">
+2013
+</td>
+<td style="text-align:right;">
+2013
+</td>
+<td style="text-align:right;">
+2014
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+2013-2014
+</td>
+<td style="text-align:left;">
+Theresa
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abed
+</td>
+<td style="text-align:left;">
+Theresa Abed
+</td>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:left;">
+MI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15575c
+</td>
+<td style="text-align:right;">
+2014
+</td>
+<td style="text-align:right;">
+2013
+</td>
+<td style="text-align:right;">
+2014
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+2013-2014
+</td>
+<td style="text-align:left;">
+Theresa
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abed
+</td>
+<td style="text-align:left;">
+Theresa Abed
+</td>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:left;">
+MI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10056h
+</td>
+<td style="text-align:right;">
+1954
+</td>
+<td style="text-align:right;">
+1954
+</td>
+<td style="text-align:right;">
+1954
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+1954-1954
+</td>
+<td style="text-align:left;">
+Hazel Hempel
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Hazel Hempel Abel
+</td>
+<td style="text-align:left;">
+Nebraska
+</td>
+<td style="text-align:left;">
+NE
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+Federal/Congress
+</td>
+<td style="text-align:left;">
+U.S. Senator
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1992
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1993
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1994
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+232646k
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:left;">
+2005-2020
+</td>
+<td style="text-align:left;">
+Catherine
+</td>
+<td style="text-align:left;">
+F.
+</td>
+<td style="text-align:left;">
+Abercrombie
+</td>
+<td style="text-align:left;">
+Catherine F. Abercrombie
+</td>
+<td style="text-align:left;">
+Connecticut
+</td>
+<td style="text-align:left;">
+CT
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>After cleaning up the data a bit and imputing some new columns, we have our dataset! In it, one row corresponds to a woman having held a given political office (either elected or appointed) for one year. If a woman has held a given political office for, say, five years, they will appear as five separate rows in the dataset.</p>
+<p>As part of my set-up, I took a look at the number of missing (null) values for each variable (field). Based on this, I removed the “District” column, which is entirely null in the dataset I downloaded, and thus provides us no value. Middle name, which is about 1/3 null, has been left in the dataset since it’s not an essential variable.</p>
+<p>Now that we have our data, let’s start to explore it.</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/total_viz-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>In absolute terms, most of the women who have held office have done so at the state legislative level, which makes sense given that there are more seats available at that level. Interestingly enough, in U.S. Territories/D.C., a lot of women outside the two major parties have held office.</p>
+<p>This is great to see total numbers, but our data, depending on which level of government we’re talking about, can span 130 years! Let’s breakout our totals over time to look for trends.</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/total_over_time-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Here are some key takeaways:<br />
+1. The number of women holding political office has been growing incredibly fast over the past few decades.<br />
+2. Most of the positions held are at the State Legislative level, which makes sense given the greater number of positions open at that level.<br />
+3. U.S. Territories and D.C. are late to the game, not having any semblance of gender representation until the 2000’s.</p>
+<p>Let’s look to see if these trends have differed based on political party.</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/total_over_time_by_party-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>For female officeholders in Congress, Democrats and Republicans were in lockstep until 1990, when Democrats took off at a much faster rate.</p>
+<p>How does gender representation in political office change not by political party, but by race? Let’s take a look.</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/total_over_time_by_race-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>We can see rather clearly that white women dominate across the board (except in U.S. Territories/D.C., which is dominated by women of Hispanic/Latina ethnicity). This would not be too surprising given that places like Puerto Rico are include in this group. The difference is clearest in Statewide Executive positions, which are often not elected (Secretary of State, Treasurer, Superintendent of Public Instruction, Lt. Governor, etc.) and instead appointed.</p>
+<p>Let’s take a look at how long individual female officeholders have held their respective office. We’ll do so by utilizing a density plot, which shows the distribution of the number of years a given politician has served in their respective office.</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/years_of_service-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>From this, we can see the distribution of the number of years a given politician has held her respective office over the past 120 years, broken out by different levels of government. In particular, we can clearly see that the women who have held office in various U.S. Territories/D.C. have done so for a very short period of time: <strong>3 years</strong>. This makes sense given how women have only been holding office in U.S. Territories/D.C. since the early 2000’s. On the other end of the spectrum, women in Congress have held their positions for a much more uniform amount of time, averaging about <strong>21 years</strong> in office!</p>
+<p>Now let’s hone in on the Federal/Congressional piece of the puzzle. Specifically, let’s look at the proportion of women who have been members of the U.S. Senate/House of Representatives over time. Unfortunately our dataset only includes the number of women who have held political office over time, so it’s difficult to compare that to the number of men who have held office over time at all the levels of government, except for the U.S. Senate, which has had 100 members since 1959, and the U.S. House of Representatives, which has had 435 members since 1959. Thus, we’ll focus our analysis to 1959 and after.</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/congress_genders_by_proportion-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>From this, we can see that in both chambers of Congress, the share of female representatives has increased steadily, with a significant bump in the 1990s and a steady increase from there on out. The next question that comes to my head is:</p>
+<p><em>When will we achieve a 50-50 parity in each chamber of Congress?</em></p>
+<div id="predictive-modeling" class="section level2">
+<h2>Predictive Modeling</h2>
+<p>In this next section, I’d like to use two predictive models to determine when each chamber of the U.S. Congress will achieve full gender parity. What does that mean in plain English? Can we use data science methods to project when the Senate will have 50 female members and the House 217 (435/2) female members?</p>
+<p>The first model I’ll use is an ARIMA (Auto Regressive Integrated Moving Average) time forecasting model.</p>
+<p>By building an ARIMA model with a trend component, we can esimate the increase in the number of female officeholders in Congress over the next 80 years:</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/senate_arima_viz-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>According to the Senate ARIMA model, the U.S. Senate will first achieve full gender parity in the year <strong>2052</strong>.</p>
+<p>Let’s now do the same thing for the House.</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/house_arima_viz-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Thus, according to the House ARIMA model built, the U.S. House of Representatives will first achieve full gender parity in the year <strong>2070</strong>.</p>
+<p>Let’s plot the Senate and House graphs side-by-side, just to get a better view of the whole picture.</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/congress_arima_viz-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>From these graphs, we can see that both ARIMA models took a rather linear approach, assuming a steady increase over time. This makes sense, because ARIMA usually looks for seasonality trends (which our data does NOT have) on top of the general trends (which our data does have). Obviously, this assumes that the rate of increase is steady over time and doesn’t plateau
+as women in Congress hit a certain threshold. Assuming the rate of increase is generally linear, the <strong>Senate</strong> will achieve full parity <strong>18</strong> years before the <strong>House</strong>.</p>
+<p>Because a linear approach is unrealistic (eventually, the threshold of women in each chamber will eventually exceed 100%) in the long run, let’s try to fit something that caps out at 100%. For that reason, I’d like to fit a logistic regression curve, which uses a Sigmoidal function (S-shaped) to make its estimate.</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/log_mode-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>From this, we can see a much more realistic fit for the model. That is, by using a logistic model, we can safely assume that there is a ceiling to the number of women who will serve in Congress (i.e. 100% of seats being held by women). The logistic models estimate that the <strong>Senate</strong> will achieve full parity <strong>11</strong> years before the <strong>House</strong>.</p>
+<p>For interest purposes, let’s just take a look at the ARIMA and Logistic models side-by-side.</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/both_models-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>It seems that the Logistic models, because of their generally steeper ascent to start, lend credence to gender parity in Congress sooner than the ARIMA models estimate.</p>
+</div>
+<div id="geographic-analysis" class="section level2">
+<h2>Geographic Analysis</h2>
+<p>Next, we’ll look into how the number of women holding certain political office varies based on location (state). This will help us understand if there are certain areas of the country where the phenomenon of women holding office is taking off, and others where it’s lagging.</p>
+<p>First, let’s take a look at our all-time leaders. Which states have had the most women state representatives in the past 120 years? To look at this, I’ve pulled state population data from the U.S. Census website to help normalize our results (so that California and New York, which are obviously larger states, don’t disproportionately dominate the graph compared to smaller states, like Connecticut and Vermont).</p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/racing_bar_chart_total_by_state-1.gif" style="display: block; margin: auto;" /></p>
+<p><img src="datacracy.netlify.app/post/2021-01-26-women-in-politics/index_files/figure-html/animated_map_total_by_state-1.gif" style="display: block; margin: auto;" /></p>
+<p>From this we can see that certain states dominate consistently throughout the past century, specifically New Hampshire, Vermont, and Connecticut. Let’s look at the same data in map-form to give us a better sense of the geographic trends.</p>
+<div id="conclusion" class="section level3">
+<h3>Conclusion</h3>
+<p>Thanks for reading! I hope you were able to learn a bit more about the data behind women in political office across the United States. If you felt like the article was educational, interesting, or if you just want to support me, feel free to follow me on any social media platform (all are listed as icons on the homepage of my website) and stay tuned for the next post. If you have ideas on public policy/political topics that could use some data expertise, please send me your suggestions – the more ideas, the better!</p>
+</div>
+<div id="additional-resources" class="section level3">
+<h3>Additional Resources</h3>
+<p>The original blog post can be found here:<br />
+<strong><a href="https://towardsdatascience.com/women-in-politics-exploratory-data-analysis-in-r-54bfd49dcd3a" class="uri">https://towardsdatascience.com/women-in-politics-exploratory-data-analysis-in-r-54bfd49dcd3a</a></strong></p>
+<p>Interested in seeing my original code? Go to my GitHub repository here:<br />
+<strong><a href="https://github.com/jschulberg/Women-in-Politics" class="uri">https://github.com/jschulberg/Women-in-Politics</a></strong></p>
+<p>Interested in learning more about this subject or the Center for American Women and Politics? Go to:<br />
+<strong><a href="https://cawp.rutgers.edu/facts/milestones-for-women/" class="uri">https://cawp.rutgers.edu/facts/milestones-for-women/</a></strong></p>
+<p>Interested in seeing the Eagleton Institue of Politics, Center for American Women and Politics Women Elected Officials Database? Go to:<br />
+<strong><a href="https://cawpdata.rutgers.edu/" class="uri">https://cawpdata.rutgers.edu/</a></strong></p>
+</div>
+</div>
+<ul class="pa0">
+  
+   <li class="list">
+     <a href="/datacracy.netlify.app/tags/public-policy" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">public policy</a>
+   </li>
+  
+   <li class="list">
+     <a href="/datacracy.netlify.app/tags/eda" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">EDA</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "datacracy" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      <div id="commento"></div>
+<script defer src="https://cdn.commento.io/js/commento.js"></script>
+
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">Related</p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/">U.S. Police-Caused Fatalities</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-light-purple bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="datacracy.netlify.app/" >
+    &copy;  Datacracy 2021 
+  </a>
+    <div>
+
+
+
+<a href="https://www.facebook.com/jschulberg/" target="_blank" class="link-transition facebook link dib z-999 pt3 pt0-l mr1" title="Facebook link" rel="noopener" aria-label="follow on Facebook——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M28.765,50.32h6.744V33.998h4.499l0.596-5.624h-5.095  l0.007-2.816c0-1.466,0.14-2.253,2.244-2.253h2.812V17.68h-4.5c-5.405,0-7.307,2.729-7.307,7.317v3.377h-3.369v5.625h3.369V50.32z   M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://twitter.com/SchulbergJustin" target="_blank" class="link-transition twitter link dib z-999 pt3 pt0-l mr1" title="Twitter link" rel="noopener" aria-label="follow on Twitter——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M37.167,22.283c-2.619,0.953-4.274,3.411-4.086,6.101  l0.063,1.038l-1.048-0.127c-3.813-0.487-7.145-2.139-9.974-4.915l-1.383-1.377l-0.356,1.017c-0.754,2.267-0.272,4.661,1.299,6.271  c0.838,0.89,0.649,1.017-0.796,0.487c-0.503-0.169-0.943-0.296-0.985-0.233c-0.146,0.149,0.356,2.076,0.754,2.839  c0.545,1.06,1.655,2.097,2.871,2.712l1.027,0.487l-1.215,0.021c-1.173,0-1.215,0.021-1.089,0.467  c0.419,1.377,2.074,2.839,3.918,3.475l1.299,0.444l-1.131,0.678c-1.676,0.976-3.646,1.526-5.616,1.568  C19.775,43.256,19,43.341,19,43.405c0,0.211,2.557,1.397,4.044,1.864c4.463,1.377,9.765,0.783,13.746-1.568  c2.829-1.673,5.657-5,6.978-8.221c0.713-1.716,1.425-4.851,1.425-6.354c0-0.975,0.063-1.102,1.236-2.267  c0.692-0.678,1.341-1.419,1.467-1.631c0.21-0.403,0.188-0.403-0.88-0.043c-1.781,0.636-2.033,0.551-1.152-0.402  c0.649-0.678,1.425-1.907,1.425-2.267c0-0.063-0.314,0.042-0.671,0.233c-0.377,0.212-1.215,0.53-1.844,0.72l-1.131,0.361l-1.027-0.7  c-0.566-0.381-1.361-0.805-1.781-0.932C39.766,21.902,38.131,21.944,37.167,22.283z M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4  s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://www.instagram.com/schulbergjustin/" target="_blank" class="link-transition instagram link dib z-999 pt3 pt0-l mr1" title="Instagram link" rel="noopener" aria-label="follow on Instagram——Opens in a new window">
+  <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M42.271,26.578v-0.006c0.502,0,1.005,0.01,1.508-0.002  c0.646-0.017,1.172-0.57,1.172-1.217c0-0.963,0-1.927,0-2.89c0-0.691-0.547-1.24-1.236-1.241c-0.961,0-1.922-0.001-2.883,0  c-0.688,0.001-1.236,0.552-1.236,1.243c-0.001,0.955-0.004,1.91,0.003,2.865c0.001,0.143,0.028,0.291,0.073,0.426  c0.173,0.508,0.639,0.82,1.209,0.823C41.344,26.579,41.808,26.578,42.271,26.578z M33,27.817c-3.384-0.002-6.135,2.721-6.182,6.089  c-0.049,3.46,2.72,6.201,6.04,6.272c3.454,0.074,6.248-2.686,6.321-6.043C39.254,30.675,36.462,27.815,33,27.817z M21.046,31.116  v0.082c0,4.515-0.001,9.03,0,13.545c0,0.649,0.562,1.208,1.212,1.208c7.16,0.001,14.319,0.001,21.479,0  c0.656,0,1.215-0.557,1.215-1.212c0.001-4.509,0-9.02,0-13.528v-0.094h-2.912c0.411,1.313,0.537,2.651,0.376,4.014  c-0.161,1.363-0.601,2.631-1.316,3.803s-1.644,2.145-2.779,2.918c-2.944,2.006-6.821,2.182-9.946,0.428  c-1.579-0.885-2.819-2.12-3.685-3.713c-1.289-2.373-1.495-4.865-0.739-7.451C22.983,31.116,22.021,31.116,21.046,31.116z   M45.205,49.255c0.159-0.026,0.318-0.049,0.475-0.083c1.246-0.265,2.264-1.304,2.508-2.557c0.025-0.137,0.045-0.273,0.067-0.409  V21.794c-0.021-0.133-0.04-0.268-0.065-0.401c-0.268-1.367-1.396-2.428-2.78-2.618c-0.058-0.007-0.113-0.02-0.17-0.03H20.761  c-0.147,0.027-0.296,0.047-0.441,0.08c-1.352,0.308-2.352,1.396-2.545,2.766c-0.008,0.057-0.02,0.114-0.029,0.171V46.24  c0.028,0.154,0.05,0.311,0.085,0.465c0.299,1.322,1.427,2.347,2.77,2.52c0.064,0.008,0.13,0.021,0.195,0.03H45.205z M33,64  C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+
+<a href="https://www.linkedin.com/in/schulbergjustin/" target="_blank" class="link-transition linkedin link dib z-999 pt3 pt0-l mr1" title="LinkedIn link" rel="noopener" aria-label="follow on LinkedIn——Opens in a new window">
+  <svg  height="32px"  style="enable-background:new 0 0 65 65;" version="1.1" viewBox="0 0 65 65" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d="M50.837,48.137V36.425c0-6.275-3.35-9.195-7.816-9.195  c-3.604,0-5.219,1.983-6.119,3.374V27.71h-6.79c0.09,1.917,0,20.427,0,20.427h6.79V36.729c0-0.609,0.044-1.219,0.224-1.655  c0.49-1.22,1.607-2.483,3.482-2.483c2.458,0,3.44,1.873,3.44,4.618v10.929H50.837z M22.959,24.922c2.367,0,3.842-1.57,3.842-3.531  c-0.044-2.003-1.475-3.528-3.797-3.528s-3.841,1.524-3.841,3.528c0,1.961,1.474,3.531,3.753,3.531H22.959z M34,64  C17.432,64,4,50.568,4,34C4,17.431,17.432,4,34,4s30,13.431,30,30C64,50.568,50.568,64,34,64z M26.354,48.137V27.71h-6.789v20.427  H26.354z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+<a href="https://github.com/jschulberg" target="_blank" class="link-transition github link dib z-999 pt3 pt0-l mr1" title="Github link" rel="noopener" aria-label="follow on Github——Opens in a new window">
+  <svg  height="32px"  style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+  <path d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"/>
+</svg>
+
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000" width="8px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
+</svg>
+</span></a>
+
+
+
+
+
+
+
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

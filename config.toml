@@ -1,7 +1,7 @@
 title = "Datacracy"
 baseURL = "datacracy.netlify.app/"
 languageCode = "en-us"
-theme = "gohugo-theme-ananke"
+theme = "ananke"
 # themesDir = "../.."
 resourceDir = "../resources"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$"]
