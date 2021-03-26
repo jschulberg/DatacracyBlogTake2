@@ -2,8 +2,8 @@ title = "Datacracy"
 baseURL = "https://datacracy.netlify.app/"
 languageCode = "en-us"
 theme = "ananke"
-themesDir = "../.."
-resourceDir = "../resources"
+#themesDir = "../.."
+#resourceDir = "../resources"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$"]
 
 DefaultContentLanguage = "en"
