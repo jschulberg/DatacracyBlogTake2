@@ -1,5 +1,5 @@
 title = "Datacracy"
-baseURL = "datacracy.netlify.app/"
+baseURL = "https://datacracy.netlify.app/"
 languageCode = "en-us"
 theme = "ananke"
 themesDir = "../.."
