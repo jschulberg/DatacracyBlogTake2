@@ -4,11 +4,10 @@ author: Justin S.
 date: '2021-01-26'
 slug: [Polling-Places]
 categories:
-  - R
   - viz
   - public policy
 tags:
-  - public policy
+  - R
 comments: yes
 featured_image: 'images/Voting Polls.jpg'
 share: yes

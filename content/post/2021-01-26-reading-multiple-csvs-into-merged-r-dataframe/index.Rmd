@@ -4,10 +4,10 @@ author: Justin Schulberg
 date: '2020-12-20'
 slug: [reading-multiple-csvs-into-merged-r-dataframe]
 categories:
-  - R
   - ETL
   - Data
-tags: []
+tags:
+  - R
 comments: yes
 featured_image: 'images/excel_sheets.png'
 menu: ''
