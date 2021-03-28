@@ -6,11 +6,11 @@ slug: [us-police-caused-fatalities]
 categories:
   - Data
   - public policy
-  - R
   - viz
 tags:
   - EDA
   - public policy
+  - R
 comments: yes
 featured_image: 'images/blm_dc.jpg'
 menu: ''

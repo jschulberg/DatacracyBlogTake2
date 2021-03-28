@@ -6,11 +6,11 @@ slug: [Women-in-Politics]
 featured_image: 'images/power_women.png'
 categories:
   - public policy
-  - R
   - viz
 tags:
   - public policy
   - EDA
+  - R
 comments: yes
 share: yes
 ---
