@@ -10,7 +10,7 @@ categories:
 tags: 
   - python
 comments: yes
-image: 'images/fed_authors.jpeg'
+featured_image: 'images/fed_authors.jpeg'
 share: yes
 
 ---
