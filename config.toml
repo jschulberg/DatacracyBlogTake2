@@ -46,7 +46,7 @@ disqusShortname = "datacracy"
   filename = "sitemap.xml"
   
 [params]
-  favicon = "images/Datacracy_Logo.png"
+  favicon = "images/Datacracy_Logo.ico"
   site_logo = "images/Datacracy_Logo.png"
   description = "Welcome to Datacracy: A site showing the power of data as a defining force in the future of American politics and policy"
   facebook = "https://www.facebook.com/jschulberg/"
