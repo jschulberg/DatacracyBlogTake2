@@ -1,0 +1,50 @@
+---
+title: 'The Case for D.C. Statehood: An Analytics Approach'
+author: Justin S.
+date: '2021-07-16'
+slug: dc-statehood
+categories:
+  - R
+  - public policy
+  - history
+tags:
+  - EDA
+comments: yes
+image: ''
+menu: ''
+share: yes
+---
+
+51. A prime number. Odd. 
+
+Here are the arguments against D.C. Statehood:
+  - Too small
+  - Too urban
+  - Lacks manufacturing
+  - No landfill
+  - Political ploy by the Democrats
+  - If it were a state it would have the power to control Congress
+  - Paying taxes
+
+```{r load_libraries}
+library(pacman)
+pacman::p_load(tidyverse, rvest)
+```
+
+## Taxes
+If you ever drive around D.C. and look closely, you'll notice that every license plate is surrounded with the words "NO TAXATION WITHOUT REPRESENTATION". The notion that this country was founded on `r 250-15` years ago
+
+```{r load_tax_info}
+# Let's use rvest to load tax data from the table on https://www.taxadmin.org/2019-state-tax-revenue
+
+html <- read_html("https://www.taxadmin.org/2019-state-tax-revenue")
+
+html %>% 
+  html_node("table") %>% 
+  html_table()
+```
+libr
+## Is Annexation into MD/VA Possible?
+It is! There are strong arguments, not least of which is that Alexandria, VA used to be part of the Federal District (and thus could not vote in Federal Elections), but was [annexed by VA](http://www.compromise-of-1850.org/banning-slave-trade-in-washington-dc/) in order to preserve its ability to maintain slavery.
+
+## Conclusion
