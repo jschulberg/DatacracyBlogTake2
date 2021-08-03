@@ -1,5 +1,5 @@
 ---
-title: 'The Case for D.C. Statehood: An Analytics Approach'
+title: 'The Case for D.C. Statehood: An Analytic Approach'
 author: Justin S.
 date: '2021-07-16'
 slug: dc-statehood
@@ -36,6 +36,7 @@ knitr::opts_chunk$set(fig.width = 9,
                       echo = F,
                       warning = F,
                       message = F)
+options(scipen = 999)
 ```
 
 ```{r load_libraries}
@@ -46,8 +47,172 @@ pacman::p_load(tidyverse, # Data manipulation
                janitor, # General data cleaning
                stringr, # String manipulation
                "kableExtra", # Used for RMarkdown formatting
+               ggalt, # Used for dumbbell plot
                ggplot2 # Visualization package
                )
+
+```
+
+
+## Population 
+A common argument against D.C. Statehood is its size. Claiming that it's just a medium-sized city opponents of D.C. Statehood often argue that it's really just a subcomponent of what every other state has: one large city; and is thus missing the other components that other states have (i.e. more suburban/rural areas outside of its large cities).
+
+Let's take a look at D.C.'s population compared to other states.
+
+```{r load_population_info}
+# Let's use rvest to load tax data from the table on https://www.taxadmin.org/2019-state-tax-revenue
+
+pop_url <- "https://worldpopulationreview.com/states"
+
+pop_data <- pop_url %>% 
+  read_html() %>%
+  html_table() 
+
+# 3 tables were pulled, so only use the last one
+pop_cleaned <- pop_data[[1]] %>% 
+  janitor::clean_names() %>% 
+  janitor::remove_empty(which = c("rows", "cols")) %>% 
+  # Rename first column (named 'x') to state
+  # rename("state" = "x") %>% 
+  mutate(x2021_population = as.integer(str_remove_all(x2021_population, ",")),
+         x2010_census = as.integer(str_remove_all(x2010_census, ","))) %>% 
+  print() 
+```
+```{r plot_pop_info}
+pop_cleaned %>% 
+  # Pull bottom 10
+  top_n(-10, x2021_population) %>% 
+  ggplot(aes(x = reorder(state, x2021_population), 
+             y = x2021_population,
+             fill=factor(if_else(state=="District of Columbia", "Highlighted", "Normal"))
+             )
+         ) +
+    scale_fill_manual(name = "State", values=c("slateblue", "light gray")) +
+    geom_col() +
+    # Add labels
+    geom_label(aes(y = x2021_population,
+                 label = x2021_population),
+             hjust = .75,
+             size = 4) +    
+  # Change the theme to classic
+    theme_classic() +
+    coord_flip() + 
+    # Let's change the names of the axes and title
+    xlab("Population") +
+    ylab("State") +
+    labs(title = "Total Population by State (Bottom 10)",
+         subtitle = paste("D.C. has a population ", 
+                          ((pop_cleaned %>% filter(state == "District of Columbia") %>% select(x2021_population) %>% as.integer() ) / (pop_cleaned %>% filter(rank == n()) %>% select(x2021_population) %>% as.integer() )) %>% round(2), 
+                          "x greater than the bottom state, ",
+                          pop_cleaned %>% filter(rank == n()) %>% select(state) %>% as.character(),
+                          ".",
+                          sep = ""
+                          ),
+         caption = paste("Data is gathered from", pop_url)
+         ) +
+    # hide legends
+  guides(fill = FALSE) + 
+    # format our title and subtitle
+    theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
+          plot.subtitle = element_text(hjust = 0, color = "slateblue2", size = 10),
+          plot.caption = element_text(color = "dark gray", size = 10, face = "italic"))
+
+```
+
+We can see that D.C. ranks towards the bottom of states in terms of population, although not the smallest state. Let's see how this compares to data from the 2010 Census.
+
+```{r load_historical_population}
+# Let's use rvest to load tax data from the table on https://www.taxadmin.org/2019-state-tax-revenue
+
+hist_pop_url <- "https://en.wikipedia.org/wiki/List_of_U.S._states_and_territories_by_historical_population"
+
+hist_pop_data <- hist_pop_url %>% 
+  read_html() %>%
+  html_table() 
+
+# Function to convert strings to integers
+convert_to_int <- function(col) {
+  col <- str_remove_all(col, ",")
+  col <- as.integer(col)
+}
+
+# 3 tables were pulled, so only use the last one
+hist_pop_cleaned <- hist_pop_data[[3]] %>% 
+  dplyr::full_join(hist_pop_data[[4]], by = "Name") %>% 
+  janitor::clean_names() %>% 
+  janitor::remove_empty(which = c("rows", "cols")) %>% 
+  # Remove any states that don't have 2020 data
+  filter(x2020 != "") %>% 
+  # Remove total US population
+  filter(name != "United States") %>% 
+  # Convert all columns (except for state name) to integer
+  mutate(across(x1870:x2020, convert_to_int)) %>%
+  rename("state" = "name")
+```
+```{r pop_line_chart}
+# Let's take a look at the population of each state over time
+hist_pop_cleaned %>%
+  # Pivot the data longer
+  pivot_longer(cols = x1870:x2020, names_to = "year", values_to = "population") %>% 
+  # filter(state == "District of Columbia") %>% 
+  filter(population < 2500000) %>% 
+  # Remove 'x' from the years
+  mutate("year" = as.integer(str_remove(year, "x"))) %>% 
+  # Only pull years from 1900 on
+  filter(year > 1899) %>% 
+  # Create our plot
+  ggplot(aes(x = year,
+             y = population,
+             group = state,
+             color = factor(if_else(state=="District of Columbia", "Highlighted", "Normal")),
+             # Shade out other states so it's easier to see DC
+             size = if_else(state == "District of Columbia", 1.01, 1))) +
+             # alpha = if_else(state == "District of Columbia", 1, .9))) +
+  geom_line() +
+  # hide legends
+  guides(color = FALSE, alpha = FALSE, size = FALSE) + 
+  scale_color_manual(name = "State", values=c("slateblue", "light gray")) +
+  theme_classic() +
+  # Because big states DOMINATE the y-axis, let's perform a log transformation to make
+  # the data easier to interpret
+  scale_y_continuous()
+
+```
+
+```{r compare_pop_info}
+pop_cleaned %>% 
+  mutate(growth_since_2010 = as.double(str_remove_all(growth_since_2010, "%")),
+         state = as.factor(state)) %>% 
+  arrange(growth_since_2010) %>% 
+  ggplot(aes(x=0, 
+             xend=growth_since_2010, 
+             y = state, 
+             group = state,
+             color = factor(if_else(state=="District of Columbia", "Highlighted", "Normal"))
+               )
+           ) +
+      scale_color_manual(name = "State", values=c("slateblue", "light gray")) +
+          geom_dumbbell(size=0.75, 
+                        point.colour.l="slateblue") + 
+      # hide legends
+  guides(color = FALSE) + 
+          # scale_x_continuous(label=growth_since_2010) + 
+          labs(x=NULL, 
+               y=NULL, 
+               title="Dumbbell Chart", 
+               subtitle="Pct Change: 2010 vs. 2021", 
+               caption="Source: https://github.com/hrbrmstr/ggalt") +
+          theme_classic() 
+          # theme(plot.title = element_text(hjust=0.5, face="bold"),
+          #       plot.background=element_rect(fill="#f7f7f7"),
+          #       panel.background=element_rect(fill="#f7f7f7"),
+          #       panel.grid.minor=element_blank(),
+          #       panel.grid.major.y=element_blank(),
+          #       panel.grid.major.x=element_line(),
+          #       axis.ticks=element_blank(),
+          #       legend.position="top",
+          #       panel.border=element_blank())
+
 ```
 
 ## Taxes
@@ -58,9 +223,9 @@ Below, I scrape tax information from [taxadmin.org](https://www.taxadmin.org/201
 ```{r load_tax_info}
 # Let's use rvest to load tax data from the table on https://www.taxadmin.org/2019-state-tax-revenue
 
-url <- "https://www.taxadmin.org/2019-state-tax-revenue"
+tax_url <- "https://www.taxadmin.org/2019-state-tax-revenue"
 
-tax_data <- url %>% 
+tax_data <- tax_url %>% 
   read_html() %>%
   html_table() 
 
@@ -88,12 +253,14 @@ tax_cleaned %>%
   scroll_box(height = "400px", width = "100%")
 ```
 
-Now we'll plot the tax paid per state to see how DC compares.
+Now we'll plot the state tax *(note: not Federal tax)* paid per state to see how DC compares.
 
 ```{r plot_tax_info}
 tax_cleaned %>% 
   # Pull top 10
   top_n(10, per_capita) %>% 
+  # Bring in our bottom 10 for reference
+  bind_rows(tax_cleaned %>% top_n(-5, per_capita)) %>% 
   ggplot(aes(x = reorder(state, per_capita), 
              y = per_capita,
              fill=factor(if_else(state=="Dist. of Columbia", "Highlighted", "Normal"))
@@ -112,8 +279,14 @@ tax_cleaned %>%
     # Let's change the names of the axes and title
     xlab("State") +
     ylab("Taxes paid per capita ($)") +
-    labs(title = "Total Taxes Paid by State",
-         subtitle = "Taxes are reported on a per-capita basis",
+    labs(title = "Total Taxes Paid by State (Top 10 and Bottom 5)",
+         subtitle = paste("D.C. pays ", 
+                          ((tax_cleaned %>% filter(state == "Dist. of Columbia") %>% select(per_capita) %>% as.integer() ) / (tax_cleaned %>% filter(rank == 2) %>% select(per_capita) %>% as.integer() )) %>% round(1), 
+                          "x as much state taxes per-capita as the 2nd most state, ",
+                          tax_cleaned %>% filter(rank == 2) %>% select(state) %>% as.character(),
+                          ".",
+                          sep = ""
+                          ),
          caption = "Data is gathered from https://www.taxadmin.org/2019-state-tax-revenue") +
     # format our title and subtitle
     theme(plot.title = element_text(hjust = 0, color = "slateblue4"),
@@ -121,6 +294,9 @@ tax_cleaned %>%
           plot.caption = element_text(color = "dark gray", size = 10, face = "italic"))
 
 ```
+
+Astounding. Compared to every other state, D.C. contributes significantly more to State taxes on a per-capita basis. Per-capita is often the best measure to look at as it shows the average revenue collected per person. Compared to the second-most state, D.C. contributes **`r ((tax_cleaned %>% filter(state == "Dist. of Columbia") %>% select(per_capita) %>% as.integer() ) / (tax_cleaned %>% filter(rank == 2) %>% select(per_capita) %>% as.integer() )) %>% round(1)`x** as much Federal taxes.
+
 
 ## Is Annexation into MD/VA Possible?
 It is! There are strong arguments, not least of which is that Alexandria, VA used to be part of the Federal District (and thus could not vote in Federal Elections), but was [annexed by VA](http://www.compromise-of-1850.org/banning-slave-trade-in-washington-dc/) in order to preserve its ability to maintain slavery.

@@ -1,5 +1,5 @@
 ---
-title: 'The Case for D.C. Statehood: An Analytics Approach'
+title: 'The Case for D.C. Statehood: An Analytic Approach'
 author: Justin S.
 date: '2021-07-16'
 slug: dc-statehood
@@ -32,6 +32,30 @@ draft: false
 - Political ploy by the Democrats
 - If it were a state it would have the power to control Congress
 - Paying taxes</p>
+<div id="population" class="section level2">
+<h2>Population</h2>
+<p>A common argument against D.C. Statehood is its size. Claiming that it’s just a medium-sized city opponents of D.C. Statehood often argue that it’s really just a subcomponent of what every other state has: one large city; and is thus missing the other components that other states have (i.e. more suburban/rural areas outside of its large cities).</p>
+<p>Let’s take a look at D.C.’s population compared to other states.</p>
+<pre><code>## # A tibble: 52 x 9
+##     rank state x2021_population growth_2021 x2018_population x2010_census
+##    &lt;int&gt; &lt;chr&gt;            &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;                   &lt;int&gt;
+##  1     1 Cali…         39613493 0.38%       39,461,588           37319502
+##  2     2 Texas         29730311 3.85%       28,628,666           25241971
+##  3     3 Flor…         21944577 3.30%       21,244,317           18845537
+##  4     4 New …         19299981 -1.18%      19,530,351           19399878
+##  5     5 Penn…         12804123 0.03%       12,800,922           12711160
+##  6     6 Illi…         12569321 -1.21%      12,723,071           12840503
+##  7     7 Ohio          11714618 0.33%       11,676,341           11539336
+##  8     8 Geor…         10830007 3.03%       10,511,131            9711881
+##  9     9 Nort…         10701022 3.08%       10,381,615            9574323
+## 10    10 Mich…          9992427 0.08%       9,984,072             9877510
+## # … with 42 more rows, and 3 more variables: growth_since_2010 &lt;chr&gt;,
+## #   percent_of_us &lt;chr&gt;, density_mi2 &lt;chr&gt;</code></pre>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/plot_pop_info-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>We can see that D.C. ranks towards the bottom of states in terms of population, although not the smallest state. Let’s see how this compares to data from the 2010 Census.</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/pop_line_chart-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/compare_pop_info-1.png" width="864" style="display: block; margin: auto;" /></p>
+</div>
 <div id="taxes" class="section level2">
 <h2>Taxes</h2>
 <p>If you ever drive around D.C. and look closely, you’ll notice that every license plate is surrounded with the words “NO TAXATION WITHOUT REPRESENTATION”. The notion that this country was founded on 245 years ago is one that doesn’t hold true in its own capital.</p>
@@ -1084,8 +1108,9 @@ Wyoming
 </tbody>
 </table>
 </div>
-<p>Now we’ll plot the tax paid per state to see how DC compares.</p>
+<p>Now we’ll plot the state tax <em>(note: not Federal tax)</em> paid per state to see how DC compares.</p>
 <p><img src="{{< blogdown/postref >}}index.en_files/figure-html/plot_tax_info-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Astounding. Compared to every other state, D.C. contributes significantly more to State taxes on a per-capita basis. Per-capita is often the best measure to look at as it shows the average revenue collected per person. Compared to the second-most state, D.C. contributes <strong>1.9x</strong> as much Federal taxes.</p>
 </div>
 <div id="is-annexation-into-mdva-possible" class="section level2">
 <h2>Is Annexation into MD/VA Possible?</h2>
