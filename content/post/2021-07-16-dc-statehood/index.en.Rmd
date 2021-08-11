@@ -119,7 +119,7 @@ pop_cleaned %>%
 
 ```
 
-We can see that D.C. ranks towards the bottom of states in terms of population, although not the smallest state. Let's see how this compares to data from the 2010 Census.
+We can see that D.C. ranks towards the bottom of states in terms of population, although not the smallest state. This hasn't always been the case. In fact, there was an almost 50-year stretch in the mid 20th Century where D.C. wasn't even in the bottom 10 states by population.
 
 ```{r load_historical_population}
 # Let's use rvest to load tax data from the table on https://www.taxadmin.org/2019-state-tax-revenue
@@ -149,6 +149,7 @@ hist_pop_cleaned <- hist_pop_data[[3]] %>%
   mutate(across(x1870:x2020, convert_to_int)) %>%
   rename("state" = "name")
 ```
+
 ```{r pop_line_chart}
 # Let's take a look at the population of each state over time
 hist_pop_cleaned %>%
@@ -295,8 +296,12 @@ tax_cleaned %>%
 
 ```
 
-Astounding. Compared to every other state, D.C. contributes significantly more to State taxes on a per-capita basis. Per-capita is often the best measure to look at as it shows the average revenue collected per person. Compared to the second-most state, D.C. contributes **`r ((tax_cleaned %>% filter(state == "Dist. of Columbia") %>% select(per_capita) %>% as.integer() ) / (tax_cleaned %>% filter(rank == 2) %>% select(per_capita) %>% as.integer() )) %>% round(1)`x** as much Federal taxes.
+Astounding. Compared to every other state, D.C. contributes significantly more to State taxes on a per-capita basis. Per-capita is often the best measure to look at as it shows the average revenue collected per person. Compared to the second-most state, D.C. contributes **`r ((tax_cleaned %>% filter(state == "Dist. of Columbia") %>% select(per_capita) %>% as.integer() ) / (tax_cleaned %>% filter(rank == 2) %>% select(per_capita) %>% as.integer() )) %>% round(1)`x** as much Federal taxes. 
 
+Why does something like this matter? Well, when Congress was debating the *Alaska Statehood Act* in 1949, Republicans (who are the main opponents of D.C. Statehood) claimed that Alaska's population was too sparse to generate substantial taxes and would ultimately become a welfare state. It's worth noting that Southern Democrats were also opposed to Alaska Statehood for fear that future Alaskan Congresspeople would be pro-Civil Rights. The ultimate passage of the Act was guaranteed by packaging it with Hawaii (a then-Republican territory) Statehood.
+
+## The Power Grab  
+There are quite a few arguments about D.C. Statehood being a political ploy by Democrats to gain more control of the U.S. Senate. Those arguments are fair and are likely in the minds of at least some Democratic members of Congress. However, I pose the question: when would the inclusion of 2 likely-Democratic Senators be the least politically motivated? Would it be when Democrats are already in control of all three branches of Congress or when Republicans control the U.S. Senate?
 
 ## Is Annexation into MD/VA Possible?
 It is! There are strong arguments, not least of which is that Alexandria, VA used to be part of the Federal District (and thus could not vote in Federal Elections), but was [annexed by VA](http://www.compromise-of-1850.org/banning-slave-trade-in-washington-dc/) in order to preserve its ability to maintain slavery.
