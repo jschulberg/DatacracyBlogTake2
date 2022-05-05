@@ -12,6 +12,7 @@ Paginate = 5 # this is set low for demonstrating with dummy content. Set to a hi
 googleAnalytics = "UA-170127672-1"
 enableRobotsTXT = true
 disqusShortname = "datacracy"
+math = true
 
 
 [[menu.main]]

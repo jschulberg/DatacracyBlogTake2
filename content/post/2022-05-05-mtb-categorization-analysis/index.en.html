@@ -1,0 +1,2630 @@
+---
+title: Mountain Bike Categorization Analysis
+author: Justin Schulberg & Mike Czerwinski
+date: '2022-05-05'
+slug: mtb-categorization-analysis
+categories:
+  - Data
+  - Clustering
+  - Unsupervised Analysis
+  - Bikes
+tags: []
+featured_image: 'images/bike_cover.png'
+description: 'The goal of this analysis is to determine how many, if any, discrete categories should exist for mountain bikes.'
+output:
+  blogdown::html_page:
+    toc: true
+---
+
+<script src="{{< blogdown/postref >}}index.en_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index.en_files/lightable/lightable.css" rel="stylesheet" />
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#the-data">The Data</a></li>
+</ul></li>
+<li><a href="#eda">EDA</a>
+<ul>
+<li><a href="#label-mountainbike-category">Label (Mountainbike Category)</a></li>
+<li><a href="#categorical-variables">Categorical Variables</a></li>
+<li><a href="#continuous-variables">Continuous Variables</a>
+<ul>
+<li><a href="#normally-distributed-variables">~Normally Distributed Variables:</a></li>
+<li><a href="#skewed-variables">Skewed Variables:</a></li>
+<li><a href="#multi-modal-distributed-variables">Multi-Modal Distributed Variables:</a></li>
+</ul></li>
+<li><a href="#average-bikes-by-flip-chip-setting">Average bikes by flip-chip setting</a></li>
+</ul></li>
+<li><a href="#methodology">Methodology</a></li>
+<li><a href="#variation-amongst-featureset">Variation Amongst Featureset</a>
+<ul>
+<li><a href="#correlation">1. Correlation</a></li>
+<li><a href="#principal-component-analysis-pca">2. Principal Component Analysis (PCA)</a></li>
+</ul></li>
+<li><a href="#clustering">Clustering</a>
+<ul>
+<li><a href="#k-means">K-Means</a></li>
+<li><a href="#gaussian-mixture-model-gmm">Gaussian Mixture Model (GMM)</a></li>
+<li><a href="#multi-class-svm">Multi-class SVM</a></li>
+</ul></li>
+<li><a href="#conclusions">Conclusions</a>
+<ul>
+<li><a href="#findings">Findings</a></li>
+<li><a href="#opportunities-for-improved-analysis">Opportunities for Improved Analysis</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>For this post, I worked with <a href="https://github.com/mczerwin">Mike Czerwinski</a> to determine whether the specifications of mountain bikes (MTB) are enough to differentiate between the different types of mountain bike categories.</p>
+<p>Currently, full suspension mountain bikes come in 5 categories:</p>
+<ul>
+<li><strong>Cross Country (XC)</strong> | Tend to be the most lightweight, nimble, and designed to put the rider in an efficient pedaling position</li>
+<li><strong>Enduro (EN)</strong> | Heavier frames, more travel and more downhill oriented geometry</li>
+<li><strong>Trail (TR)</strong> | The most common category of bikes, considered to be the halfway point between XC and Enduro</li>
+<li><strong>All Mountain (AM)</strong> | A more niche category which some manufacturers claim to be more downhill focused than trail bikes, but not designed for downhill races like Enduro bikes are</li>
+<li><strong>Downcountry (DC)</strong> | A relatively new category between XC and Trail. Similar to the All Mountain category, these bikes aren’t race specific like XC bikes tend to be, but are lighter and faster than trail bikes.</li>
+</ul>
+<p>With all of the factors to consider when designing a bike, there are no clear boundaries between these categories. For example, one brand’s Downcountry bike could be what another brand considers a Trail bike. The popular mountain biking website PinkBike has done in-depth analyses of many bikes across all categories, and covered the topics of which category bikes should be classified as and of how many categories is sufficient, as seen in the video <a href="https://www.youtube.com/watch?v=JYQJbymyG6k&amp;ab_channel=Pinkbike">here</a>.</p>
+<p><strong>The goal of this analysis is to determine how many, if any, discrete categories should exist for mountain bikes.</strong> Since most specifications and geometric measurements have one direction when moving across the spectrum of bikes, it’s reasonable to believe that these measurements could be reduced to much fewer dimensions, and perhaps even one continuous principle component rather than discrete categories. We can also cluster the bikes together based on some of these specifications and geometric measurements.</p>
+<p>As an example, here is a diagram of some of the different types of geometric specifications on mountain bikes:</p>
+<p><img src="images/Bike_Diagram.png" /></p>
+</div>
+<div id="the-data" class="section level2">
+<h2>The Data</h2>
+<p>The data was retrieved manually from each of the mountain bike company’s websites. All data and associated code for this analysis is available at the team’s corresponding <a href="https://github.com/mczerwin/MTB-Categorization-Analysis">GitHub repository</a>. Let’s take a look at the data.</p>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Model
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Brand
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Build Type
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Price
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Url
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Image
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Setting
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Size Used
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Label
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Rear Travel
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Fork Travel
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+F Piston
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+F Rotor Dim
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+R Piston
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+R Rotor Dim
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Head Angle
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Seat Angle
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Crank Length
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Stem Length
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Handlebar Width
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Reach
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Stack
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Wheelbase
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Chainstay Length
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Bb Height
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Standover Height
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Bike Category
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+element
+</td>
+<td style="text-align:left;">
+rocky mountain
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:left;">
+<a href="https://bikes.com/collections/element" class="uri">https://bikes.com/collections/element</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+pos3
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+xc
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+65.50
+</td>
+<td style="text-align:right;">
+76.5
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+480
+</td>
+<td style="text-align:right;">
+627
+</td>
+<td style="text-align:right;">
+1231
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+809
+</td>
+<td style="text-align:left;">
+Cross Country
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+instinct
+</td>
+<td style="text-align:left;">
+rocky mountain
+</td>
+<td style="text-align:left;">
+Carbon 90
+</td>
+<td style="text-align:right;">
+9799
+</td>
+<td style="text-align:left;">
+<a href="https://bikes.com/collections/instinct" class="uri">https://bikes.com/collections/instinct</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+pos3
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+tr
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+65.50
+</td>
+<td style="text-align:right;">
+76.5
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+435
+</td>
+<td style="text-align:right;">
+629
+</td>
+<td style="text-align:right;">
+1277
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:left;">
+Trail
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Altitude
+</td>
+<td style="text-align:left;">
+Rocky Mountain
+</td>
+<td style="text-align:left;">
+Carbon 90 Rally Edition
+</td>
+<td style="text-align:right;">
+10229
+</td>
+<td style="text-align:left;">
+<a href="https://bikes.com/collections/altitude" class="uri">https://bikes.com/collections/altitude</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+pos3
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+en
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+64.80
+</td>
+<td style="text-align:right;">
+75.8
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+478
+</td>
+<td style="text-align:right;">
+635
+</td>
+<td style="text-align:right;">
+1249
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+815
+</td>
+<td style="text-align:left;">
+Enduro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+jeffsy
+</td>
+<td style="text-align:left;">
+yt
+</td>
+<td style="text-align:left;">
+Uncaged 6
+</td>
+<td style="text-align:right;">
+9499
+</td>
+<td style="text-align:left;">
+<a href="https://us.yt-industries.com/products/bikes/465/jeffsy-uncaged-6/preview" class="uri">https://us.yt-industries.com/products/bikes/465/jeffsy-uncaged-6/preview</a>
+</td>
+<td style="text-align:left;">
+<a href="https://cdn-prod.yt-industries.com/media/image/03/eb/be/Jeffsy_29_CF_SuperPro_Seite.png" class="uri">https://cdn-prod.yt-industries.com/media/image/03/eb/be/Jeffsy_29_CF_SuperPro_Seite.png</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+am
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+66.00
+</td>
+<td style="text-align:right;">
+77.0
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+470
+</td>
+<td style="text-align:right;">
+627
+</td>
+<td style="text-align:right;">
+1218
+</td>
+<td style="text-align:right;">
+435
+</td>
+<td style="text-align:right;">
+344
+</td>
+<td style="text-align:right;">
+701
+</td>
+<td style="text-align:left;">
+All Mountain
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+izzo
+</td>
+<td style="text-align:left;">
+yt
+</td>
+<td style="text-align:left;">
+Uncaged 7
+</td>
+<td style="text-align:right;">
+7499
+</td>
+<td style="text-align:left;">
+<a href="https://us.yt-industries.com/products/bikes/466/izzo-uncaged-7/preview" class="uri">https://us.yt-industries.com/products/bikes/466/izzo-uncaged-7/preview</a>
+</td>
+<td style="text-align:left;">
+<a href="https://cdn-prod.yt-industries.com/media/image/28/aa/9a/07_Izzo_29_CF_SuperLIGHT_SideVcEjYkvRoG6p2.png" class="uri">https://cdn-prod.yt-industries.com/media/image/28/aa/9a/07_Izzo_29_CF_SuperLIGHT_SideVcEjYkvRoG6p2.png</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+tr
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+66.50
+</td>
+<td style="text-align:right;">
+77.5
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+740
+</td>
+<td style="text-align:right;">
+475
+</td>
+<td style="text-align:right;">
+619
+</td>
+<td style="text-align:right;">
+1206
+</td>
+<td style="text-align:right;">
+432
+</td>
+<td style="text-align:right;">
+332
+</td>
+<td style="text-align:right;">
+714
+</td>
+<td style="text-align:left;">
+Trail
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Capra
+</td>
+<td style="text-align:left;">
+Yt
+</td>
+<td style="text-align:left;">
+Uncaged 9
+</td>
+<td style="text-align:right;">
+3999
+</td>
+<td style="text-align:left;">
+<a href="https://us.yt-industries.com/products/bikes/428/capra-uncaged-9/preview" class="uri">https://us.yt-industries.com/products/bikes/428/capra-uncaged-9/preview</a>
+</td>
+<td style="text-align:left;">
+<a href="https://cdn-prod.yt-industries.com/media/image/8b/17/03/Capra_MX_SHRED2_Side.png" class="uri">https://cdn-prod.yt-industries.com/media/image/8b/17/03/Capra_MX_SHRED2_Side.png</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+en
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+64.20
+</td>
+<td style="text-align:right;">
+77.6
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+467
+</td>
+<td style="text-align:right;">
+634
+</td>
+<td style="text-align:right;">
+1248
+</td>
+<td style="text-align:right;">
+438
+</td>
+<td style="text-align:right;">
+349
+</td>
+<td style="text-align:right;">
+735
+</td>
+<td style="text-align:left;">
+Enduro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+revolver
+</td>
+<td style="text-align:left;">
+Norco
+</td>
+<td style="text-align:left;">
+Revolver FS AXS 120
+</td>
+<td style="text-align:right;">
+10999
+</td>
+<td style="text-align:left;">
+<a href="https://www.norco.com/bikes/2021/mountain/xc-race/revolver-fs-120/revolver-fs-axs-120/" class="uri">https://www.norco.com/bikes/2021/mountain/xc-race/revolver-fs-120/revolver-fs-axs-120/</a>
+</td>
+<td style="text-align:left;">
+<a href="https://www.norco.com/cmsb/uploads/bikes/bikes/my21_revolver_fs_c_axs_29_120_black_silver-full.webp" class="uri">https://www.norco.com/cmsb/uploads/bikes/bikes/my21_revolver_fs_c_axs_29_120_black_silver-full.webp</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+xc
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+67.40
+</td>
+<td style="text-align:right;">
+74.9
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+478
+</td>
+<td style="text-align:right;">
+597
+</td>
+<td style="text-align:right;">
+1188
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+341
+</td>
+<td style="text-align:right;">
+717
+</td>
+<td style="text-align:left;">
+Cross Country
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+optic
+</td>
+<td style="text-align:left;">
+Norco
+</td>
+<td style="text-align:left;">
+Optic C AXS
+</td>
+<td style="text-align:right;">
+10499
+</td>
+<td style="text-align:left;">
+<a href="https://www.norco.com/bikes/2021/mountain/trail/optic/optic-c-axs/" class="uri">https://www.norco.com/bikes/2021/mountain/trail/optic/optic-c-axs/</a>
+</td>
+<td style="text-align:left;">
+<a href="https://www.norco.com/cmsb/uploads/bikes/bikes/my21_optic_c_axs_29_black_chrome-full.webp" class="uri">https://www.norco.com/cmsb/uploads/bikes/bikes/my21_optic_c_axs_29_black_chrome-full.webp</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+tr
+</td>
+<td style="text-align:right;">
+125
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+65.00
+</td>
+<td style="text-align:right;">
+76.0
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+480
+</td>
+<td style="text-align:right;">
+629
+</td>
+<td style="text-align:right;">
+1235
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+337
+</td>
+<td style="text-align:right;">
+698
+</td>
+<td style="text-align:left;">
+Trail
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sight
+</td>
+<td style="text-align:left;">
+Norco
+</td>
+<td style="text-align:left;">
+Sight C SE
+</td>
+<td style="text-align:right;">
+9999
+</td>
+<td style="text-align:left;">
+<a href="https://www.norco.com/bikes/2022/mountain/all-mountain/sight/Sight-c-se/" class="uri">https://www.norco.com/bikes/2022/mountain/all-mountain/sight/Sight-c-se/</a>
+</td>
+<td style="text-align:left;">
+<a href="https://www.norco.com/cmsb/uploads/bikes/bikes/2022_sight_c__se_grey_green_main-full.webp" class="uri">https://www.norco.com/cmsb/uploads/bikes/bikes/2022_sight_c__se_grey_green_main-full.webp</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+am
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+63.50
+</td>
+<td style="text-align:right;">
+77.7
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+485
+</td>
+<td style="text-align:right;">
+603
+</td>
+<td style="text-align:right;">
+1259
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+342
+</td>
+<td style="text-align:right;">
+683
+</td>
+<td style="text-align:left;">
+All Mountain
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+range
+</td>
+<td style="text-align:left;">
+Norco
+</td>
+<td style="text-align:left;">
+Range C1
+</td>
+<td style="text-align:right;">
+9499
+</td>
+<td style="text-align:left;">
+<a href="https://www.norco.com/bikes/2022/mountain/enduro/range/range-c1/" class="uri">https://www.norco.com/bikes/2022/mountain/enduro/range/range-c1/</a>
+</td>
+<td style="text-align:left;">
+<a href="https://www.norco.com/cmsb/uploads/bikes/bikes/range_c1_black_silver-boty-main-full.webp" class="uri">https://www.norco.com/cmsb/uploads/bikes/bikes/range_c1_black_silver-boty-main-full.webp</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+en
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+63.25
+</td>
+<td style="text-align:right;">
+77.0
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+480
+</td>
+<td style="text-align:right;">
+641
+</td>
+<td style="text-align:right;">
+1285
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+355
+</td>
+<td style="text-align:right;">
+665
+</td>
+<td style="text-align:left;">
+Enduro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+spur
+</td>
+<td style="text-align:left;">
+transition
+</td>
+<td style="text-align:left;">
+XG1
+</td>
+<td style="text-align:right;">
+6499
+</td>
+<td style="text-align:left;">
+<a href="https://www.transitionbikes.com/Bikes_Spur.cfm" class="uri">https://www.transitionbikes.com/Bikes_Spur.cfm</a>
+</td>
+<td style="text-align:left;">
+<a href="https://www.transitionbikes.com/WebStoreImages/2020_AdminProductImage_Spur_XO1_BlackPowder.jpg" class="uri">https://www.transitionbikes.com/WebStoreImages/2020_AdminProductImage_Spur_XO1_BlackPowder.jpg</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+dc
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+66.00
+</td>
+<td style="text-align:right;">
+76.2
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+455
+</td>
+<td style="text-align:right;">
+610
+</td>
+<td style="text-align:right;">
+1190
+</td>
+<td style="text-align:right;">
+435
+</td>
+<td style="text-align:right;">
+335
+</td>
+<td style="text-align:right;">
+670
+</td>
+<td style="text-align:left;">
+Downcountry
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sentinel
+</td>
+<td style="text-align:left;">
+transition
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+7199
+</td>
+<td style="text-align:left;">
+<a href="https://www.transitionbikes.com/Bikes_Sentinel.cfm" class="uri">https://www.transitionbikes.com/Bikes_Sentinel.cfm</a>
+</td>
+<td style="text-align:left;">
+<a href="https://www.transitionbikes.com/WebStoreImages/2021_AdminProductImage_SentinelCarbon_XO1_LoamGold.jpg" class="uri">https://www.transitionbikes.com/WebStoreImages/2021_AdminProductImage_SentinelCarbon_XO1_LoamGold.jpg</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+tr
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+63.60
+</td>
+<td style="text-align:right;">
+77.5
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+450
+</td>
+<td style="text-align:right;">
+622
+</td>
+<td style="text-align:right;">
+1233
+</td>
+<td style="text-align:right;">
+440
+</td>
+<td style="text-align:right;">
+346
+</td>
+<td style="text-align:right;">
+688
+</td>
+<td style="text-align:left;">
+Trail
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Spire
+</td>
+<td style="text-align:left;">
+Transition
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:left;">
+<a href="https://www.transitionbikes.com/Bikes_Spire.cfm" class="uri">https://www.transitionbikes.com/Bikes_Spire.cfm</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+high
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+en
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+203
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+203
+</td>
+<td style="text-align:right;">
+63.00
+</td>
+<td style="text-align:right;">
+78.8
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+460
+</td>
+<td style="text-align:right;">
+619
+</td>
+<td style="text-align:right;">
+1257
+</td>
+<td style="text-align:right;">
+446
+</td>
+<td style="text-align:right;">
+350
+</td>
+<td style="text-align:right;">
+700
+</td>
+<td style="text-align:left;">
+Enduro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Spire
+</td>
+<td style="text-align:left;">
+Transition
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:left;">
+<a href="https://www.transitionbikes.com/Bikes_Spire.cfm" class="uri">https://www.transitionbikes.com/Bikes_Spire.cfm</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+low
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+en
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+203
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+203
+</td>
+<td style="text-align:right;">
+62.50
+</td>
+<td style="text-align:right;">
+78.3
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+455
+</td>
+<td style="text-align:right;">
+624
+</td>
+<td style="text-align:right;">
+1259
+</td>
+<td style="text-align:right;">
+448
+</td>
+<td style="text-align:right;">
+343
+</td>
+<td style="text-align:right;">
+695
+</td>
+<td style="text-align:left;">
+Enduro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Patrol
+</td>
+<td style="text-align:left;">
+Transition
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:left;">
+<a href="https://www.transitionbikes.com/Bikes_Patrol.cfm" class="uri">https://www.transitionbikes.com/Bikes_Patrol.cfm</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+high
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+am
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+203
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+203
+</td>
+<td style="text-align:right;">
+63.50
+</td>
+<td style="text-align:right;">
+78.8
+</td>
+<td style="text-align:right;">
+165
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+455
+</td>
+<td style="text-align:right;">
+623
+</td>
+<td style="text-align:right;">
+1231
+</td>
+<td style="text-align:right;">
+434
+</td>
+<td style="text-align:right;">
+340
+</td>
+<td style="text-align:right;">
+690
+</td>
+<td style="text-align:left;">
+All Mountain
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Patrol
+</td>
+<td style="text-align:left;">
+Transition
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:left;">
+<a href="https://www.transitionbikes.com/Bikes_Patrol.cfm" class="uri">https://www.transitionbikes.com/Bikes_Patrol.cfm</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+low
+</td>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:left;">
+am
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+203
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+203
+</td>
+<td style="text-align:right;">
+63.00
+</td>
+<td style="text-align:right;">
+78.3
+</td>
+<td style="text-align:right;">
+165
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+450
+</td>
+<td style="text-align:right;">
+628
+</td>
+<td style="text-align:right;">
+1233
+</td>
+<td style="text-align:right;">
+436
+</td>
+<td style="text-align:right;">
+333
+</td>
+<td style="text-align:right;">
+700
+</td>
+<td style="text-align:left;">
+All Mountain
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ranger
+</td>
+<td style="text-align:left;">
+revel
+</td>
+<td style="text-align:left;">
+XX1 AXS EAGLE KIT
+</td>
+<td style="text-align:right;">
+12099
+</td>
+<td style="text-align:left;">
+<a href="https://www.revelbikes.com/our-bikes/ranger/" class="uri">https://www.revelbikes.com/our-bikes/ranger/</a>
+</td>
+<td style="text-align:left;">
+<a href="https://www.revelbikes.com/wp-content/uploads/2020/06/Ranger-_Johnny_Green_Jeans_Complete_3-4_Drive_Side_WEB.jpg" class="uri">https://www.revelbikes.com/wp-content/uploads/2020/06/Ranger-_Johnny_Green_Jeans_Complete_3-4_Drive_Side_WEB.jpg</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+dc
+</td>
+<td style="text-align:right;">
+115
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+67.50
+</td>
+<td style="text-align:right;">
+75.3
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+473
+</td>
+<td style="text-align:right;">
+619
+</td>
+<td style="text-align:right;">
+1194
+</td>
+<td style="text-align:right;">
+436
+</td>
+<td style="text-align:right;">
+338
+</td>
+<td style="text-align:right;">
+699
+</td>
+<td style="text-align:left;">
+Downcountry
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+rascal
+</td>
+<td style="text-align:left;">
+Revel
+</td>
+<td style="text-align:left;">
+XX1 EAGLE AXS KIT
+</td>
+<td style="text-align:right;">
+10999
+</td>
+<td style="text-align:left;">
+<a href="https://www.revelbikes.com/our-bikes/rascal/" class="uri">https://www.revelbikes.com/our-bikes/rascal/</a>
+</td>
+<td style="text-align:left;">
+<a href="https://www.revelbikes.com/wp-content/uploads/2020/10/Rascal-Frame-Cosmic-Purple-Profile-WEB.jpg" class="uri">https://www.revelbikes.com/wp-content/uploads/2020/10/Rascal-Frame-Cosmic-Purple-Profile-WEB.jpg</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+tr
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+66.00
+</td>
+<td style="text-align:right;">
+75.0
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+464
+</td>
+<td style="text-align:right;">
+618
+</td>
+<td style="text-align:right;">
+1220
+</td>
+<td style="text-align:right;">
+433
+</td>
+<td style="text-align:right;">
+335
+</td>
+<td style="text-align:right;">
+716
+</td>
+<td style="text-align:left;">
+Trail
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+rail
+</td>
+<td style="text-align:left;">
+Revel
+</td>
+<td style="text-align:left;">
+XX1 EAGLE AXS KIT
+</td>
+<td style="text-align:right;">
+10999
+</td>
+<td style="text-align:left;">
+<a href="https://www.revelbikes.com/our-bikes/rail29/" class="uri">https://www.revelbikes.com/our-bikes/rail29/</a>
+</td>
+<td style="text-align:left;">
+<a href="https://www.revelbikes.com/wp-content/uploads/2022/03/image001_Cropped_2-980x664.jpg.webp" class="uri">https://www.revelbikes.com/wp-content/uploads/2022/03/image001_Cropped_2-980x664.jpg.webp</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+en
+</td>
+<td style="text-align:right;">
+165
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+65.00
+</td>
+<td style="text-align:right;">
+76.0
+</td>
+<td style="text-align:right;">
+270
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+469
+</td>
+<td style="text-align:right;">
+637
+</td>
+<td style="text-align:right;">
+1228
+</td>
+<td style="text-align:right;">
+436
+</td>
+<td style="text-align:right;">
+348
+</td>
+<td style="text-align:right;">
+728
+</td>
+<td style="text-align:left;">
+Enduro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Exie
+</td>
+<td style="text-align:left;">
+Ibis
+</td>
+<td style="text-align:left;">
+XX1
+</td>
+<td style="text-align:right;">
+12799
+</td>
+<td style="text-align:left;">
+<a href="https://www.ibiscycles.com/bikes/exie" class="uri">https://www.ibiscycles.com/bikes/exie</a>
+</td>
+<td style="text-align:left;">
+<a href="https://assets-ibiscycles-com.s3.amazonaws.com/images/Bikes/Exie/Builder/exie-build-xx1-1200.png" class="uri">https://assets-ibiscycles-com.s3.amazonaws.com/images/Bikes/Exie/Builder/exie-build-xx1-1200.png</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+xc
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+67.20
+</td>
+<td style="text-align:right;">
+74.8
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+478
+</td>
+<td style="text-align:right;">
+606
+</td>
+<td style="text-align:right;">
+1202
+</td>
+<td style="text-align:right;">
+435
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+748
+</td>
+<td style="text-align:left;">
+Cross Country
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ripmo
+</td>
+<td style="text-align:left;">
+Ibis
+</td>
+<td style="text-align:left;">
+XX1
+</td>
+<td style="text-align:right;">
+11699
+</td>
+<td style="text-align:left;">
+<a href="https://www.ibiscycles.com/bikes/ripmo" class="uri">https://www.ibiscycles.com/bikes/ripmo</a>
+</td>
+<td style="text-align:left;">
+<a href="https://assets-ibiscycles-com.s3.amazonaws.com/images/Bikes/Ripmo-2/Builder/ripmo2-buildKit-xx1-axs-blue-july20.png" class="uri">https://assets-ibiscycles-com.s3.amazonaws.com/images/Bikes/Ripmo-2/Builder/ripmo2-buildKit-xx1-axs-blue-july20.png</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+tr
+</td>
+<td style="text-align:right;">
+147
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+64.90
+</td>
+<td style="text-align:right;">
+76.0
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+475
+</td>
+<td style="text-align:right;">
+628
+</td>
+<td style="text-align:right;">
+1238
+</td>
+<td style="text-align:right;">
+435
+</td>
+<td style="text-align:right;">
+341
+</td>
+<td style="text-align:right;">
+740
+</td>
+<td style="text-align:left;">
+Trail
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ripley
+</td>
+<td style="text-align:left;">
+Ibis
+</td>
+<td style="text-align:left;">
+XX1
+</td>
+<td style="text-align:right;">
+11499
+</td>
+<td style="text-align:left;">
+<a href="https://www.ibiscycles.com/bikes/ripley" class="uri">https://www.ibiscycles.com/bikes/ripley</a>
+</td>
+<td style="text-align:left;">
+<a href="https://assets-ibiscycles-com.s3.amazonaws.com/images/Bikes/Ripley-4/Builder/ripley4-buildKit-xx1AXS-MY21-black-120621.png" class="uri">https://assets-ibiscycles-com.s3.amazonaws.com/images/Bikes/Ripley-4/Builder/ripley4-buildKit-xx1AXS-MY21-black-120621.png</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+tr
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+66.55
+</td>
+<td style="text-align:right;">
+76.0
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+475
+</td>
+<td style="text-align:right;">
+622
+</td>
+<td style="text-align:right;">
+1207
+</td>
+<td style="text-align:right;">
+432
+</td>
+<td style="text-align:right;">
+335
+</td>
+<td style="text-align:right;">
+742
+</td>
+<td style="text-align:left;">
+Trail
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mach 4 SL
+</td>
+<td style="text-align:left;">
+pivot
+</td>
+<td style="text-align:left;">
+SL V2
+</td>
+<td style="text-align:right;">
+8399
+</td>
+<td style="text-align:left;">
+<a href="https://global.pivotcycles.com/products/mach-4-sl" class="uri">https://global.pivotcycles.com/products/mach-4-sl</a>
+</td>
+<td style="text-align:left;">
+<a href="https://portal.pivotcycles.com/portalimages/bikes/clv/004SLV229CXXEC-GRYLGDRPNN.png" class="uri">https://portal.pivotcycles.com/portalimages/bikes/clv/004SLV229CXXEC-GRYLGDRPNN.png</a>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+xc
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+68.50
+</td>
+<td style="text-align:right;">
+74.5
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+760
+</td>
+<td style="text-align:right;">
+460
+</td>
+<td style="text-align:right;">
+612
+</td>
+<td style="text-align:right;">
+1160
+</td>
+<td style="text-align:right;">
+431
+</td>
+<td style="text-align:right;">
+325
+</td>
+<td style="text-align:right;">
+687
+</td>
+<td style="text-align:left;">
+Cross Country
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Trail 429
+</td>
+<td style="text-align:left;">
+pivot
+</td>
+<td style="text-align:left;">
+Pro XT/XTR w/ Carbon Wheels
+</td>
+<td style="text-align:right;">
+9699
+</td>
+<td style="text-align:left;">
+<a href="https://global.pivotcycles.com/products/trail-429" class="uri">https://global.pivotcycles.com/products/trail-429</a>
+</td>
+<td style="text-align:left;">
+<a href="https://portal.pivotcycles.com/portalimages/bikes/clv/00TLCV329CXRA--SILMDDRPNN.png" class="uri">https://portal.pivotcycles.com/portalimages/bikes/clv/00TLCV329CXRA--SILMDDRPNN.png</a>
+</td>
+<td style="text-align:left;">
+Low BB
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+tr
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+66.50
+</td>
+<td style="text-align:right;">
+75.5
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+475
+</td>
+<td style="text-align:right;">
+609
+</td>
+<td style="text-align:right;">
+1204
+</td>
+<td style="text-align:right;">
+430
+</td>
+<td style="text-align:right;">
+347
+</td>
+<td style="text-align:right;">
+682
+</td>
+<td style="text-align:left;">
+Trail
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Trail 429
+</td>
+<td style="text-align:left;">
+pivot
+</td>
+<td style="text-align:left;">
+Pro XT/XTR w/ Carbon Wheels
+</td>
+<td style="text-align:right;">
+9699
+</td>
+<td style="text-align:left;">
+<a href="https://global.pivotcycles.com/products/trail-429" class="uri">https://global.pivotcycles.com/products/trail-429</a>
+</td>
+<td style="text-align:left;">
+<a href="https://portal.pivotcycles.com/portalimages/bikes/clv/00TLCV329CXRA--SILMDDRPNN.png" class="uri">https://portal.pivotcycles.com/portalimages/bikes/clv/00TLCV329CXRA--SILMDDRPNN.png</a>
+</td>
+<td style="text-align:left;">
+Lower BB
+</td>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:left;">
+tr
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+66.00
+</td>
+<td style="text-align:right;">
+75.0
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+780
+</td>
+<td style="text-align:right;">
+470
+</td>
+<td style="text-align:right;">
+613
+</td>
+<td style="text-align:right;">
+1205
+</td>
+<td style="text-align:right;">
+432
+</td>
+<td style="text-align:right;">
+340
+</td>
+<td style="text-align:right;">
+677
+</td>
+<td style="text-align:left;">
+Trail
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr />
+</div>
+</div>
+<div id="eda" class="section level1">
+<h1>EDA</h1>
+<p>In this section, we’ll take a look at the 74 mountain bikes in our dataset and some of the 27 features. We’ll try to break down our understanding of the data in terms of <code>label</code>, our target variable that acts as the category for each mountain bike.</p>
+<div id="label-mountainbike-category" class="section level2">
+<h2>Label (Mountainbike Category)</h2>
+<p>As stated earlier, there are 5 mountain bike categories in our dataset:</p>
+<ol style="list-style-type: decimal">
+<li>Cross Country (xc)<br />
+</li>
+<li>Enduro (en)<br />
+</li>
+<li>Trail (tr)<br />
+</li>
+<li>All Mountain (am)<br />
+</li>
+<li>Downcountry (dc)</li>
+</ol>
+<p>Let’s look at how many of each we have in our dataset.</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/label_bar_plot-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>We see that out of our 74 bikes, most of them are Trail bikes, with the smallest grouping of bikes being all mountain bikes</p>
+</div>
+<div id="categorical-variables" class="section level2">
+<h2>Categorical Variables</h2>
+<p>There are 4 categorical variables we’ll take a look at to better understand our data:</p>
+<ol style="list-style-type: decimal">
+<li>Setting<br />
+</li>
+<li>Size<br />
+</li>
+<li>Front Piston (<code>f_piston</code>)<br />
+</li>
+<li>Rear Piston (<code>r_piston</code>)</li>
+</ol>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/categorical_vars-1.png" width="864" style="display: block; margin: auto;" /></p>
+<ul>
+<li>We see that only few bikes have a setting value, which is a feature that allows a rider to slightly adjust the frame’s geometry to hone in rider comfort. Later on, we’ll group by settings for the same bike and average the results to get a more accurate representation of the bikes’ specs.<br />
+</li>
+<li>Most of the bikes analyzed have 4 rear/front pistons. The two variables seem to be perfectly in-sync, leading us to believe that they’re highly correlated.</li>
+</ul>
+<p>But, really, we care about understanding how these different variables interact with our target variable, <code>label</code>. Let’s look at their distribution and look for any patterns.</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/categorical_by_label-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Here we see:<br />
+</p>
+<ul>
+<li>The size used for most of the bikes is pretty evenly distributed. For the most part, we attempted to find bikes that are sized to the heights of the authors of this report (approx. 5’8”-5’11”), which tended to be Large-sized bikes; however, for some bikes, like Trail, the specific bike’s company website from which we pulled the data recommended a Medium-sized bike.<br />
+</li>
+<li>Although most of the bikes have 4-piston brakes, of the bikes that have 2 pistons, most are Cross Country (<em>xc</em>) bikes. 4-piston brakes are known to have higher stopping power which is more important the more the rider intends to ride downhill. However, they come at the cost of additional weight, which most XC riders will avoid at all costs.</li>
+</ul>
+</div>
+<div id="continuous-variables" class="section level2">
+<h2>Continuous Variables</h2>
+<p>To analyze the continuous features within our dataset, we built density plots for each of them to better understand their distribution.</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/continuous_vars-1.png" width="864" style="display: block; margin: auto;" /><img src="{{< blogdown/postref >}}index.en_files/figure-html/continuous_vars-2.png" width="864" style="display: block; margin: auto;" /></p>
+<div id="normally-distributed-variables" class="section level3">
+<h3>~Normally Distributed Variables:</h3>
+<ul>
+<li>Chainstay_length<br />
+</li>
+<li>Fork_travel<br />
+</li>
+<li>Bb_height<br />
+</li>
+<li>Seat_angle</li>
+</ul>
+</div>
+<div id="skewed-variables" class="section level3">
+<h3>Skewed Variables:</h3>
+<ul>
+<li>Head_angle (skewed right)<br />
+</li>
+<li>Handlebar_width (skewed left)<br />
+</li>
+<li>Wheelbase (skewed left)</li>
+</ul>
+</div>
+<div id="multi-modal-distributed-variables" class="section level3">
+<h3>Multi-Modal Distributed Variables:</h3>
+<ul>
+<li>f_rotor_dim / r_rotor_dim<br />
+</li>
+<li>Stem_length</li>
+</ul>
+<p>Like we did for continuous variables, let’s look at the distribution of each of these predictors by our target variable, <code>label</code>, to look for any discernible patterns.</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/cont_by_label-1.png" width="864" style="display: block; margin: auto;" /><img src="{{< blogdown/postref >}}index.en_files/figure-html/cont_by_label-2.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Here we see:<br />
+</p>
+<ul>
+<li>Cross Country (<em>xc</em>) bikes tend to have the largest head angle and smallest seat angle compared to other bikes. They also have the largest stem length by a significant margin. Overall, Cross Country bikes tend to be the most differentiable from other bike categories;<br />
+</li>
+<li>All Mountain (<em>am</em>) bikes have a significantly smaller standover height and, along with Enduro (<em>en</em>) bikes, have a much larger reach than other bike categories;<br />
+</li>
+<li>As is generally expected, Trail (<em>tr</em>) bikes tend to fit mostly in the middle for most of these continuous’ variables. This makes sense given that they tend to split the difference between Cross Country and Enduro bikes.</li>
+</ul>
+</div>
+</div>
+<div id="average-bikes-by-flip-chip-setting" class="section level2">
+<h2>Average bikes by flip-chip setting</h2>
+<p>Because some bikes’ websites would have two different “settings” for the same-sized bike, we opted to include both options and average the two together to get one middle-of-the-road estimate for that type of bike. We end up performing this operation for 47% of the bikes in our dataset.</p>
+<hr />
+</div>
+</div>
+<div id="methodology" class="section level1">
+<h1>Methodology</h1>
+<p>Now that we have a better understanding of our mountain bike dataset, we’ll formulate a plan to prove the following hypothesis:</p>
+<blockquote>
+<p><strong>Applying our own clustering algorithms will either give us a different set number of clusters (rather than the 5 pre-ordained categories) OR will not provide clearly defined clusters, leading us to believe that the bikes are actually created on a spectrum and cannot be grouped into one of the 5 pre-ordained categories.</strong></p>
+</blockquote>
+<p>To do so, we’ll:<br />
+</p>
+<ul>
+<li><p>Try to use various methods to reduce the featureset and see if there are certain variables that can better be used to differentiate between different mountain bike categories.</p></li>
+<li><p>Apply various clustering and classification algorithms, including K-Means Clustering, Gaussian Mixture Models, and Multi-class Support Vector Machine, to disprove the notion that 5 distinct categories of Mountain Bikes exist.</p></li>
+</ul>
+<hr />
+</div>
+<div id="variation-amongst-featureset" class="section level1">
+<h1>Variation Amongst Featureset</h1>
+<p>The first thing we’ll do is look to see if any of the features in our dataset are better at explaining the variation amongst the different bikes than other features. That is, it’s completely possible that two features are similar and don’t have much variation in them, even across some of the different bike categories. To do so, we’ll:</p>
+<ol style="list-style-type: decimal">
+<li>Look for highly correlated features and flag these for potential removal;<br />
+</li>
+<li>Run Principal Component Analysis (PCA) to see if certain features are better at explaining the variation in our data better than others.</li>
+</ol>
+<div id="correlation" class="section level2">
+<h2>1. Correlation</h2>
+<p>First, let’s take a look at our most highly correlated features. We’ll use the <code>corrplot()</code> function to better order the highly correlated features by the angular order of their eigenvectors.</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/correlation-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Here we see some obvious correlations, for example:</p>
+<ul>
+<li><code>f_piston</code> (front brakes) is perfectly correlated with <code>r_piston</code> (rear brakes), which makes sense since mountain bikes tend to use the same types/spec of brakes for the front vs. rear tires.<br />
+</li>
+<li><code>fork_travel</code> has a correlation above .95 with: c(“rear_travel”, “fork_travel”). This make sense; for example, <code>rear_travel</code> <em>should</em> be highly correlated with <code>fork_travel</code>.</li>
+</ul>
+<p>In all, here are the most highly correlated variables (i.e. variables which have a correlation above .9 or below -.9):</p>
+<table style="width:69%;">
+<colgroup>
+<col width="19%" />
+<col width="30%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">variable</th>
+<th align="center">correlated_variable</th>
+<th align="center">correlation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">f_piston</td>
+<td align="center">r_piston</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">rear_travel</td>
+<td align="center">fork_travel</td>
+<td align="center">0.9608</td>
+</tr>
+<tr class="odd">
+<td align="center">rear_travel</td>
+<td align="center">wheelbase</td>
+<td align="center">0.9301</td>
+</tr>
+<tr class="even">
+<td align="center">rear_travel</td>
+<td align="center">head_angle</td>
+<td align="center">-0.9219</td>
+</tr>
+<tr class="odd">
+<td align="center">fork_travel</td>
+<td align="center">wheelbase</td>
+<td align="center">0.9195</td>
+</tr>
+<tr class="even">
+<td align="center">fork_travel</td>
+<td align="center">head_angle</td>
+<td align="center">-0.9193</td>
+</tr>
+<tr class="odd">
+<td align="center">head_angle</td>
+<td align="center">seat_angle</td>
+<td align="center">-0.9031</td>
+</tr>
+</tbody>
+</table>
+<p>There are a solid amount, especially given that we only have 18 continuous columns in our dataset! For now, we’ll opt to include everything. But later on, as we analyze the importance of different features, we’ll look to remove some of the above variables first.</p>
+</div>
+<div id="principal-component-analysis-pca" class="section level2">
+<h2>2. Principal Component Analysis (PCA)</h2>
+<p>Next, we’ll apply PCA to our dataset. In so doing, we’ll have to center and scale our data given how different the ranges are for certain measurements. Let’s take a look at our 5 principal components which explain the largest proportion of variance in the data:</p>
+<table style="width:100%;">
+<colgroup>
+<col width="37%" />
+<col width="10%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">PC1</th>
+<th align="center">PC2</th>
+<th align="center">PC3</th>
+<th align="center">PC4</th>
+<th align="center">PC5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Standard deviation</strong></td>
+<td align="center">3.024</td>
+<td align="center">1.262</td>
+<td align="center">1.164</td>
+<td align="center">1.071</td>
+<td align="center">0.8761</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Proportion of Variance</strong></td>
+<td align="center">0.538</td>
+<td align="center">0.09369</td>
+<td align="center">0.07977</td>
+<td align="center">0.06745</td>
+<td align="center">0.04515</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Cumulative Proportion</strong></td>
+<td align="center">0.538</td>
+<td align="center">0.6317</td>
+<td align="center">0.7115</td>
+<td align="center">0.7789</td>
+<td align="center">0.8241</td>
+</tr>
+</tbody>
+</table>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/pca-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>We can see that, actually, our 1<sup>st</sup> principal component alone explains more than half our data. Starting at the 2<sup>nd</sup> principal component, there’s a distinguishable elbow point. After that, we have a huge drop-off. Starting at our 5<sup>th</sup> principal component, nearly 82.4% of the data’s variation is properly explained. This leads us to believe that the majority of the variation in our data can be explained by using just 1 principal component!</p>
+<p>Let’s take a look at how our top 2 principal components explain the 5 different mountain bike categories:</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/pca_viz-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Here we can see that our top 2 principal components, which explain roughly 63.2% of the variation in our data, are already pretty good representations for describing the different components in our dataset. Even so, the groupings are distinctly plotted on the 2-D graph and it is pretty easy to see how the different bike categories (denoted by color) can be explained using a linear transformation of our existing data.</p>
+<hr />
+</div>
+</div>
+<div id="clustering" class="section level1">
+<h1>Clustering</h1>
+<p>Because we are investigating the validity of mountain bike categories, one approach is to treat this dataset as unsupervised, stripping the bikes of their <code>label</code> and seeing if various clustering algorithms can re-create the 5 distinct <code>label</code>s. To do so, we’ll take a look at the following algorithms:</p>
+<ul>
+<li>K-Means</li>
+<li>Gaussian Mixture Models (GMM)</li>
+<li>Support Vector Machine (SVM)</li>
+</ul>
+<div id="k-means" class="section level2">
+<h2>K-Means</h2>
+<p>We’ll start by using the K-Means Clustering algorithm, looking at various numbers of clusters (<em>k</em>) and seeing if the bikes logically group together.</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-2-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-3-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Above, we attempted to graph the 3 clusters created using top 2 principal components in our data. For example, we can see Cluster #1 on the right-hand side of the chart, mostly composed of Cross Country bikes (triangles in the chart) and some Downcountry bikes (denoted by squares). Downcountry bikes also seem to be part of Cluster #2 (gray points), along with Trail bikes (denoted by squares with an ‘x’ in them) and some Enduro bikes (denoted by ‘+’). However, Trail bikes also feature heavily in Cluster #3 along with most of the Enduro bikes.</p>
+<p>Overall, it’s clear that there is significant overlap between our Clusters, mainly along the Principal Component 1 axis; lending credence to the notion that our bikes can be differentiated along a single, continuous scale.</p>
+<p><em>Note: In the bottom-right of the graph (<code>PC2 &lt; -4</code>), we see two Niner bikes, almost acting as outliers. For a 5’10” rider Niner suggests a size Medium, which results in low reach numbers on its bikes. From the earlier PCA plot, we see that Reach heavily corresponds with PC2, and thus these bikes appear lower on the visual.</em></p>
+</div>
+<div id="gaussian-mixture-model-gmm" class="section level2">
+<h2>Gaussian Mixture Model (GMM)</h2>
+<p>In this section, we’ll take a more probabilistic model to our clustering. That is, we’ll use a Guassian Mixture Model (GMM) to build out normally distributed subgroupings within our mountain bike dataset, where the densities of each of the subgroupings represents a probability that a bike belongs to that subgrouping. Unlike K-Means, which is a more centroid-based clustering method, GMM is more of a distribution-based clustering method.</p>
+<p>Generally, what we expect to see is something like the following:</p>
+<p><img src="images/Theoretical_GMM.png" /> where, given a specific type of bike, we can predict the probability, <span class="math inline">\(p(x)\)</span> that a bike belongs to a category like <code>Cross Country (xc)</code> vs. <code>Trail</code> vs. <code>Enduro</code>.</p>
+<p>We’ll run the <code>ClusterR::GMM()</code> function in R to figure out an optimal number of clusters. It uses the expectation-maximization algorithm to perform the probabilistic clustering; at each iteration, it aims to maximize the Bayesian Information Criterion (BIC) to determine an optimal number of clusters.</p>
+<pre><code>## iteration: 1  num-clusters: 1
+## iteration: 2  num-clusters: 2
+## iteration: 3  num-clusters: 3
+## iteration: 4  num-clusters: 4
+## iteration: 5  num-clusters: 5
+## iteration: 6  num-clusters: 6
+## iteration: 7  num-clusters: 7
+## iteration: 8  num-clusters: 8
+## iteration: 9  num-clusters: 9
+## iteration: 10  num-clusters: 10</code></pre>
+<p><img src="images/GMM_Optimal.png" /></p>
+<p>From the plot above, we see that the BIC value decreases <em>generally</em> as the number of clusters increases. However, it appears that the first big drop is when <code>clusters = 3</code>. Let’s try that value out and see which bike categories get mapped into each of the 3 clusters.</p>
+<table style="width:58%;">
+<colgroup>
+<col width="23%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">cluster_labels</th>
+<th align="center">am</th>
+<th align="center">dc</th>
+<th align="center">en</th>
+<th align="center">tr</th>
+<th align="center">xc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">5</td>
+<td align="center">11</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">9</td>
+<td align="center">8</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">7</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">11</td>
+</tr>
+</tbody>
+</table>
+<p>Here we see the predicted cluster labels along with the actual 5 bike categories in our data. Trail and Enduro bikes are mostly grouped into Clusters 1 and 2, while Downcountry and Cross Country bikes are grouped into Cluster 3. This would lead us to believe that the original 5 bike categories can be sufficiently explained with fewer clusters.</p>
+<p>Even so, let’s see how the probability of each bike belonging to a cluster appears by looking at the densities of each of the associated probabilities for a bike belonging to one of the cluster labels.</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/gmm_plots-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Above, we see the expected probability associated with predicting a correct class label. That is, the graph on the left shows how accurate the 3-cluster Gaussian Mixture Model was for predicting bikes fitting into Cluster #1. Generally, the probabilities for the predictions are all above .95; that is, GMM is extremely confident in grouping the different bikes into these 3 clusters.</p>
+</div>
+<div id="multi-class-svm" class="section level2">
+<h2>Multi-class SVM</h2>
+<p>If we took a slightly different approach and opted to treat our pre-assigned <code>label</code>s as truth, then we could approach this analysis as a supervised learning problem.</p>
+<p>For this section, we chose to group the All Mountain and Enduro categories, since they completely overlapped in the PCA chart earlier. We also chose to switch the categorization of the Downcountry category, leaving it as a separate category and grouping it with both Trail and XC to experiment with the results of the model.</p>
+<p>We chose to use a Multi-Class Support Vector Machine (SVM), and a grid search to tune the kernel functions and <span class="math inline">\(\gamma\)</span> values. For each set of parameters, we used 10-fold cross validation on all rows of the data. We decided against holding out data as a test set since we have such limited data, and the 10-fold CV should evaluate the model’s performance on blind data.</p>
+<p>Using all of the data, the best SVM model was 73% accurate, using a Radial Basis kernel function with <span class="math inline">\(\gamma=2.595024\)</span></p>
+<p>Treating the Downcountry category as XC, the best model was 81.6% accurate, with a Radial Basis kernel function with <span class="math inline">\(\gamma=0.02983647\)</span></p>
+<p>Treating the Downcountry category as Trail, the best model was 80.0% accurate with a Radial Basis kernel function with <span class="math inline">\(\gamma=3.764936\)</span></p>
+<p>Logically, grouping Downcountry bikes with one of their adjacent categories should naturally lead to an increase in performance; however, this could suggest that the Downcountry category is slightly more skewed towards the XC bikes.</p>
+<p>To visualize the results of the SVM classifier, we mapped all features to the 2 Principal Components. In so doing, we were able to achieve a higher accuracy of 75% using a linear kernel, while continuing to treat the Downcountry category as its own distinct category.</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-5-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>In the chart above, we can see how SVM closely maps the actual labels of the bike categories to their predicted categories. There are some misclassifications (when different colored dots appear in a differently shaded region), but overall the shaded SVM feature spaces seem to be accurate representations of the bike categories.</p>
+<p>An interesting observation is that most of the boundary lines are more or less vertical, suggesting that most of the variation between classes is along Principal Component 1. We see this deviate between the XC and Downcountry boundary, however the validity of this boundary is still in question since the Downcountry category itself is more or less unofficial. Let’s try remapping Downcountry bikes to the Cross Country (XC) category and review the updated results.</p>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-6-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Mapping all Downcountry bikes to XC, the boundaries become almost entirely vertical, again suggesting that the classification of bikes can be attributed to Principal Component 1. The distinct regions appear to be accurate predictors of the 3 bike categories and are simple to explain, which would mean that we have effectively reduced the bias in our model.</p>
+<hr />
+</div>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<div id="findings" class="section level2">
+<h2>Findings</h2>
+<ul>
+<li><p>All results suggest that trying to discretely categorize full suspension mountain bikes is more or less arbitrary.</p></li>
+<li><p>The categorization of a mountain bike should be treated as on a continuous scale, with Cross Country (XC) bikes on one end and Enduro (EN) bikes on another.</p></li>
+<li><p>To obtain where a specific bike lies on this scale, one can use the linear combination of the bike’s specifications and the first principal component.</p></li>
+<li><p>This new spectrum of mapping bikes can provide bike manufacturers and consumers a method to quantify how a bike will handle when ridden.</p></li>
+</ul>
+<p>Let’s look at an example from the data above. Some bike companies, like Transition and Revel, do not explicitly categorize their bikes like others do. For these brands, we categorized them based on general attributes, as well as media coverage of them. Let’s take a look at the Revel Ranger:</p>
+<p><img src="images/Revel_Ranger.jpg" /></p>
+<table>
+<colgroup>
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Rear Travel</th>
+<th>Fork Travel</th>
+<th>Front Piston</th>
+<th>Front Rotor Diameter</th>
+<th>Rear Piston</th>
+<th>Rear Rotor Diameter</th>
+<th>Head Angle</th>
+<th>Seat Angle</th>
+<th>Crank Length</th>
+<th>Stem Length</th>
+<th>Handlebar Width</th>
+<th>Reach</th>
+<th>Stack</th>
+<th>Wheelbase</th>
+<th>Chainstay Length</th>
+<th>Bottom Bracket Height</th>
+<th>Standover Height</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>115</td>
+<td>120</td>
+<td>2</td>
+<td>180</td>
+<td>2</td>
+<td>160</td>
+<td>67.5</td>
+<td>75.3</td>
+<td>170</td>
+<td>40</td>
+<td>780</td>
+<td>473</td>
+<td>619</td>
+<td>1194</td>
+<td>436</td>
+<td>338</td>
+<td>699</td>
+</tr>
+</tbody>
+</table>
+<p>Converting to an input vector:
+<span class="math display">\[
+\text{Ranger} = \begin{bmatrix}  115 \\ 120 \\ 2 \\ 180 \\ 2 \\ 160 \\ 67.5 \\ 75.3 \\ 170 \\ 40 \\ 780 \\ 473 \\ 619 \\ 1194 \\ 436 \\ 338 \\ 699 \end{bmatrix} \rightarrow \text{   Ranger (scaled)} = \begin{bmatrix}    -0.61 \\ -0.80 \\   -1.68  \\ -0.53  \\ -1.68 \\ -1.30 \\  0.79  \\ -0.39  \\ -0.40 \\-1.15 \\-0.11 \\0.60 \\0.16 \\-0.33 \\0.16 \\-0.16 \\  -1.01 \end{bmatrix} \text{and PC1}=\begin{bmatrix} -0.31 \\  -0.31
+        \\ -0.23 \\
+      -0.26\\
+         -0.23\\
+      -0.27\\
+        0.30\\
+       -0.26\\
+     -0.01\\
+       0.24\\
+  -0.27\\
+            -0.17\\
+            -0.26\\
+        -0.30\\
+-0.13\\
+        -0.25\\
+  0.08\end{bmatrix}
+\]</span></p>
+<p><span class="math display">\[
+\text{Ranger} \times \text{PC1} = 1.7
+\]</span></p>
+<p>Mapping the Revel Ranger to its first Principal Component we get a value of 1.7 which puts us right around the boundary between Trail and XC, which lines up with the PinkBike editors’ labelling of Downcountry in the <a href="https://www.youtube.com/watch?v=JYQJbymyG6k">video</a> mentioned in the Overview section.</p>
+</div>
+<div id="opportunities-for-improved-analysis" class="section level2">
+<h2>Opportunities for Improved Analysis</h2>
+<p>There are a few opportunities to improve the analysis included in this presentation and forthcoming report:</p>
+<ul>
+<li><p><strong>Inclusion of more bikes (rows)</strong> | The most obvious improvement we can make is to add more data points to our dataset. The data for each individual bike was manually entered by one of the authors of this report. After entering data for bikes of most major bike brands, we had enough data to accurately visualize the different bike categories; however, with more bikes, our algorithms will become more robust and less affected by the presence of outliers.</p></li>
+<li><p><strong>Inclusion of more bike features (columns)</strong> | Although we included the most meaningful specs/geometry of the bikes analyzed, there are dozens of other, smaller features that can be used to help differentiate between different types of bikes.</p></li>
+<li><p><strong>Include all sizes of bikes</strong> | We chose to use the size that corresponded to a 5’10” rider, but some bike manufacturers could interpret this as a Medium while others interpret this as a Large.</p></li>
+<li><p><strong>Include bikes across multiple years</strong> | As bike trends slowly change, it’d be interesting to see how the data shifts across time. For example, the Rocky Mountain Element reduced its head angle from 70 degrees to 65.8 in one iteration of the bike. Including data from past years could provide valuable market insights into how the industry as a whole is moving.</p></li>
+</ul>
+</div>
+</div>
