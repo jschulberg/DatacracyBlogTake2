@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R on Datacracy</title>
+    <link>https://datacracy.netlify.app/tags/r/</link>
+    <description>Recent content in R on Datacracy</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 26 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Polling Places | Exploratory Data Analysis</title>
+      <link>https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/</link>
+      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/</guid>
+      <description>In a democracy, the polling booth is much more than a location where an unwitting citizen fills in a bubble on a piece of paper in a make-shift booth. It is a symbol of the promise of democracy, a connector between the citizen and the government. It is the shrine that, if protected and respected, powers a democracy.
+This article analyzes that symbol of American democracy by taking an analytical look at a dataset of U.</description>
+    </item>
+    
+    <item>
+      <title>Reading Multiple CSVs into Merged R Dataframe</title>
+      <link>https://datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</link>
+      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</guid>
+      <description>The purpose of this script is to load and clean all of the various .csv files containing polling place data into R. The data, which is available for download here, is structured as follows:
+- Each state (32 in total) has its own folder
+- Within each state (folder), there are a variable number of CSV files, one for each year that polling place data is available</description>
+    </item>
+    
+  </channel>
+</rss>

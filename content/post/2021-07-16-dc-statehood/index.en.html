@@ -13,7 +13,7 @@ comments: yes
 image: ''
 menu: ''
 share: yes
-draft: false
+draft: true
 ---
 
 <script src="{{< blogdown/postref >}}index.en_files/header-attrs/header-attrs.js"></script>
@@ -36,21 +36,21 @@ draft: false
 <h2>Population</h2>
 <p>A common argument against D.C. Statehood is its size. Claiming that it’s just a medium-sized city opponents of D.C. Statehood often argue that it’s really just a subcomponent of what every other state has: one large city; and is thus missing the other components that other states have (i.e. more suburban/rural areas outside of its large cities).</p>
 <p>Let’s take a look at D.C.’s population compared to other states.</p>
-<pre><code>## # A tibble: 52 x 9
-##     rank state x2021_population growth_2021 x2018_population x2010_census
-##    &lt;int&gt; &lt;chr&gt;            &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;                   &lt;int&gt;
-##  1     1 Cali…         39613493 0.38%       39,461,588           37319502
-##  2     2 Texas         29730311 3.85%       28,628,666           25241971
-##  3     3 Flor…         21944577 3.30%       21,244,317           18845537
-##  4     4 New …         19299981 -1.18%      19,530,351           19399878
-##  5     5 Penn…         12804123 0.03%       12,800,922           12711160
-##  6     6 Illi…         12569321 -1.21%      12,723,071           12840503
-##  7     7 Ohio          11714618 0.33%       11,676,341           11539336
-##  8     8 Geor…         10830007 3.03%       10,511,131            9711881
-##  9     9 Nort…         10701022 3.08%       10,381,615            9574323
-## 10    10 Mich…          9992427 0.08%       9,984,072             9877510
-## # … with 42 more rows, and 3 more variables: growth_since_2010 &lt;chr&gt;,
-## #   percent_of_us &lt;chr&gt;, density_mi2 &lt;chr&gt;</code></pre>
+<pre><code>## # A tibble: 52 x 8
+##     rank state x2021_population growth_2021 x2010_census growth_since_20…
+##    &lt;int&gt; &lt;chr&gt;            &lt;int&gt; &lt;chr&gt;              &lt;int&gt; &lt;chr&gt;           
+##  1     1 Cali…         39613493 0.13%           37319502 6.15%           
+##  2     2 Texas         29730311 1.25%           25241971 17.78%          
+##  3     3 Flor…         21944577 1.08%           18845537 16.44%          
+##  4     4 New …         19299981 -0.40%          19399878 -0.51%          
+##  5     5 Penn…         12804123 0.01%           12711160 0.73%           
+##  6     6 Illi…         12569321 -0.41%          12840503 -2.11%          
+##  7     7 Ohio          11714618 0.11%           11539336 1.52%           
+##  8     8 Geor…         10830007 0.99%            9711881 11.51%          
+##  9     9 Nort…         10701022 1.00%            9574323 11.77%          
+## 10    10 Mich…          9992427 0.03%            9877510 1.16%           
+## # … with 42 more rows, and 2 more variables: percent_of_us &lt;chr&gt;,
+## #   density_mi2 &lt;chr&gt;</code></pre>
 <p><img src="{{< blogdown/postref >}}index.en_files/figure-html/plot_pop_info-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>We can see that D.C. ranks towards the bottom of states in terms of population, although not the smallest state. This hasn’t always been the case. In fact, there was an almost 50-year stretch in the mid 20th Century where D.C. wasn’t even in the bottom 10 states by population.</p>
 <p><img src="{{< blogdown/postref >}}index.en_files/figure-html/pop_line_chart-1.png" width="864" style="display: block; margin: auto;" /></p>
@@ -58,7 +58,7 @@ draft: false
 </div>
 <div id="taxes" class="section level2">
 <h2>Taxes</h2>
-<p>If you ever drive around D.C. and look closely, you’ll notice that every license plate is surrounded with the words “NO TAXATION WITHOUT REPRESENTATION”. The notion that this country was founded on 245 years ago is one that doesn’t hold true in its own capital.</p>
+<p>If you ever drive around D.C. and look closely, you’ll notice that every license plate is surrounded with the words “NO TAXATION WITHOUT REPRESENTATION”. The notion that this country was founded on 246 years ago is one that doesn’t hold true in its own capital.</p>
 <p>Below, I scrape tax information from <a href="https://www.taxadmin.org/2019-state-tax-revenue">taxadmin.org</a> to see how well DC does in paying its taxes compared to other states. Let’s start by taking a look at the table</p>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
 <table class="table table-striped table-hover" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">

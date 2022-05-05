@@ -2,48 +2,27 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>R on Datacracy</title>
-    <link>datacracy.netlify.app/categories/r/</link>
+    <link>https://datacracy.netlify.app/categories/r/</link>
     <description>Recent content in R on Datacracy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 26 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="datacracy.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Polling Places | Exploratory Data Analysis</title>
-      <link>datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/</link>
-      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
-      
-      <guid>datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/</guid>
-      <description>In a democracy, the polling booth is much more than a location where an unwitting citizen fills in a bubble on a piece of paper in a make-shift booth. It is a symbol of the promise of democracy, a connector between the citizen and the government. It is the shrine that, if protected and respected, powers a democracy.
-This article analyzes that symbol of American democracy by taking an analytical look at a dataset of U.</description>
-    </item>
-    
-    <item>
-      <title>Reading Multiple CSVs into Merged R Dataframe</title>
-      <link>datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</link>
-      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</guid>
-      <description>The purpose of this script is to load and clean all of the various .csv files containing polling place data into R. The data, which is available for download here, is structured as follows:
-- Each state (32 in total) has its own folder
-- Within each state (folder), there are a variable number of CSV files, one for each year that polling place data is available</description>
-    </item>
-    
+    <lastBuildDate>Sat, 12 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Women in Politics</title>
-      <link>datacracy.netlify.app/post/2021-01-26-women-in-politics/</link>
+      <link>https://datacracy.netlify.app/post/2021-01-26-women-in-politics/</link>
       <pubDate>Sat, 12 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/post/2021-01-26-women-in-politics/</guid>
+      <guid>https://datacracy.netlify.app/post/2021-01-26-women-in-politics/</guid>
       <description>It all started in Montana. In 1916, Jeannette Rankin, a peace activist and a strong advocate for women’s suffrage, broke down centuries-long barriers by becoming the first woman elected to Congress. Since then, 366 women have served in U.S. Congress, and thousands more in various elected and executive offices at the state-level.
 In this post, we will analyze the Women in Politics dataset published by the Eagleton Institute of Politics’ Center for American Women and Politics.</description>
     </item>
     
     <item>
       <title>U.S. Police-Caused Fatalities</title>
-      <link>datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/</link>
+      <link>https://datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/</link>
       <pubDate>Mon, 15 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/</guid>
+      <guid>https://datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/</guid>
       <description>George Floyd. Eric Garner. Tamir Rice.
 Those names, among thousands of others, are emblematic of fatal police violence in the United States. The protest movement that has spread like wildfire across the U.S. has brought police brutality to the forefront of everyone’s minds.
 Following the deluge of information from news stations and social media, I can’t help but wonder, what does the data say? Are these new trends or longstanding realities?</description>

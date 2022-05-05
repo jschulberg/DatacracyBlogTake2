@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>history on Datacracy</title>
-    <link>datacracy.netlify.app/categories/history/</link>
+    <link>https://datacracy.netlify.app/categories/history/</link>
     <description>Recent content in history on Datacracy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 10 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="datacracy.netlify.app/categories/history/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 10 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/categories/history/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The Federalist Papers | NLP Analysis (Part 1)</title>
-      <link>datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/</link>
+      <link>https://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/</link>
       <pubDate>Wed, 10 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/</guid>
+      <guid>https://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/</guid>
       <description>When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.
-This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays.</description>
+In part one of our analysis, we perform an Exploratory Data Analysis (EDA) using modern Natural Language Processing (NLP) techniques to to better understand these essays.</description>
     </item>
     
   </channel>

@@ -2,71 +2,71 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Datacracy</title>
-    <link>datacracy.netlify.app/categories/</link>
+    <link>https://datacracy.netlify.app/categories/</link>
     <description>Recent content in Categories on Datacracy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 10 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="datacracy.netlify.app/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 10 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>history</title>
-      <link>datacracy.netlify.app/categories/history/</link>
+      <link>https://datacracy.netlify.app/categories/history/</link>
       <pubDate>Wed, 10 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/categories/history/</guid>
+      <guid>https://datacracy.netlify.app/categories/history/</guid>
       <description></description>
     </item>
     
     <item>
       <title>nlp</title>
-      <link>datacracy.netlify.app/categories/nlp/</link>
+      <link>https://datacracy.netlify.app/categories/nlp/</link>
       <pubDate>Wed, 10 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/categories/nlp/</guid>
+      <guid>https://datacracy.netlify.app/categories/nlp/</guid>
       <description></description>
     </item>
     
     <item>
       <title>public policy</title>
-      <link>datacracy.netlify.app/categories/public-policy/</link>
+      <link>https://datacracy.netlify.app/categories/public-policy/</link>
       <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/categories/public-policy/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>R</title>
-      <link>datacracy.netlify.app/categories/r/</link>
-      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
-      
-      <guid>datacracy.netlify.app/categories/r/</guid>
+      <guid>https://datacracy.netlify.app/categories/public-policy/</guid>
       <description></description>
     </item>
     
     <item>
       <title>viz</title>
-      <link>datacracy.netlify.app/categories/viz/</link>
+      <link>https://datacracy.netlify.app/categories/viz/</link>
       <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/categories/viz/</guid>
+      <guid>https://datacracy.netlify.app/categories/viz/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Data</title>
-      <link>datacracy.netlify.app/categories/data/</link>
+      <link>https://datacracy.netlify.app/categories/data/</link>
       <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/categories/data/</guid>
+      <guid>https://datacracy.netlify.app/categories/data/</guid>
       <description></description>
     </item>
     
     <item>
       <title>ETL</title>
-      <link>datacracy.netlify.app/categories/etl/</link>
+      <link>https://datacracy.netlify.app/categories/etl/</link>
       <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/categories/etl/</guid>
+      <guid>https://datacracy.netlify.app/categories/etl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R</title>
+      <link>https://datacracy.netlify.app/categories/r/</link>
+      <pubDate>Sat, 12 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://datacracy.netlify.app/categories/r/</guid>
       <description></description>
     </item>
     

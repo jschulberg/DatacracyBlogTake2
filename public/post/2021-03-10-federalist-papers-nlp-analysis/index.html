@@ -7,7 +7,7 @@
     <title>The Federalist Papers | NLP Analysis (Part 1) | Datacracy</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <meta name="description" content="When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.
-This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays.">
+In part one of our analysis, we perform an Exploratory Data Analysis (EDA) using modern Natural Language Processing (NLP) techniques to to better understand these essays.">
     <meta name="generator" content="Hugo 0.82.0" />
     
     
@@ -18,7 +18,7 @@ This article applies various text analyses using modern Natural Language Process
 
   
   
-    <link rel="stylesheet" href="/datacracy.netlify.app/ananke/dist/main.css_5c99d70a7725bacd4c701e995b969fea.css" >
+    <link rel="stylesheet" href="/ananke/dist/main.css_5c99d70a7725bacd4c701e995b969fea.css" >
   
 
 
@@ -26,7 +26,7 @@ This article applies various text analyses using modern Natural Language Process
 
     
       
-<link rel="shortcut icon" href="/datacracy.netlify.app/images/Datacracy_Logo.png" type="image/x-icon" />
+<link rel="shortcut icon" href="/images/Datacracy_Logo.ico" type="image/x-icon" />
 
 
     
@@ -35,21 +35,21 @@ This article applies various text analyses using modern Natural Language Process
     
     <meta property="og:title" content="The Federalist Papers | NLP Analysis (Part 1)" />
 <meta property="og:description" content="When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.
-This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays." />
+In part one of our analysis, we perform an Exploratory Data Analysis (EDA) using modern Natural Language Processing (NLP) techniques to to better understand these essays." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/" /><meta property="article:section" content="post" />
+<meta property="og:url" content="https://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2021-03-10T00:00:00&#43;00:00" />
 <meta property="article:modified_time" content="2021-03-10T00:00:00&#43;00:00" /><meta property="og:site_name" content="Datacracy" />
 
 <meta itemprop="name" content="The Federalist Papers | NLP Analysis (Part 1)">
 <meta itemprop="description" content="When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.
-This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays."><meta itemprop="datePublished" content="2021-03-10T00:00:00&#43;00:00" />
+In part one of our analysis, we perform an Exploratory Data Analysis (EDA) using modern Natural Language Processing (NLP) techniques to to better understand these essays."><meta itemprop="datePublished" content="2021-03-10T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-03-10T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="2286">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta itemprop="wordCount" content="2165">
+<meta itemprop="keywords" content="python," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="The Federalist Papers | NLP Analysis (Part 1)"/>
 <meta name="twitter:description" content="When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.
-This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays."/>
+In part one of our analysis, we perform an Exploratory Data Analysis (EDA) using modern Natural Language Processing (NLP) techniques to to better understand these essays."/>
 
 	
   </head>
@@ -62,11 +62,11 @@ This article applies various text analyses using modern Natural Language Process
 
   
   
-  <header class="cover bg-top" style="background-image: url('datacracy.netlify.app/images/fed_authors.jpeg');">
+  <header class="cover bg-top" style="background-image: url('https://datacracy.netlify.app/images/fed_authors.jpeg');">
     <div class="pb3-m pb6-l bg-black-60">
       <nav class="pv3 ph3 ph4-ns" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="datacracy.netlify.app/" class="f3 fw2 hover-white no-underline white-90 dib">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
       
         <img src="images/Datacracy_Logo.png" class="w100 mw5-ns" alt="Datacracy" />
       
@@ -78,19 +78,19 @@ This article applies various text analyses using modern Natural Language Process
         <ul class="pl0 mr3">
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="datacracy.netlify.app/post" title="Posts page">
+            <a class="hover-white no-underline white-90" href="/post" title="Posts page">
               Posts
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="datacracy.netlify.app/aboutme" title="About Me page">
+            <a class="hover-white no-underline white-90" href="/aboutme" title="About Me page">
               About Me
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="datacracy.netlify.app/about" title="About this site page">
+            <a class="hover-white no-underline white-90" href="/about" title="About this site page">
               About this site
             </a>
           </li>
@@ -189,20 +189,20 @@ This article applies various text analyses using modern Natural Language Process
   <div id="sharing" class="mt3">
 
     
-    <a href="https://www.facebook.com/sharer.php?u=datacracy.netlify.app/datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/" class="facebook no-underline" aria-label="share on Facebook">
+    <a href="https://www.facebook.com/sharer.php?u=https://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/" class="facebook no-underline" aria-label="share on Facebook">
       <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M28.765,50.32h6.744V33.998h4.499l0.596-5.624h-5.095  l0.007-2.816c0-1.466,0.14-2.253,2.244-2.253h2.812V17.68h-4.5c-5.405,0-7.307,2.729-7.307,7.317v3.377h-3.369v5.625h3.369V50.32z   M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;"/></svg>
 
     </a>
 
     
     
-    <a href="https://twitter.com/share?url=datacracy.netlify.app/datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/&amp;text=The%20Federalist%20Papers%20%7c%20NLP%20Analysis%20%28Part%201%29" class="twitter no-underline" aria-label="share on Twitter">
+    <a href="https://twitter.com/share?url=https://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/&amp;text=The%20Federalist%20Papers%20%7c%20NLP%20Analysis%20%28Part%201%29" class="twitter no-underline" aria-label="share on Twitter">
       <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M37.167,22.283c-2.619,0.953-4.274,3.411-4.086,6.101  l0.063,1.038l-1.048-0.127c-3.813-0.487-7.145-2.139-9.974-4.915l-1.383-1.377l-0.356,1.017c-0.754,2.267-0.272,4.661,1.299,6.271  c0.838,0.89,0.649,1.017-0.796,0.487c-0.503-0.169-0.943-0.296-0.985-0.233c-0.146,0.149,0.356,2.076,0.754,2.839  c0.545,1.06,1.655,2.097,2.871,2.712l1.027,0.487l-1.215,0.021c-1.173,0-1.215,0.021-1.089,0.467  c0.419,1.377,2.074,2.839,3.918,3.475l1.299,0.444l-1.131,0.678c-1.676,0.976-3.646,1.526-5.616,1.568  C19.775,43.256,19,43.341,19,43.405c0,0.211,2.557,1.397,4.044,1.864c4.463,1.377,9.765,0.783,13.746-1.568  c2.829-1.673,5.657-5,6.978-8.221c0.713-1.716,1.425-4.851,1.425-6.354c0-0.975,0.063-1.102,1.236-2.267  c0.692-0.678,1.341-1.419,1.467-1.631c0.21-0.403,0.188-0.403-0.88-0.043c-1.781,0.636-2.033,0.551-1.152-0.402  c0.649-0.678,1.425-1.907,1.425-2.267c0-0.063-0.314,0.042-0.671,0.233c-0.377,0.212-1.215,0.53-1.844,0.72l-1.131,0.361l-1.027-0.7  c-0.566-0.381-1.361-0.805-1.781-0.932C39.766,21.902,38.131,21.944,37.167,22.283z M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4  s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
 
     </a>
 
     
-    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=datacracy.netlify.app/datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/&amp;title=The%20Federalist%20Papers%20%7c%20NLP%20Analysis%20%28Part%201%29" class="linkedin no-underline" aria-label="share on LinkedIn">
+    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/&amp;title=The%20Federalist%20Papers%20%7c%20NLP%20Analysis%20%28Part%201%29" class="linkedin no-underline" aria-label="share on LinkedIn">
       <svg  height="32px"  style="enable-background:new 0 0 65 65;" version="1.1" viewBox="0 0 65 65" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <path d="M50.837,48.137V36.425c0-6.275-3.35-9.195-7.816-9.195  c-3.604,0-5.219,1.983-6.119,3.374V27.71h-6.79c0.09,1.917,0,20.427,0,20.427h6.79V36.729c0-0.609,0.044-1.219,0.224-1.655  c0.49-1.22,1.607-2.483,3.482-2.483c2.458,0,3.44,1.873,3.44,4.618v10.929H50.837z M22.959,24.922c2.367,0,3.842-1.57,3.842-3.531  c-0.044-2.003-1.475-3.528-3.797-3.528s-3.841,1.524-3.841,3.528c0,1.961,1.474,3.531,3.753,3.531H22.959z M34,64  C17.432,64,4,50.568,4,34C4,17.431,17.432,4,34,4s30,13.431,30,30C64,50.568,50.568,64,34,64z M26.354,48.137V27.71h-6.789v20.427  H26.354z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
 </svg>
@@ -227,14 +227,12 @@ This article applies various text analyses using modern Natural Language Process
       
       
         <span class="f6 mv4 dib tracked"> - 11 minutes read</span>
-        <span class="f6 mv4 dib tracked"> - 2286 words</span>
+        <span class="f6 mv4 dib tracked"> - 2165 words</span>
       
     </header>
     <div class="nested-copy-line-height lh-copy serif f4 nested-links nested-img mid-gray pr4-l w-two-thirds-l"><p>When Alexander Hamilton, John Jay, and James Madison came together in support of the ratification of the Constitution, they created what has become one of the most celebrated series of political texts in history. The Federalist Papers, a series of 85 essays, helped push New Yorkers towards ratification and laid some of the strongest arguments in favor of a strong Federal Government.</p>
-<p>This article applies various text analyses using modern Natural Language Processing (NLP) techniques to better understand these essays.</p>
-<p>In part one of our analysis, we perform an EDA (Exploratory Data Analysis) to create an overview of the main characteristics of these essays. We will showcase insightful visualizations that help us learn more about each individual author&rsquo;s writing style, word counts, and the frequency in which those words appear in the essays.</p>
-<p>In future parts of our analysis, we will perform a text summarization to allow readers to get a precursory understanding of the topics each essay discusses.</p>
-<p>Finally, we will transform this information into a data science application so you will have this information readily accessible to you!</p>
+<p>In part one of our analysis, we perform an Exploratory Data Analysis (EDA) using modern Natural Language Processing (NLP) techniques to to better understand these essays. We will showcase insightful visualizations that help us learn more about each individual author&rsquo;s writing style, word counts, and the frequency in which those words appear in the essays.</p>
+<p>In future analyses, we will perform text summarization to allow readers to get a precursory understanding of the topics each essay discusses, cosine similarity to understand which essays are most related, and even try to build an interactive application that makes it easy to understand the essays.</p>
 <p>Here is part one of our analysis.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Load Data and import packages</span>
 <span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
@@ -242,47 +240,54 @@ This article applies various text analyses using modern Natural Language Process
 <span style="color:#f92672">import</span> nltk
 <span style="color:#f92672">import</span> seaborn <span style="color:#f92672">as</span> sns
 <span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#f92672">as</span> plt
+<span style="color:#f92672">import</span> os
+<span style="color:#f92672">from</span> IPython.display <span style="color:#f92672">import</span> set_matplotlib_formats
+<span style="color:#f92672">%</span>matplotlib inline
+
+<span style="color:#75715e"># plt.rcParams[&#34;figure.figsize&#34;] = (16,12)</span>
+set_matplotlib_formats(<span style="color:#e6db74">&#39;svg&#39;</span>)
 
 <span style="color:#75715e">### NLTK Download</span>
 <span style="color:#75715e"># Note: To download nltk products, you need to run the nltk downloader. If you </span>
 <span style="color:#75715e"># just want to run this quickly, uncomment the following line and run:</span>
 <span style="color:#75715e"># nltk.download(&#39;popular&#39;)</span>
 
-<span style="color:#75715e"># Note that I created a Spyder prjoect in my federalist-papers-nlp folder so I</span>
-<span style="color:#75715e"># can just reference the &#34;Data&#34; folder without all the stuff that comes before it.</span>
-fed_papers <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#34;Data/full_fedpapers.csv&#34;</span>)
+<span style="color:#75715e"># Note that we need to go back one folder to the parent directory so that we can actually access the Data/ folder</span>
+parent_dir <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>realpath(<span style="color:#e6db74">&#39;..&#39;</span>)
+fed_papers <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(parent_dir <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;/Data/full_fedpapers.csv&#34;</span>)<span style="color:#f92672">.</span>rename(columns <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;Lemmatized_Word&#39;</span>: <span style="color:#e6db74">&#39;word&#39;</span>})
 
 <span style="color:#66d9ef">print</span>(fed_papers<span style="color:#f92672">.</span>head())
 
-</code></pre></div><pre><code>                                               lines     essay        word  \
+</code></pre></div><pre><code>                                               Lines     Essay        Word  \
 0  addition defects already enumerated existing f...  Essay 22    addition   
 1  addition defects already enumerated existing f...  Essay 22     defects   
 2  addition defects already enumerated existing f...  Essay 22     already   
 3  addition defects already enumerated existing f...  Essay 22  enumerated   
 4  addition defects already enumerated existing f...  Essay 22    existing   
 
-      Essay                                              Title    Author  \
-0  Essay 22  The Same Subject Continued: Other Defects of t...  Hamilton   
-1  Essay 22  The Same Subject Continued: Other Defects of t...  Hamilton   
-2  Essay 22  The Same Subject Continued: Other Defects of t...  Hamilton   
-3  Essay 22  The Same Subject Continued: Other Defects of t...  Hamilton   
-4  Essay 22  The Same Subject Continued: Other Defects of t...  Hamilton   
+         word                                              Title    Author  \
+0    addition  The Same Subject Continued: Other Defects of t...  Hamilton   
+1      defect  The Same Subject Continued: Other Defects of t...  Hamilton   
+2     already  The Same Subject Continued: Other Defects of t...  Hamilton   
+3  enumerated  The Same Subject Continued: Other Defects of t...  Hamilton   
+4    existing  The Same Subject Continued: Other Defects of t...  Hamilton   
 
-                Publication        Date  
-0  From the New York Packet  1787-12-14  
-1  From the New York Packet  1787-12-14  
-2  From the New York Packet  1787-12-14  
-3  From the New York Packet  1787-12-14  
-4  From the New York Packet  1787-12-14  
+       Publication        Date  
+0  New York Packet  1787-12-14  
+1  New York Packet  1787-12-14  
+2  New York Packet  1787-12-14  
+3  New York Packet  1787-12-14  
+4  New York Packet  1787-12-14  
 </code></pre>
-<p>First, we create a few data frames that can be used for analysis purposes later on. To generate these datasets, we have to get rid of some of the unnecessary words that don&rsquo;t signify very much to us.</p>
+<p>First, we create a few data frames that can be used for analysis purposes later on. To generate these datasets, we have to get rid of some of the unnecessary words that don&rsquo;t signify very much to us (i.e. stop words).</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># ----------------------------------------------------------------------------</span>
 <span style="color:#75715e">#                             Data Prep</span>
 <span style="color:#75715e"># ----------------------------------------------------------------------------</span>
 
 stop_words <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;would&#39;</span>, <span style="color:#e6db74">&#39;may&#39;</span>, <span style="color:#e6db74">&#39;yet&#39;</span>, <span style="color:#e6db74">&#39;must&#39;</span>, <span style="color:#e6db74">&#39;shall&#39;</span>, <span style="color:#e6db74">&#39;not&#39;</span>, <span style="color:#e6db74">&#39;still&#39;</span>, <span style="color:#e6db74">&#39;let&#39;</span>, 
               <span style="color:#e6db74">&#39;also&#39;</span>, <span style="color:#e6db74">&#39;ought&#39;</span>, <span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;the&#39;</span>, <span style="color:#e6db74">&#39;it&#39;</span>, <span style="color:#e6db74">&#39;i&#39;</span>, <span style="color:#e6db74">&#39;upon&#39;</span>, <span style="color:#e6db74">&#39;but&#39;</span>, <span style="color:#e6db74">&#39;if&#39;</span>, <span style="color:#e6db74">&#39;in&#39;</span>,
-              <span style="color:#e6db74">&#39;this&#39;</span>, <span style="color:#e6db74">&#39;might&#39;</span>, <span style="color:#e6db74">&#39;and&#39;</span>, <span style="color:#e6db74">&#39;us&#39;</span>, <span style="color:#e6db74">&#39;can&#39;</span>, <span style="color:#e6db74">&#39;as&#39;</span>, <span style="color:#e6db74">&#39;to&#39;</span>]
+              <span style="color:#e6db74">&#39;this&#39;</span>, <span style="color:#e6db74">&#39;might&#39;</span>, <span style="color:#e6db74">&#39;and&#39;</span>, <span style="color:#e6db74">&#39;us&#39;</span>, <span style="color:#e6db74">&#39;can&#39;</span>, <span style="color:#e6db74">&#39;as&#39;</span>, <span style="color:#e6db74">&#39;to&#39;</span>, <span style="color:#e6db74">&#39;make&#39;</span>, <span style="color:#e6db74">&#39;made&#39;</span>,
+             <span style="color:#e6db74">&#39;much&#39;</span>]
 
 fed_nonstop <span style="color:#f92672">=</span> fed_papers<span style="color:#f92672">.</span>copy()
 fed_nonstop <span style="color:#f92672">=</span> fed_nonstop[<span style="color:#f92672">~</span>fed_nonstop[<span style="color:#e6db74">&#39;word&#39;</span>]<span style="color:#f92672">.</span>isin(stop_words)]
@@ -313,14 +318,14 @@ viz1 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span
 <span style="color:#75715e"># Set our labels</span>
 viz1<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Number of Appearances&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Word&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Word Counts across all Federalist Papers&#39;</span>)
 plt<span style="color:#f92672">.</span>show()
-</code></pre></div><p><img src="EDA_files/EDA_6_0.png" alt="png"></p>
-<p>Unsurprisingly, the word <em>state/states</em> and <em>government</em> appear more than almost any others. At the time, Hamilton, Madison, and Jay were arguing for the dissolution of The Articles of Confederation, the governing document for early America, which ceded immense power to the states. Most of the purpose of the Constitution was to shift power from the states to the Federal Government.</p>
+</code></pre></div><p><img src="EDA_Part_1_files/EDA_Part_1_6_0.svg" alt="svg"></p>
+<p>Unsurprisingly, the words <em>state</em> and <em>government</em> appear more than almost any others. At the time, Hamilton, Madison, and Jay were arguing for the dissolution of The Articles of Confederation, the governing document for early America, which ceded immense power to the states. Most of the purpose of the Constitution was to shift power from the states to the Federal Government.</p>
 <p>Next, we will look at the lengths of each document using a violin plot. Violin plots are similar to boxplots, but can be a bit more visually descriptive by helping show you volume of documents by length.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># ----------------------------------------------------------------------------</span>
 <span style="color:#75715e">#                          Viz 2: Document Lengths</span>
 <span style="color:#75715e"># ----------------------------------------------------------------------------</span>
 
-doc_lengths <span style="color:#f92672">=</span> fed_papers<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;essay&#39;</span>]) \
+doc_lengths <span style="color:#f92672">=</span> fed_papers<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;Essay&#39;</span>]) \
     <span style="color:#f92672">.</span>size() \
     <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;length&#39;</span>) \
     <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;length&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
@@ -332,13 +337,13 @@ viz2 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span
 <span style="color:#75715e"># Set our labels</span>
 viz2<span style="color:#f92672">.</span>set(ylabel <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Number of Words&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Length of Federalist Papers &#39;</span>)
 plt<span style="color:#f92672">.</span>show()
-</code></pre></div><p><img src="EDA_files/EDA_8_0.png" alt="png"></p>
+</code></pre></div><p><img src="EDA_Part_1_files/EDA_Part_1_8_0.svg" alt="svg"></p>
 <p>Most of the essays are somewhere between 500-1000 words, with some being <em>extremely</em> length. One essay is almost 2500 words!</p>
 <p>How do the lengths of the different essays vary by author? Is one author more verbose than the others? Let&rsquo;s take a look.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># ----------------------------------------------------------------------------</span>
 <span style="color:#75715e">#                      Viz 3: Document Lengths by Author</span>
 <span style="color:#75715e"># ----------------------------------------------------------------------------</span>
-doc_lengths <span style="color:#f92672">=</span> fed_papers<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;essay&#39;</span>, <span style="color:#e6db74">&#39;Author&#39;</span>]) \
+doc_lengths <span style="color:#f92672">=</span> fed_papers<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;Essay&#39;</span>, <span style="color:#e6db74">&#39;Author&#39;</span>]) \
     <span style="color:#f92672">.</span>size() \
     <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;length&#39;</span>) \
     <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;length&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
@@ -354,7 +359,7 @@ viz3 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span
 <span style="color:#75715e"># Set our labels</span>
 viz3<span style="color:#f92672">.</span>set(xlabel <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Author&#39;</span>, ylabel <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Number of Words&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Length of Federalist Papers by Author&#39;</span>)
 plt<span style="color:#f92672">.</span>show()
-</code></pre></div><p><img src="EDA_files/EDA_10_0.png" alt="png"></p>
+</code></pre></div><p><img src="EDA_Part_1_files/EDA_Part_1_10_0.svg" alt="svg"></p>
 <p>A bit hard to tell from this visualization since Hamilton wrote <em>so</em> many essays. We can see that the lengthy essay (the 2500 word one) was written by Hamilton.</p>
 <p>Our next few visualization constitutes a bar chart of the top 10 words by word count of each author (John Jay, Alexander Hamilton, James Madison, or
 Unknown).</p>
@@ -390,10 +395,7 @@ viz4<span style="color:#f92672">.</span>set_xticklabels(viz4<span style="color:#
 viz4<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;count&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Hamilton Top Words&#39;</span>)
 plt<span style="color:#f92672">.</span>show()
 
-<span style="color:#75715e"># Save our plot to the Viz folder </span>
-viz4<span style="color:#f92672">.</span>figure<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;Viz/Hamilton_Top_Words.png&#34;</span>)
-
-</code></pre></div><p><img src="EDA_files/EDA_12_0.png" alt="png"></p>
+</code></pre></div><p><img src="EDA_Part_1_files/EDA_Part_1_12_0.svg" alt="svg"></p>
 <p>Hamilton&rsquo;s ardent support in favor of a strong centralized government is evident here. 5 out of the top 6 words included &ldquo;power&rdquo;, &ldquo;one&rdquo;, &ldquo;government&rdquo;, &ldquo;national&rdquo;, and &ldquo;union&rdquo;.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#%% Madison - Visualization 5-------------------------------------------------------</span>
 
@@ -414,22 +416,20 @@ sns<span style="color:#f92672">.</span>set_style(<span style="color:#e6db74">&#3
 sns<span style="color:#f92672">.</span>set_context(<span style="color:#e6db74">&#39;notebook&#39;</span>)
 
 <span style="color:#75715e"># Build the visualization</span>
-viz6 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>barplot(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
+viz5 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>barplot(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
             y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>,
             data <span style="color:#f92672">=</span> Madison_top_words,
             palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Purples_r&#34;</span>)
 
 <span style="color:#75715e">#Rotate X tick labels</span>
-viz6<span style="color:#f92672">.</span>set_xticklabels(viz6<span style="color:#f92672">.</span>get_xticklabels(), rotation<span style="color:#f92672">=</span><span style="color:#ae81ff">45</span> )
+viz5<span style="color:#f92672">.</span>set_xticklabels(viz5<span style="color:#f92672">.</span>get_xticklabels(), rotation<span style="color:#f92672">=</span><span style="color:#ae81ff">45</span> )
 
 <span style="color:#75715e"># Set our labels</span>
-viz6<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;count&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Madison Top Words&#39;</span>)
+viz5<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;count&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Madison Top Words&#39;</span>)
 plt<span style="color:#f92672">.</span>show()
 
-<span style="color:#75715e"># Save our plot to the Viz folder </span>
-viz6<span style="color:#f92672">.</span>figure<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;Viz/Madison_Top_Words.png&#34;</span>)
 
-</code></pre></div><p><img src="EDA_files/EDA_14_0.png" alt="png"></p>
+</code></pre></div><p><img src="EDA_Part_1_files/EDA_Part_1_14_0.svg" alt="svg"></p>
 <p>Madison&rsquo;s top words shared some similarities with Hamilton&rsquo;s. Both authors had the word &ldquo;states&rdquo; and &ldquo;governments&rdquo; as their top words of choice. Additionally, out of their 15 top words, they shared 10 words in common, which indicates that the authors were thinking on a similar wavelength.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
 <span style="color:#75715e">#%% John Jay - Visualization 6--------------------------------------------------</span>
@@ -452,21 +452,19 @@ sns<span style="color:#f92672">.</span>set_style(<span style="color:#e6db74">&#3
 sns<span style="color:#f92672">.</span>set_context(<span style="color:#e6db74">&#39;notebook&#39;</span>)
 
 <span style="color:#75715e"># Build the visualization</span>
-viz5 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>barplot(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
+viz6 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>barplot(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;word&#39;</span>,
             y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;count&#39;</span>,
             data <span style="color:#f92672">=</span> Jay_top_words,
             palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Purples_r&#34;</span>)
 
 <span style="color:#75715e">#Rotate X tick labels</span>
-viz5<span style="color:#f92672">.</span>set_xticklabels(viz5<span style="color:#f92672">.</span>get_xticklabels(), rotation<span style="color:#f92672">=</span><span style="color:#ae81ff">45</span> )
+viz6<span style="color:#f92672">.</span>set_xticklabels(viz6<span style="color:#f92672">.</span>get_xticklabels(), rotation<span style="color:#f92672">=</span><span style="color:#ae81ff">45</span> )
 
 <span style="color:#75715e"># Set our labels</span>
-viz5<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;count&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Jay Top Words&#39;</span>)
+viz6<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;count&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Jay Top Words&#39;</span>)
 plt<span style="color:#f92672">.</span>show()
 
-<span style="color:#75715e"># Save our plot to the Viz folder </span>
-viz5<span style="color:#f92672">.</span>figure<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;Viz/Jay_Top_Words.png&#34;</span>)
-</code></pre></div><p><img src="EDA_files/EDA_16_0.png" alt="png"></p>
+</code></pre></div><p><img src="EDA_Part_1_files/EDA_Part_1_16_0.svg" alt="svg"></p>
 <p>In comparison, Jay&rsquo;s top words seem to strike a different tone with his top word being &ldquo;treaties&rdquo;. There isn&rsquo;t a strong cohesive theme that can be gathered from his top word choice alone. When compared to Hamilton and Madison however, it is clear that he took a different route to convey his support for having a centralized government.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#%% Unknown - Visualization 7-------------------------------------------------------</span>
 
@@ -501,12 +499,11 @@ viz7<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=<
 plt<span style="color:#f92672">.</span>show()
 
 
-<span style="color:#75715e"># Save our plot to the Viz folder </span>
-viz7<span style="color:#f92672">.</span>figure<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;Viz/Unknown_Top_Words.png&#34;</span>)
-</code></pre></div><p><img src="EDA_files/EDA_18_0.png" alt="png"></p>
+</code></pre></div><p><img src="EDA_Part_1_files/EDA_Part_1_18_0.svg" alt="svg"></p>
+<h2 id="tf-idf">TF-IDF</h2>
 <p>Let&rsquo;s dive a bit deeper into word usage throughout The Federalist Papers. We&rsquo;ll make a scatter plot of all the words
 that could reasonably appear in our dataset, measuring the number of times each one appears as well as the number of documents it appears in.</p>
-<p>The hope here is to take a look at what will eventually be the TF-IDF of each word: that way we can filter out words that appear many times but only in very few documents (i.e. &lsquo;Constitution&rsquo; appears 100 times in total but 95 times in Essay 100.)</p>
+<p>The hope here is to take a look at what will eventually be the TF-IDF of each word: that way we can filter out words that appear many times but only in very few documents (like if &lsquo;Constitution&rsquo; were to appear 100 times in total but 95 times in Essay 100.)</p>
 <p>Now let&rsquo;s create a grouped dataframe that counts the number of documents a given word appears in (document frequency). This is important to help us identify words that may appear many times but in the same document. A word is considered more &ldquo;important&rdquo; if it is not just a frequently occuring word within a document, but a word that appears across many documents.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">doc_lengths <span style="color:#f92672">=</span> fed_nonstop[[<span style="color:#e6db74">&#39;word&#39;</span>, <span style="color:#e6db74">&#39;Essay&#39;</span>]]<span style="color:#f92672">.</span>drop_duplicates() \
     <span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;word&#39;</span>]) \
@@ -514,18 +511,6 @@ that could reasonably appear in our dataset, measuring the number of times each 
     <span style="color:#f92672">.</span>reset_index(name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;doc_count&#39;</span>) \
     <span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;doc_count&#39;</span>, ascending <span style="color:#f92672">=</span> False) \
     <span style="color:#f92672">.</span>reset_index(drop <span style="color:#f92672">=</span> True)
-    
-    
-<span style="color:#75715e">#Looking at which essays government and other words appears more frequently </span>
-<span style="color:#75715e"># word_frequency = doc_lengths.loc[doc_lengths.word.isin([ &#39;one&#39;, &#39;government&#39;, &#39;people&#39;])]</span>
-
-<span style="color:#75715e">#If we wanted to look at the percentage in total papers</span>
-<span style="color:#75715e">##word_frequency[&#39;% of total papers&#39;] = word_frequency[&#39;count&#39;] / word_frequency[&#39;count&#39;].sum()</span>
-
-<span style="color:#75715e">#Remove &#34;Essay&#34; from the Essay columns so we are only left with the number - just so we can fit everything into the graph</span>
-<span style="color:#75715e"># word_frequency[&#39;Essay&#39;] = pd.to_numeric(word_frequency[&#39;Essay&#39;].astype(str).str[5:], errors=&#39;coerce&#39;)</span>
-
-<span style="color:#75715e"># word_frequency.head()</span>
 
 merged_counts <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>merge(word_counts, 
                          doc_lengths, 
@@ -548,9 +533,8 @@ viz8<span style="color:#f92672">.</span>set(ylabel <span style="color:#f92672">=
 
 plt<span style="color:#f92672">.</span>show()
 
-<span style="color:#75715e"># Save our plot to the Viz folder </span>
-viz8<span style="color:#f92672">.</span>figure<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;Viz/Word_Frequency_by_Document_Frequency.png&#34;</span>)
-</code></pre></div><p><img src="EDA_files/EDA_20_0.png" alt="png"></p>
+
+</code></pre></div><p><img src="EDA_Part_1_files/EDA_Part_1_20_0.svg" alt="svg"></p>
 <p>Building on our analysis above, we&rsquo;ll now look into the TF-IDF for each word. Let&rsquo;s start by calculating term frequency. While we&rsquo;ve mostly been looking at the word counts across all documents, for term frequency, we care about the proportion of times the word appears in a given document. Ex: If a sentence is 10 words long and &lsquo;constitution&rsquo; appears 3 times, its term frequency is .3 (30%).</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">fed_analysis <span style="color:#f92672">=</span> merged_counts<span style="color:#f92672">.</span>copy()
 
@@ -594,11 +578,11 @@ tf_idf_df[<span style="color:#e6db74">&#39;tf_idf&#39;</span>] <span style="colo
 <span style="color:#75715e">#                                Viz 9: Top TF-IDF</span>
 <span style="color:#75715e"># ----------------------------------------------------------------------------</span>
 
-authors <span style="color:#f92672">=</span> fed_nonstop[[<span style="color:#e6db74">&#39;essay&#39;</span>, <span style="color:#e6db74">&#39;Author&#39;</span>]]<span style="color:#f92672">.</span>drop_duplicates()
+authors <span style="color:#f92672">=</span> fed_nonstop[[<span style="color:#e6db74">&#39;Essay&#39;</span>, <span style="color:#e6db74">&#39;Author&#39;</span>]]<span style="color:#f92672">.</span>drop_duplicates()
 
 merged_df <span style="color:#f92672">=</span> tf_idf_df<span style="color:#f92672">.</span>merge(authors,
                             left_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Essay&#39;</span>,
-                            right_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;essay&#39;</span>)
+                            right_on <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Essay&#39;</span>)
 
 authors_tf <span style="color:#f92672">=</span> merged_df<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;tf_idf&#39;</span>, <span style="color:#e6db74">&#39;Author&#39;</span>, <span style="color:#e6db74">&#39;word&#39;</span>]) \
     <span style="color:#f92672">.</span>size() \
@@ -622,22 +606,22 @@ sns<span style="color:#f92672">.</span>set_context(<span style="color:#e6db74">&
 
 <span style="color:#75715e"># Build the visualization</span>
 viz9 <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>FacetGrid(authors_top_tf, 
-                     col <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Author&#34;</span>, 
+                     col <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Author&#34;</span>,
+                     hue <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Author&#39;</span>, 
+                     col_wrap <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>,
+                     palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Purples_r&#39;</span>,
                      sharex <span style="color:#f92672">=</span> False, 
                      sharey <span style="color:#f92672">=</span> False)
 viz9<span style="color:#f92672">.</span>map(sns<span style="color:#f92672">.</span>barplot, <span style="color:#e6db74">&#34;tf_idf&#34;</span>, <span style="color:#e6db74">&#34;word&#34;</span>)
 
 <span style="color:#75715e"># Set our labels</span>
-viz9<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;tf_idf&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Hamilton Top Words&#39;</span>)
+viz9<span style="color:#f92672">.</span>set(xlabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;tf_idf&#39;</span>, ylabel<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;word&#39;</span>)
 plt<span style="color:#f92672">.</span>show()
 
-</code></pre></div><pre><code>/Users/Owner/opt/anaconda3/lib/python3.8/site-packages/seaborn/axisgrid.py:645: UserWarning: Using the barplot function without specifying `order` is likely to produce an incorrect plot.
-  warnings.warn(warning)
-</code></pre>
-<p><img src="EDA_files/EDA_24_1.png" alt="png"></p>
+</code></pre></div><p><img src="EDA_Part_1_files/EDA_Part_1_24_1.svg" alt="svg"></p>
 <p>These TF-IDF scores give us a heightened sense of some of the most poignant words used by each author. For example, Hamilton seems wholly focused on the Judicial Branch of government (<em>courts</em>, <em>jury</em>, etc.). Although Madison similarly focused on the judiciary, he also cares quite a bit about the structure of government, referencing words like <em>faction</em> and <em>department(s)</em>.</p>
 <h2 id="conclusion">Conclusion</h2>
-<p>Thanks for reading! We hope you were able to learn a bit more about the Federalist Papers. If you feltlike the article was educational or interesting stay tuned for the next post, where we hope to provide text summarization, an interactive app, and a Tableau infographic. If you have ideas on other routes this could go, please send your suggestions &ndash; the more ideas, the better!</p>
+<p>Thanks for reading! We hope you were able to learn a bit more about the Federalist Papers. If you felt like the article was educational or interesting stay tuned for the next post, where we hope to provide text summarization, an interactive app, and a Tableau infographic. If you have ideas on other routes this could go, please comment your suggestions &ndash; the more ideas, the better!</p>
 <h2 id="additional-resources">Additional Resources</h2>
 <p>Interested in seeing the original blog post and our other work?</p>
 <ol>
@@ -648,7 +632,13 @@ plt<span style="color:#f92672">.</span>show()
 <strong><a href="https://github.com/jschulberg/Federalist-Papers-NLP">https://github.com/jschulberg/Federalist-Papers-NLP</a></strong></p>
 <p>Interested in reading the original essays? Go to:<br>
 <strong><a href="https://guides.loc.gov/federalist-papers/text-1-10#s-lg-box-wrapper-25493264">https://guides.loc.gov/federalist-papers/text-1-10#s-lg-box-wrapper-25493264</a></strong></p>
+<p>Interested in reading this post on Medium? Go to:
+<strong><a href="https://sabridatascience.medium.com/nlp-analysis-of-the-federalist-papers-in-python-part-1-2c44ed8c42d1">https://sabridatascience.medium.com/nlp-analysis-of-the-federalist-papers-in-python-part-1-2c44ed8c42d1</a></strong></p>
 <ul class="pa0">
+  
+   <li class="list">
+     <a href="/tags/python" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">python</a>
+   </li>
   
 </ul>
 <div class="mt6 instapaper_ignoref">
@@ -692,8 +682,8 @@ plt<span style="color:#f92672">.</span>show()
     </main>
     <footer class="bg-light-purple bottom-0 w-100 pa3" role="contentinfo">
   <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="datacracy.netlify.app/" >
-    &copy;  Datacracy 2021 
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://datacracy.netlify.app/" >
+    &copy;  Datacracy 2022 
   </a>
     <div>
 

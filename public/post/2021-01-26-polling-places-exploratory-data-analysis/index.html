@@ -18,7 +18,7 @@ This article analyzes that symbol of American democracy by taking an analytical 
 
   
   
-    <link rel="stylesheet" href="/datacracy.netlify.app/ananke/dist/main.css_5c99d70a7725bacd4c701e995b969fea.css" >
+    <link rel="stylesheet" href="/ananke/dist/main.css_5c99d70a7725bacd4c701e995b969fea.css" >
   
 
 
@@ -26,7 +26,7 @@ This article analyzes that symbol of American democracy by taking an analytical 
 
     
       
-<link rel="shortcut icon" href="/datacracy.netlify.app/images/Datacracy_Logo.png" type="image/x-icon" />
+<link rel="shortcut icon" href="/images/Datacracy_Logo.ico" type="image/x-icon" />
 
 
     
@@ -37,7 +37,7 @@ This article analyzes that symbol of American democracy by taking an analytical 
 <meta property="og:description" content="In a democracy, the polling booth is much more than a location where an unwitting citizen fills in a bubble on a piece of paper in a make-shift booth. It is a symbol of the promise of democracy, a connector between the citizen and the government. It is the shrine that, if protected and respected, powers a democracy.
 This article analyzes that symbol of American democracy by taking an analytical look at a dataset of U." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/" /><meta property="article:section" content="post" />
+<meta property="og:url" content="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2021-01-26T00:00:00&#43;00:00" />
 <meta property="article:modified_time" content="2021-01-26T00:00:00&#43;00:00" /><meta property="og:site_name" content="Datacracy" />
 
@@ -46,7 +46,7 @@ This article analyzes that symbol of American democracy by taking an analytical 
 This article analyzes that symbol of American democracy by taking an analytical look at a dataset of U."><meta itemprop="datePublished" content="2021-01-26T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-01-26T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="2186">
-<meta itemprop="keywords" content="public policy," /><meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="R," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Polling Places | Exploratory Data Analysis"/>
 <meta name="twitter:description" content="In a democracy, the polling booth is much more than a location where an unwitting citizen fills in a bubble on a piece of paper in a make-shift booth. It is a symbol of the promise of democracy, a connector between the citizen and the government. It is the shrine that, if protected and respected, powers a democracy.
 This article analyzes that symbol of American democracy by taking an analytical look at a dataset of U."/>
@@ -60,11 +60,13 @@ This article analyzes that symbol of American democracy by taking an analytical 
    
   
 
-  <header>
-    <div class="bg-light-purple">
+  
+  
+  <header class="cover bg-top" style="background-image: url('https://datacracy.netlify.app/images/Voting%20Polls.jpg');">
+    <div class="pb3-m pb6-l bg-black-60">
       <nav class="pv3 ph3 ph4-ns" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="datacracy.netlify.app/" class="f3 fw2 hover-white no-underline white-90 dib">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
       
         <img src="images/Datacracy_Logo.png" class="w100 mw5-ns" alt="Datacracy" />
       
@@ -76,19 +78,19 @@ This article analyzes that symbol of American democracy by taking an analytical 
         <ul class="pl0 mr3">
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="datacracy.netlify.app/post" title="Posts page">
+            <a class="hover-white no-underline white-90" href="/post" title="Posts page">
               Posts
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="datacracy.netlify.app/aboutme" title="About Me page">
+            <a class="hover-white no-underline white-90" href="/aboutme" title="About Me page">
               About Me
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="datacracy.netlify.app/about" title="About this site page">
+            <a class="hover-white no-underline white-90" href="/about" title="About this site page">
               About this site
             </a>
           </li>
@@ -159,6 +161,12 @@ This article analyzes that symbol of American democracy by taking an analytical 
   </div>
 </nav>
 
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <h1 class="f2 f1-l fw2 white-90 mb0 lh-title">Polling Places | Exploratory Data Analysis</h1>
+          
+        
+      </div>
     </div>
   </header>
 
@@ -181,20 +189,20 @@ This article analyzes that symbol of American democracy by taking an analytical 
   <div id="sharing" class="mt3">
 
     
-    <a href="https://www.facebook.com/sharer.php?u=datacracy.netlify.app/datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/" class="facebook no-underline" aria-label="share on Facebook">
+    <a href="https://www.facebook.com/sharer.php?u=https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/" class="facebook no-underline" aria-label="share on Facebook">
       <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M28.765,50.32h6.744V33.998h4.499l0.596-5.624h-5.095  l0.007-2.816c0-1.466,0.14-2.253,2.244-2.253h2.812V17.68h-4.5c-5.405,0-7.307,2.729-7.307,7.317v3.377h-3.369v5.625h3.369V50.32z   M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;"/></svg>
 
     </a>
 
     
     
-    <a href="https://twitter.com/share?url=datacracy.netlify.app/datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/&amp;text=Polling%20Places%20%7c%20Exploratory%20Data%20Analysis" class="twitter no-underline" aria-label="share on Twitter">
+    <a href="https://twitter.com/share?url=https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/&amp;text=Polling%20Places%20%7c%20Exploratory%20Data%20Analysis" class="twitter no-underline" aria-label="share on Twitter">
       <svg height="32px"  style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M37.167,22.283c-2.619,0.953-4.274,3.411-4.086,6.101  l0.063,1.038l-1.048-0.127c-3.813-0.487-7.145-2.139-9.974-4.915l-1.383-1.377l-0.356,1.017c-0.754,2.267-0.272,4.661,1.299,6.271  c0.838,0.89,0.649,1.017-0.796,0.487c-0.503-0.169-0.943-0.296-0.985-0.233c-0.146,0.149,0.356,2.076,0.754,2.839  c0.545,1.06,1.655,2.097,2.871,2.712l1.027,0.487l-1.215,0.021c-1.173,0-1.215,0.021-1.089,0.467  c0.419,1.377,2.074,2.839,3.918,3.475l1.299,0.444l-1.131,0.678c-1.676,0.976-3.646,1.526-5.616,1.568  C19.775,43.256,19,43.341,19,43.405c0,0.211,2.557,1.397,4.044,1.864c4.463,1.377,9.765,0.783,13.746-1.568  c2.829-1.673,5.657-5,6.978-8.221c0.713-1.716,1.425-4.851,1.425-6.354c0-0.975,0.063-1.102,1.236-2.267  c0.692-0.678,1.341-1.419,1.467-1.631c0.21-0.403,0.188-0.403-0.88-0.043c-1.781,0.636-2.033,0.551-1.152-0.402  c0.649-0.678,1.425-1.907,1.425-2.267c0-0.063-0.314,0.042-0.671,0.233c-0.377,0.212-1.215,0.53-1.844,0.72l-1.131,0.361l-1.027-0.7  c-0.566-0.381-1.361-0.805-1.781-0.932C39.766,21.902,38.131,21.944,37.167,22.283z M33,64C16.432,64,3,50.569,3,34S16.432,4,33,4  s30,13.431,30,30S49.568,64,33,64z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/></svg>
 
     </a>
 
     
-    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=datacracy.netlify.app/datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/&amp;title=Polling%20Places%20%7c%20Exploratory%20Data%20Analysis" class="linkedin no-underline" aria-label="share on LinkedIn">
+    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/&amp;title=Polling%20Places%20%7c%20Exploratory%20Data%20Analysis" class="linkedin no-underline" aria-label="share on LinkedIn">
       <svg  height="32px"  style="enable-background:new 0 0 65 65;" version="1.1" viewBox="0 0 65 65" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <path d="M50.837,48.137V36.425c0-6.275-3.35-9.195-7.816-9.195  c-3.604,0-5.219,1.983-6.119,3.374V27.71h-6.79c0.09,1.917,0,20.427,0,20.427h6.79V36.729c0-0.609,0.044-1.219,0.224-1.655  c0.49-1.22,1.607-2.483,3.482-2.483c2.458,0,3.44,1.873,3.44,4.618v10.929H50.837z M22.959,24.922c2.367,0,3.842-1.57,3.842-3.531  c-0.044-2.003-1.475-3.528-3.797-3.528s-3.841,1.524-3.841,3.528c0,1.961,1.474,3.531,3.753,3.531H22.959z M34,64  C17.432,64,4,50.568,4,34C4,17.431,17.432,4,34,4s30,13.431,30,30C64,50.568,50.568,64,34,64z M26.354,48.137V27.71h-6.789v20.427  H26.354z" style="fill-rule:evenodd;clip-rule:evenodd;fill:;"/>
 </svg>
@@ -223,9 +231,9 @@ This article analyzes that symbol of American democracy by taking an analytical 
       
     </header>
     <div class="nested-copy-line-height lh-copy serif f4 nested-links nested-img mid-gray pr4-l w-two-thirds-l">
-<script src="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/header-attrs/header-attrs.js"></script>
-<script src="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/kePrint/kePrint.js"></script>
-<link href="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/lightable/lightable.css" rel="stylesheet" />
+<script src="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/header-attrs/header-attrs.js"></script>
+<script src="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/kePrint/kePrint.js"></script>
+<link href="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/lightable/lightable.css" rel="stylesheet" />
 
 
 <p>In a democracy, the polling booth is much more than a location where an unwitting citizen fills in a bubble on a piece of paper in a make-shift booth. It is a symbol of the promise of democracy, a connector between the citizen and the government. It is the shrine that, if protected and respected, powers a democracy.</p>
@@ -1840,10 +1848,10 @@ House
 </div>
 <p>In the dataset we can see quite a bit of information! Each row corresponds to a polling place available during a given election. So in 2012 at the <em>Agricultural Museum - Fairgrounds</em> polling place, there were two elections: one for House races and one for President, thus resulting in two rows of our dataset. For each polling place we can see a few things of interest, including the location of the site, the number of people who voted in that state election (NOT the number of people who voted at that site), the population of the state, and so on.</p>
 <p>Using this data, let’s try to understand trends in the number of polling places in each state. We’ll start by looking at the relationship between the number of polling places and the population of each state.</p>
-<p><img src="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/top_10_states-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p><img src="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/top_10_states-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>As population increases, the number of polling sites also increases. This trend holds steadily true for each election, regardless of whether there was a Presidential election (2012 + 2016) or just House/Senate elections (2014 + 2018).</p>
 <p>Let’s get a better look at which states had proportionally more polling places than they did general population (the per capita rate).</p>
-<p><img src="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/map_and_bar-1.png" width="864" style="display: block; margin: auto;" />
+<p><img src="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/map_and_bar-1.png" width="864" style="display: block; margin: auto;" />
 Above I’ve stacked a bar chart showing the top 10 states by polling sites per capita on top of a map-based visualization showing the same. Although there isn’t much of a geographic differentiation in the number of polling sites per capita by state (it definitely hurts that CPI has only collected this data for 32 states), I do notice that the numbers <strong>aren’t skewed by Northeast vs. South</strong>, which would have been my initial assumption. It’s also clear that states commission more public polling sites during Presidential election years than off-cycle years.</p>
 <div id="elections-correlation" class="section level2">
 <h2>Elections Correlation</h2>
@@ -1851,21 +1859,21 @@ Above I’ve stacked a bar chart showing the top 10 states by polling sites per 
 2012 and 2018, using that data to match onto the polling places data.</p>
 <p>I’ll do so by determining a new variable defined by the overall races won by a political party in a given state. For example, if in New Jersey 2018, Democrats won the House and Senate races, Democrats controlled that election year in NJ. If in Wisconsin, a Republican (Trump) won the Presidential election in 2016, but Democrats overall won the House races, then it’s a “Split Ticket” state.</p>
 <p>Let’s start by getting a sense of this new variable. Which party won each state in the past 4 elections?</p>
-<p><img src="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/elections-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p><img src="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/elections-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>Now that we better understand how this variable works, let’s correlate this against the number of polling sites available to voters in that state. Now that we have our dataset, we’ll build 4 scatter plots (one for each year) of polling places by number of total votes.</p>
-<p><img src="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/votes_scatter-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p><img src="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/votes_scatter-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>Let’s take another look at our top 10 counts from earlier to see if there’s a correlation with which party won a given state.</p>
-<p><img src="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/top_10_by_party-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p><img src="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/top_10_by_party-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>Interestingly enough, in the most notable election covered by our dataset – the 2016 election – states that ended up going full Republican had the most polling places per capita. The state with the most polling places per capita in 2016 – Wisconsin – was notable in that it swung for Trump, much to the Hillary campaign’s surprise.</p>
 <p>To be honest, this finding surprises me a bit, especially given a lot of the rhetoric that Republican states go out of their way to make it more difficult for individuals to vote. Obviously this doesn’t tell the full story. Just because there are more polling places does not mean that they are accessible, or that there are a lot of people eligible to vote (because of difficulties in the voter registration process). Still it is a metric that helps understand the fuller picture.</p>
 <p>Let’s take a look at our “worst” 10 states to see if this trend reverses.</p>
-<p><img src="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/bottom_10-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p><img src="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/bottom_10-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>Looking at the bottom polling places makes the argument a bit more muddled. It’s overall a healthier mix of states that went full-Democrat and full-Republican (along with a fair share that had mixed results).</p>
 <p>Let’s take a closer look at our <strong>House</strong> races. Specifically, let’s tie together all three measures we’ve previously been discussing:<br />
 1. Number of Polling Sites<br />
 2. Number of Votes Cast<br />
 3. Total Population</p>
-<p><img src="datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/house_winners-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p><img src="https://datacracy.netlify.app/post/2021-01-26-polling-places-exploratory-data-analysis/index_files/figure-html/house_winners-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>In terms of trend, I can’t see much distinction between states where Republicans won the House versus Democrats. Let’s test this formally using regression. In particular, let’s fit a regression model for House elections, using party, number of votes cast, and population as predictors. We expect, based on the plot above, to see highly correlative relationships between number of votes cast, population, and number of polling places. The real question lies in party.</p>
 <p>Here are the results from running a basic regression:</p>
 <table style="width:100%;">
@@ -1968,7 +1976,7 @@ Above I’ve stacked a bar chart showing the top 10 states by polling sites per 
 <ul class="pa0">
   
    <li class="list">
-     <a href="/datacracy.netlify.app/tags/public-policy" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">public policy</a>
+     <a href="/tags/r" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">R</a>
    </li>
   
 </ul>
@@ -2011,11 +2019,7 @@ Above I’ve stacked a bar chart showing the top 10 states by polling sites per 
     <ul class="pa0 list">
 	   
 	     <li  class="mb2">
-          <a href="datacracy.netlify.app/post/2021-01-26-women-in-politics/">Women in Politics</a>
-        </li>
-	    
-	     <li  class="mb2">
-          <a href="datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/">U.S. Police-Caused Fatalities</a>
+          <a href="/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/">Reading Multiple CSVs into Merged R Dataframe</a>
         </li>
 	    
     </ul>
@@ -2028,8 +2032,8 @@ Above I’ve stacked a bar chart showing the top 10 states by polling sites per 
     </main>
     <footer class="bg-light-purple bottom-0 w-100 pa3" role="contentinfo">
   <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="datacracy.netlify.app/" >
-    &copy;  Datacracy 2021 
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://datacracy.netlify.app/" >
+    &copy;  Datacracy 2022 
   </a>
     <div>
 

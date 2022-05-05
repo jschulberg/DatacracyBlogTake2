@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Data on Datacracy</title>
-    <link>datacracy.netlify.app/categories/data/</link>
+    <link>https://datacracy.netlify.app/categories/data/</link>
     <description>Recent content in Data on Datacracy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 20 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="datacracy.netlify.app/categories/data/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 20 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/categories/data/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Reading Multiple CSVs into Merged R Dataframe</title>
-      <link>datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</link>
+      <link>https://datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</link>
       <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</guid>
+      <guid>https://datacracy.netlify.app/post/2021-01-26-reading-multiple-csvs-into-merged-r-dataframe/</guid>
       <description>The purpose of this script is to load and clean all of the various .csv files containing polling place data into R. The data, which is available for download here, is structured as follows:
 - Each state (32 in total) has its own folder
 - Within each state (folder), there are a variable number of CSV files, one for each year that polling place data is available</description>
@@ -20,10 +20,10 @@
     
     <item>
       <title>U.S. Police-Caused Fatalities</title>
-      <link>datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/</link>
+      <link>https://datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/</link>
       <pubDate>Mon, 15 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/</guid>
+      <guid>https://datacracy.netlify.app/post/2021-01-26-u-s-police-caused-fatalities/</guid>
       <description>George Floyd. Eric Garner. Tamir Rice.
 Those names, among thousands of others, are emblematic of fatal police violence in the United States. The protest movement that has spread like wildfire across the U.S. has brought police brutality to the forefront of everyone’s minds.
 Following the deluge of information from news stations and social media, I can’t help but wonder, what does the data say? Are these new trends or longstanding realities?</description>
