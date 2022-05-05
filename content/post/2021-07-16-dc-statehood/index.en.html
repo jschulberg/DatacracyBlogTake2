@@ -10,13 +10,12 @@ categories:
 tags:
   - EDA
 comments: yes
-image: ''
+image: 'images/tax_wo_rep.png'
 menu: ''
 share: yes
 draft: true
 ---
 
-<script src="{{< blogdown/postref >}}index.en_files/header-attrs/header-attrs.js"></script>
 <script src="{{< blogdown/postref >}}index.en_files/kePrint/kePrint.js"></script>
 <link href="{{< blogdown/postref >}}index.en_files/lightable/lightable.css" rel="stylesheet" />
 
@@ -36,21 +35,21 @@ draft: true
 <h2>Population</h2>
 <p>A common argument against D.C. Statehood is its size. Claiming that it’s just a medium-sized city opponents of D.C. Statehood often argue that it’s really just a subcomponent of what every other state has: one large city; and is thus missing the other components that other states have (i.e. more suburban/rural areas outside of its large cities).</p>
 <p>Let’s take a look at D.C.’s population compared to other states.</p>
-<pre><code>## # A tibble: 52 x 8
-##     rank state x2021_population growth_2021 x2010_census growth_since_20…
-##    &lt;int&gt; &lt;chr&gt;            &lt;int&gt; &lt;chr&gt;              &lt;int&gt; &lt;chr&gt;           
-##  1     1 Cali…         39613493 0.13%           37319502 6.15%           
-##  2     2 Texas         29730311 1.25%           25241971 17.78%          
-##  3     3 Flor…         21944577 1.08%           18845537 16.44%          
-##  4     4 New …         19299981 -0.40%          19399878 -0.51%          
-##  5     5 Penn…         12804123 0.01%           12711160 0.73%           
-##  6     6 Illi…         12569321 -0.41%          12840503 -2.11%          
-##  7     7 Ohio          11714618 0.11%           11539336 1.52%           
-##  8     8 Geor…         10830007 0.99%            9711881 11.51%          
-##  9     9 Nort…         10701022 1.00%            9574323 11.77%          
-## 10    10 Mich…          9992427 0.03%            9877510 1.16%           
-## # … with 42 more rows, and 2 more variables: percent_of_us &lt;chr&gt;,
-## #   density_mi2 &lt;chr&gt;</code></pre>
+<pre><code>## # A tibble: 52 × 9
+##     rank state        x2022_population growth_2022 x2021_population x2010_census
+##    &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;                  &lt;int&gt;        &lt;int&gt;
+##  1     1 California   39,664,128       0.13%               39613493     37319502
+##  2     2 Texas        30,097,526       1.24%               29730311     25241971
+##  3     3 Florida      22,177,997       1.06%               21944577     18845537
+##  4     4 New York     19,223,191       -0.40%              19299981     19399878
+##  5     5 Pennsylvania 12,805,190       0.01%               12804123     12711160
+##  6     6 Illinois     12,518,071       -0.41%              12569321     12840503
+##  7     7 Ohio         11,727,377       0.11%               11714618     11539336
+##  8     8 Georgia      10,936,299       0.98%               10830007      9711881
+##  9     9 North Carol… 10,807,491       0.99%               10701022      9574323
+## 10    10 Michigan     9,995,212        0.03%                9992427      9877510
+## # … with 42 more rows, and 3 more variables: growth_since_2010 &lt;chr&gt;,
+## #   percent_of_us &lt;chr&gt;, density_mi2 &lt;chr&gt;</code></pre>
 <p><img src="{{< blogdown/postref >}}index.en_files/figure-html/plot_pop_info-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>We can see that D.C. ranks towards the bottom of states in terms of population, although not the smallest state. This hasn’t always been the case. In fact, there was an almost 50-year stretch in the mid 20th Century where D.C. wasn’t even in the bottom 10 states by population.</p>
 <p><img src="{{< blogdown/postref >}}index.en_files/figure-html/pop_line_chart-1.png" width="864" style="display: block; margin: auto;" /></p>
@@ -58,7 +57,7 @@ draft: true
 </div>
 <div id="taxes" class="section level2">
 <h2>Taxes</h2>
-<p>If you ever drive around D.C. and look closely, you’ll notice that every license plate is surrounded with the words “NO TAXATION WITHOUT REPRESENTATION”. The notion that this country was founded on 246 years ago is one that doesn’t hold true in its own capital.</p>
+<p>If you ever drive around D.C. and look closely, you’ll notice that every license plate has the words “<em>NO TAXATION WITHOUT REPRESENTATION</em>”. The notion that this country was founded on 246 years ago is one that doesn’t hold true <strong>in its own capital</strong>.</p>
 <p>Below, I scrape tax information from <a href="https://www.taxadmin.org/2019-state-tax-revenue">taxadmin.org</a> to see how well DC does in paying its taxes compared to other states. Let’s start by taking a look at the table</p>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
 <table class="table table-striped table-hover" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
@@ -1110,8 +1109,8 @@ Wyoming
 </div>
 <p>Now we’ll plot the state tax <em>(note: not Federal tax)</em> paid per state to see how DC compares.</p>
 <p><img src="{{< blogdown/postref >}}index.en_files/figure-html/plot_tax_info-1.png" width="864" style="display: block; margin: auto;" /></p>
-<p>Astounding. Compared to every other state, D.C. contributes significantly more to State taxes on a per-capita basis. Per-capita is often the best measure to look at as it shows the average revenue collected per person. Compared to the second-most state, D.C. contributes <strong>1.9x</strong> as much Federal taxes.</p>
-<p>Why does something like this matter? Well, when Congress was debating the <em>Alaska Statehood Act</em> in 1949, Republicans (who are the main opponents of D.C. Statehood) claimed that Alaska’s population was too sparse to generate substantial taxes and would ultimately become a welfare state. It’s worth noting that Southern Democrats were also opposed to Alaska Statehood for fear that future Alaskan Congresspeople would be pro-Civil Rights. The ultimate passage of the Act was guaranteed by packaging it with Hawaii (a then-Republican territory) Statehood.</p>
+<p>Astounding. Compared to every other state, D.C. contributes significantly more to State taxes on a per-capita basis. Per-capita is often the best measure to look at as it shows the average revenue collected per person. Compared to the second-most state, D.C. contributes <strong>1.9x</strong> as much Federal taxes. What drives a differential this large? Well, it’s likely driven by the fact that D.C. is, naturally, a much wealthier region of the country per capita compared to all other regions/states (and lobbyists/contractors in the state get paid quite a pretty penny).</p>
+<p>Regardless, why does something like the high proportion of taxes paid matter? Well, when Congress was debating the <em>Alaska Statehood Act</em> in 1949, Republicans (who are the main opponents of D.C. Statehood) claimed that Alaska’s population was too sparse to generate substantial taxes and would ultimately become a welfare state. It’s worth noting that Southern Democrats were also opposed to Alaska Statehood for fear that future Alaskan Congresspeople would be pro-Civil Rights. The ultimate passage of the Act was guaranteed by packaging it with Hawaii (a then-Republican territory) Statehood.</p>
 </div>
 <div id="the-power-grab" class="section level2">
 <h2>The Power Grab</h2>
@@ -1119,8 +1118,11 @@ Wyoming
 </div>
 <div id="is-annexation-into-mdva-possible" class="section level2">
 <h2>Is Annexation into MD/VA Possible?</h2>
-<p>It is! There are strong arguments, not least of which is that Alexandria, VA used to be part of the Federal District (and thus could not vote in Federal Elections), but was <a href="http://www.compromise-of-1850.org/banning-slave-trade-in-washington-dc/">annexed by VA</a> in order to preserve its ability to maintain slavery.</p>
+<p>It is! There are strong arguments, not least of which is that Alexandria, VA used to be part of the Federal District (and thus could not vote in Federal Elections), but was <a href="http://www.compromise-of-1850.org/banning-slave-trade-in-washington-dc/">annexed by VA</a> in order to preserve its ability to maintain slavery. In fact, the retrocession of D.C. to the Federal Government changed significantly over the first ~100 years of this country, as seen in this graphic:</p>
+<p><img src="images/Dcmapanimated.gif" /></p>
+<p>Looking closely, one can see that the original portion of land that was ceded to form D.C. is now, exclusively, land given by Maryland.</p>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
+<p>Things can change! It wasn’t even until 1964 when D.C.’ers were able to vote for U.S. President.</p>
 </div>

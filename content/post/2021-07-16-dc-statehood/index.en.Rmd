@@ -10,7 +10,7 @@ categories:
 tags:
   - EDA
 comments: yes
-image: ''
+image: 'images/tax_wo_rep.png'
 menu: ''
 share: yes
 draft: true
@@ -82,7 +82,7 @@ pop_cleaned <- pop_data[[1]] %>%
 pop_cleaned %>% 
   # Pull bottom 10
   top_n(-10, x2021_population) %>% 
-  ggplot(aes(x = reorder(state, x2021_population), 
+  ggplot(aes(x = reorder(state, -x2021_population), 
              y = x2021_population,
              fill=factor(if_else(state=="District of Columbia", "Highlighted", "Normal"))
              )
@@ -204,20 +204,11 @@ pop_cleaned %>%
                subtitle="Pct Change: 2010 vs. 2021", 
                caption="Source: https://github.com/hrbrmstr/ggalt") +
           theme_classic() 
-          # theme(plot.title = element_text(hjust=0.5, face="bold"),
-          #       plot.background=element_rect(fill="#f7f7f7"),
-          #       panel.background=element_rect(fill="#f7f7f7"),
-          #       panel.grid.minor=element_blank(),
-          #       panel.grid.major.y=element_blank(),
-          #       panel.grid.major.x=element_line(),
-          #       axis.ticks=element_blank(),
-          #       legend.position="top",
-          #       panel.border=element_blank())
 
 ```
 
 ## Taxes
-If you ever drive around D.C. and look closely, you'll notice that every license plate is surrounded with the words "NO TAXATION WITHOUT REPRESENTATION". The notion that this country was founded on `r as.integer(format(Sys.Date(), "%Y"))-1776` years ago is one that doesn't hold true in its own capital. 
+If you ever drive around D.C. and look closely, you'll notice that every license plate has the words "*NO TAXATION WITHOUT REPRESENTATION*". The notion that this country was founded on `r as.integer(format(Sys.Date(), "%Y"))-1776` years ago is one that doesn't hold true **in its own capital**. 
 
 Below, I scrape tax information from [taxadmin.org](https://www.taxadmin.org/2019-state-tax-revenue) to see how well DC does in paying its taxes compared to other states. Let's start by taking a look at the table
 
@@ -280,7 +271,7 @@ tax_cleaned %>%
     # Let's change the names of the axes and title
     xlab("State") +
     ylab("Taxes paid per capita ($)") +
-    labs(title = "Total Taxes Paid by State (Top 10 and Bottom 5)",
+    labs(title = "Taxes Paid by State per Capita (Top 10 and Bottom 5)",
          subtitle = paste("D.C. pays ", 
                           ((tax_cleaned %>% filter(state == "Dist. of Columbia") %>% select(per_capita) %>% as.integer() ) / (tax_cleaned %>% filter(rank == 2) %>% select(per_capita) %>% as.integer() )) %>% round(1), 
                           "x as much state taxes per-capita as the 2nd most state, ",
@@ -296,14 +287,21 @@ tax_cleaned %>%
 
 ```
 
-Astounding. Compared to every other state, D.C. contributes significantly more to State taxes on a per-capita basis. Per-capita is often the best measure to look at as it shows the average revenue collected per person. Compared to the second-most state, D.C. contributes **`r ((tax_cleaned %>% filter(state == "Dist. of Columbia") %>% select(per_capita) %>% as.integer() ) / (tax_cleaned %>% filter(rank == 2) %>% select(per_capita) %>% as.integer() )) %>% round(1)`x** as much Federal taxes. 
+Astounding. Compared to every other state, D.C. contributes significantly more to State taxes on a per-capita basis. Per-capita is often the best measure to look at as it shows the average revenue collected per person. Compared to the second-most state, D.C. contributes **`r ((tax_cleaned %>% filter(state == "Dist. of Columbia") %>% select(per_capita) %>% as.integer() ) / (tax_cleaned %>% filter(rank == 2) %>% select(per_capita) %>% as.integer() )) %>% round(1)`x** as much Federal taxes. What drives a differential this large? Well, it's likely driven by the fact that D.C. is, naturally, a much wealthier region of the country per capita compared to all other regions/states (and lobbyists/contractors in the state get paid quite a pretty penny).
 
-Why does something like this matter? Well, when Congress was debating the *Alaska Statehood Act* in 1949, Republicans (who are the main opponents of D.C. Statehood) claimed that Alaska's population was too sparse to generate substantial taxes and would ultimately become a welfare state. It's worth noting that Southern Democrats were also opposed to Alaska Statehood for fear that future Alaskan Congresspeople would be pro-Civil Rights. The ultimate passage of the Act was guaranteed by packaging it with Hawaii (a then-Republican territory) Statehood.
+Regardless, why does something like the high proportion of taxes paid matter? Well, when Congress was debating the *Alaska Statehood Act* in 1949, Republicans (who are the main opponents of D.C. Statehood) claimed that Alaska's population was too sparse to generate substantial taxes and would ultimately become a welfare state. It's worth noting that Southern Democrats were also opposed to Alaska Statehood for fear that future Alaskan Congresspeople would be pro-Civil Rights. The ultimate passage of the Act was guaranteed by packaging it with Hawaii (a then-Republican territory) Statehood.
 
 ## The Power Grab  
 There are quite a few arguments about D.C. Statehood being a political ploy by Democrats to gain more control of the U.S. Senate. Those arguments are fair and are likely in the minds of at least some Democratic members of Congress. However, I pose the question: when would the inclusion of 2 likely-Democratic Senators be the least politically motivated? Would it be when Democrats are already in control of all three branches of Congress or when Republicans control the U.S. Senate?
 
 ## Is Annexation into MD/VA Possible?
-It is! There are strong arguments, not least of which is that Alexandria, VA used to be part of the Federal District (and thus could not vote in Federal Elections), but was [annexed by VA](http://www.compromise-of-1850.org/banning-slave-trade-in-washington-dc/) in order to preserve its ability to maintain slavery.
+It is! There are strong arguments, not least of which is that Alexandria, VA used to be part of the Federal District (and thus could not vote in Federal Elections), but was [annexed by VA](http://www.compromise-of-1850.org/banning-slave-trade-in-washington-dc/) in order to preserve its ability to maintain slavery. In fact, the retrocession of D.C. to the Federal Government changed significantly over the first ~100 years of this country, as seen in this graphic:
+
+![](images/Dcmapanimated.gif)
+
+
+Looking closely, one can see that the original portion of land that was ceded to form D.C. is now, exclusively, land given by Maryland.
 
 ## Conclusion
+
+Things can change! It wasn't even until 1964 when D.C.'ers were able to vote for U.S. President.
