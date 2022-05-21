@@ -164,7 +164,7 @@ mtb_data %>%
   labs(title = "Number of Mountain Bikes per Category")
 ```
 
-We see that out of our `r nrow(mtb_data)` bikes, most of them are Trail bikes, with the smallest grouping of bikes being all mountain bikes
+We see that out of our `r nrow(mtb_data)` bikes, most of them are Trail bikes, with the smallest grouping of bikes being All Mountain bikes.
 
 ## Categorical Variables
 
@@ -1054,3 +1054,8 @@ There are a few opportunities to improve the analysis included in this presentat
 -   **Include all sizes of bikes** \| We chose to use the size that corresponded to a 5'10" rider, but some bike manufacturers could interpret this as a Medium while others interpret this as a Large.
 
 -   **Include bikes across multiple years** \| As bike trends slowly change, it'd be interesting to see how the data shifts across time. For example, the Rocky Mountain Element reduced its head angle from 70 degrees to 65.8 in one iteration of the bike. Including data from past years could provide valuable market insights into how the industry as a whole is moving.
+
+
+Misc.
+The extent of this post was written in R. The full blog post can also be found on Medium [here](https://jschulberg.medium.com/mountain-bike-categorization-analysis-61eb1d8bb259). The source code, data, etc. can be found on Mike’s GitHub [here](https://github.com/mczerwin/MTB-Categorization-Analysis). If you want to reach out with thoughts/feedback/ideas for improvement, please either leave a comment on this post or find my contact info on my blog site.
+
