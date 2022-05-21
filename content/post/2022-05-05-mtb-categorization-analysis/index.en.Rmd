@@ -617,6 +617,8 @@ opt_gmm <- Optimal_Clusters_GMM(mtb_standard_scaled,
 
 From the plot above, we see that the BIC value decreases *generally* as the number of clusters increases. However, it appears that the first big drop is when `clusters = 3`. Let's try that value out and see which bike categories get mapped into each of the 3 clusters.
 
+### GMM - 3 Clusters
+
 ```{r gmm_optimal}
 
 # Build our GMM model
@@ -694,6 +696,56 @@ gridExtra::grid.arrange(cluster1_pred, cluster2_pred, cluster3_pred, ncol = 3)
 ```
 
 Above, we see the expected probability associated with predicting a correct class label. That is, the graph on the left shows how accurate the 3-cluster Gaussian Mixture Model was for predicting bikes fitting into Cluster #1. Generally, the probabilities for the predictions are all above .95; that is, GMM is extremely confident in grouping the different bikes into these 3 clusters.
+
+
+### GMM - 6 Clusters
+
+The next logical "elbow" in the BIC chart from earlier is at 6 clusters. For demonstrative purposes, let's show what this looks like as well.
+
+```{r gmm_optimal_6}
+
+# Build our GMM model
+mtb_gmm_6 <- GMM(mtb_standard_scaled,
+               gaussian_comps = 6,
+               dist_mode = 'maha_dist', # Distance metric to use during seeding of initial means clustering
+               seed_mode = 'random_subset', # How initial means are seeded prior to EM alg
+               km_iter = 10, # Num of iterations of K-Means alg
+               em_iter = 10, # Num of iterations of EM alg
+               verbose = F
+               )
+
+# Run our predictions and convert it to a dataframe
+mtb_gmm_6_pred <- predict_GMM(mtb_standard_scaled, 
+                            mtb_gmm_6$centroids, 
+                            mtb_gmm_6$covariance_matrices, 
+                            mtb_gmm_6$weights) 
+
+mtb_gmm_6_pred <- tibble('log_likelihood_c1' = mtb_gmm_6_pred$log_likelihood[, 1], 
+                         'log_likelihood_c2' = mtb_gmm_6_pred$log_likelihood[, 2],  
+                         'log_likelihood_c3' = mtb_gmm_6_pred$log_likelihood[, 3], 
+                         'log_likelihood_c4' = mtb_gmm_6_pred$log_likelihood[, 4], 
+                         'log_likelihood_c5' = mtb_gmm_6_pred$log_likelihood[, 5], 
+                         'log_likelihood_c6' = mtb_gmm_6_pred$log_likelihood[, 6], 
+                         'cluster1_prob' = mtb_gmm_6_pred$cluster_proba[, 1], 
+                         'cluster2_prob' = mtb_gmm_6_pred$cluster_proba[, 2], 
+                         'cluster3_prob' = mtb_gmm_6_pred$cluster_proba[, 3], 
+                         'cluster4_prob' = mtb_gmm_6_pred$cluster_proba[, 4], 
+                         'cluster5_prob' = mtb_gmm_6_pred$cluster_proba[, 5], 
+                         'cluster6_prob' = mtb_gmm_6_pred$cluster_proba[, 6], 
+                         'cluster_labels' = mtb_gmm_6_pred$cluster_labels)
+
+mtb_gmm_6_pred %>% 
+  select(cluster_labels) %>% 
+  bind_cols(label = mtb_no_null$label) %>% 
+  # xtabs(~ ., data = .) %>% 
+  table() %>% 
+  bind_cols(cluster_labels = c('1', '2', '3', '4', '5', '6')) %>% 
+  relocate(cluster_labels, everything()) %>% 
+  pander()
+```
+
+Here we see the 6 predicted cluster labels along with the actual 5 bike categories in our data. There is some cleaner separability here than what we saw earlier. For example, cluster 2 consists *only* of 2 Enduro bikes and cluster 5 consists *only* of Cross Country bikes. However, Enduro bikes feature prominently in a mixed cluster 1; and Cross Country bikes feature slightly in clusters 4 and 6. Overall, I'd say that using 6 clusters obfuscates the groupings compared to using 3 clusters.
+
 
 ## Multi-class SVM
 

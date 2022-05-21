@@ -48,7 +48,11 @@ comments: yes
 <li><a href="#clustering">Clustering</a>
 <ul>
 <li><a href="#k-means">K-Means</a></li>
-<li><a href="#gaussian-mixture-model-gmm">Gaussian Mixture Model (GMM)</a></li>
+<li><a href="#gaussian-mixture-model-gmm">Gaussian Mixture Model (GMM)</a>
+<ul>
+<li><a href="#gmm---3-clusters">GMM - 3 Clusters</a></li>
+<li><a href="#gmm---6-clusters">GMM - 6 Clusters</a></li>
+</ul></li>
 <li><a href="#multi-class-svm">Multi-class SVM</a></li>
 </ul></li>
 <li><a href="#conclusions">Conclusions</a>
@@ -2450,6 +2454,8 @@ Trail
 ## iteration: 10  num-clusters: 10</code></pre>
 <p><img src="images/GMM_Optimal.png" /></p>
 <p>From the plot above, we see that the BIC value decreases <em>generally</em> as the number of clusters increases. However, it appears that the first big drop is when <code>clusters = 3</code>. Let’s try that value out and see which bike categories get mapped into each of the 3 clusters.</p>
+<div id="gmm---3-clusters" class="section level3">
+<h3>GMM - 3 Clusters</h3>
 <table style="width:58%;">
 <colgroup>
 <col width="23%" />
@@ -2500,6 +2506,82 @@ Trail
 <p>Even so, let’s see how the probability of each bike belonging to a cluster appears by looking at the densities of each of the associated probabilities for a bike belonging to one of the cluster labels.</p>
 <p><img src="{{< blogdown/postref >}}index.en_files/figure-html/gmm_plots-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>Above, we see the expected probability associated with predicting a correct class label. That is, the graph on the left shows how accurate the 3-cluster Gaussian Mixture Model was for predicting bikes fitting into Cluster #1. Generally, the probabilities for the predictions are all above .95; that is, GMM is extremely confident in grouping the different bikes into these 3 clusters.</p>
+</div>
+<div id="gmm---6-clusters" class="section level3">
+<h3>GMM - 6 Clusters</h3>
+<p>The next logical “elbow” in the BIC chart from earlier is at 6 clusters. For demonstrative purposes, let’s show what this looks like as well.</p>
+<table style="width:58%;">
+<colgroup>
+<col width="23%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">cluster_labels</th>
+<th align="center">am</th>
+<th align="center">dc</th>
+<th align="center">en</th>
+<th align="center">tr</th>
+<th align="center">xc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">11</td>
+<td align="center">3</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">10</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+</tr>
+<tr class="odd">
+<td align="center">5</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">8</td>
+</tr>
+<tr class="even">
+<td align="center">6</td>
+<td align="center">0</td>
+<td align="center">5</td>
+<td align="center">0</td>
+<td align="center">7</td>
+<td align="center">2</td>
+</tr>
+</tbody>
+</table>
+<p>Here we see the 6 predicted cluster labels along with the actual 5 bike categories in our data. There is some cleaner separability here than what we saw earlier. For example, cluster 2 consists <em>only</em> of 2 Enduro bikes and cluster 5 consists <em>only</em> of Cross Country bikes. However, Enduro bikes feature prominently in a mixed cluster 1; and Cross Country bikes feature slightly in clusters 4 and 6. Overall, I’d say that using 6 clusters obfuscates the groupings compared to using 3 clusters.</p>
+</div>
 </div>
 <div id="multi-class-svm" class="section level2">
 <h2>Multi-class SVM</h2>
