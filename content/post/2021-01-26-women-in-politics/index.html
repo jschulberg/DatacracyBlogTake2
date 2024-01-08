@@ -1,0 +1,2800 @@
+---
+title: Women in Politics
+author: 'Justin S.'
+date: '2020-09-12'
+slug: [Women-in-Politics]
+featured_image: 'images/power_women.png'
+categories:
+  - public policy
+  - R
+  - viz
+tags:
+  - public policy
+  - EDA
+comments: yes
+share: yes
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+<p>It all started in Montana. In 1916, Jeannette Rankin, a peace activist and a strong advocate for women’s suffrage, broke down centuries-long barriers by becoming the first woman elected to Congress. Since then, 366 women have served in U.S. Congress, and thousands more in various elected and executive offices at the state-level.</p>
+<p>In this post, we will analyze the Women in Politics dataset published by the <a href="https://cawpdata.rutgers.edu/">Eagleton Institute of Politics’ Center for American Women and Politics</a>. CAWP, the nation’s leading source of scholarly research and data related to women’s political participation in the United States, has gathered tens of thousands of records of women holding political (both elected and appointed) office across the United States, dating back to the late 1800s, and made them all available in their centralized Women in Political Office Database. We will use this data along with a variety of exploratory and modeling techniques to answer the following questions:</p>
+<ul>
+<li>How many women have held political office by level of Government?<br />
+</li>
+<li>Is one political party more apt to be represented by women?<br />
+</li>
+<li>Does race add a layer of complexity to gender representation for political office?<br />
+</li>
+<li>How long do women serve in office?<br />
+</li>
+<li>When will the U.S. House of Representatives and Senate achieve full gender parity?<br />
+</li>
+<li>Is there a geographic component to equitable gender representation? Are there more female officeholders in certain states?</li>
+</ul>
+<p>Let’s start by applying some basic data cleaning/manipulation techniques, dealing with missing (NA) values, and touching up our dataset.</p>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Id
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Year
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Min Year
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Max Year
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Years Of Service
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Years In Office
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+First Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Middle Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Last Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Full Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+State
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+State Abb
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Party
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Level
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Position
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Race Ethnicity
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Party Grouped
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1982
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1983
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1984
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1985
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1986
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1987
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1988
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1989
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11841h
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+1981
+</td>
+<td style="text-align:right;">
+1990
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+1981-1990
+</td>
+<td style="text-align:left;">
+Betty
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Aaron
+</td>
+<td style="text-align:left;">
+Betty S. Aaron
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17833g
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1995-1998
+</td>
+<td style="text-align:left;">
+Catherine
+</td>
+<td style="text-align:left;">
+M.
+</td>
+<td style="text-align:left;">
+Abate
+</td>
+<td style="text-align:left;">
+Catherine M. Abate
+</td>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:left;">
+NY
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Senator
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17833g
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1995-1998
+</td>
+<td style="text-align:left;">
+Catherine
+</td>
+<td style="text-align:left;">
+M.
+</td>
+<td style="text-align:left;">
+Abate
+</td>
+<td style="text-align:left;">
+Catherine M. Abate
+</td>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:left;">
+NY
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Senator
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17833g
+</td>
+<td style="text-align:right;">
+1997
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1995-1998
+</td>
+<td style="text-align:left;">
+Catherine
+</td>
+<td style="text-align:left;">
+M.
+</td>
+<td style="text-align:left;">
+Abate
+</td>
+<td style="text-align:left;">
+Catherine M. Abate
+</td>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:left;">
+NY
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Senator
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17833g
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1995-1998
+</td>
+<td style="text-align:left;">
+Catherine
+</td>
+<td style="text-align:left;">
+M.
+</td>
+<td style="text-align:left;">
+Abate
+</td>
+<td style="text-align:left;">
+Catherine M. Abate
+</td>
+<td style="text-align:left;">
+New York
+</td>
+<td style="text-align:left;">
+NY
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Senator
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13633h
+</td>
+<td style="text-align:right;">
+1927
+</td>
+<td style="text-align:right;">
+1927
+</td>
+<td style="text-align:right;">
+1928
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1927-1928
+</td>
+<td style="text-align:left;">
+Clara
+</td>
+<td style="text-align:left;">
+A.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Clara A. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13633h
+</td>
+<td style="text-align:right;">
+1928
+</td>
+<td style="text-align:right;">
+1927
+</td>
+<td style="text-align:right;">
+1928
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1927-1928
+</td>
+<td style="text-align:left;">
+Clara
+</td>
+<td style="text-align:left;">
+A.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Clara A. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15585h
+</td>
+<td style="text-align:right;">
+1957
+</td>
+<td style="text-align:right;">
+1957
+</td>
+<td style="text-align:right;">
+1958
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1957-1958
+</td>
+<td style="text-align:left;">
+Delila
+</td>
+<td style="text-align:left;">
+M. Richards
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Delila M. Richards Abbott
+</td>
+<td style="text-align:left;">
+Utah
+</td>
+<td style="text-align:left;">
+UT
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15585h
+</td>
+<td style="text-align:right;">
+1958
+</td>
+<td style="text-align:right;">
+1957
+</td>
+<td style="text-align:right;">
+1958
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1957-1958
+</td>
+<td style="text-align:left;">
+Delila
+</td>
+<td style="text-align:left;">
+M. Richards
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Delila M. Richards Abbott
+</td>
+<td style="text-align:left;">
+Utah
+</td>
+<td style="text-align:left;">
+UT
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13634h
+</td>
+<td style="text-align:right;">
+1971
+</td>
+<td style="text-align:right;">
+1971
+</td>
+<td style="text-align:right;">
+1972
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1971-1972
+</td>
+<td style="text-align:left;">
+Frances
+</td>
+<td style="text-align:left;">
+J.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Frances J. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13634h
+</td>
+<td style="text-align:right;">
+1972
+</td>
+<td style="text-align:right;">
+1971
+</td>
+<td style="text-align:right;">
+1972
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1971-1972
+</td>
+<td style="text-align:left;">
+Frances
+</td>
+<td style="text-align:left;">
+J.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Frances J. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13635h
+</td>
+<td style="text-align:right;">
+1929
+</td>
+<td style="text-align:right;">
+1929
+</td>
+<td style="text-align:right;">
+1930
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1929-1930
+</td>
+<td style="text-align:left;">
+Helen
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Helen S. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13635h
+</td>
+<td style="text-align:right;">
+1930
+</td>
+<td style="text-align:right;">
+1929
+</td>
+<td style="text-align:right;">
+1930
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+1929-1930
+</td>
+<td style="text-align:left;">
+Helen
+</td>
+<td style="text-align:left;">
+S.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Helen S. Abbott
+</td>
+<td style="text-align:left;">
+New Hampshire
+</td>
+<td style="text-align:left;">
+NH
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Unavailable
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+566417k
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+2017-2020
+</td>
+<td style="text-align:left;">
+Kim
+</td>
+<td style="text-align:left;">
+K.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Kim K. Abbott
+</td>
+<td style="text-align:left;">
+Montana
+</td>
+<td style="text-align:left;">
+MT
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+566417k
+</td>
+<td style="text-align:right;">
+2018
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+2017-2020
+</td>
+<td style="text-align:left;">
+Kim
+</td>
+<td style="text-align:left;">
+K.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Kim K. Abbott
+</td>
+<td style="text-align:left;">
+Montana
+</td>
+<td style="text-align:left;">
+MT
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+566417k
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+2017-2020
+</td>
+<td style="text-align:left;">
+Kim
+</td>
+<td style="text-align:left;">
+K.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Kim K. Abbott
+</td>
+<td style="text-align:left;">
+Montana
+</td>
+<td style="text-align:left;">
+MT
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+566417k
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+2017-2020
+</td>
+<td style="text-align:left;">
+Kim
+</td>
+<td style="text-align:left;">
+K.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Kim K. Abbott
+</td>
+<td style="text-align:left;">
+Montana
+</td>
+<td style="text-align:left;">
+MT
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+14772c
+</td>
+<td style="text-align:right;">
+2010
+</td>
+<td style="text-align:right;">
+2010
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+2010-2011
+</td>
+<td style="text-align:left;">
+Robin
+</td>
+<td style="text-align:left;">
+A.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Robin A. Abbott
+</td>
+<td style="text-align:left;">
+Virginia
+</td>
+<td style="text-align:left;">
+VA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+14772c
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:right;">
+2010
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+2010-2011
+</td>
+<td style="text-align:left;">
+Robin
+</td>
+<td style="text-align:left;">
+A.
+</td>
+<td style="text-align:left;">
+Abbott
+</td>
+<td style="text-align:left;">
+Robin A. Abbott
+</td>
+<td style="text-align:left;">
+Virginia
+</td>
+<td style="text-align:left;">
+VA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2006
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2007
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2008
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2009
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2010
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2011
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11954c
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+2005-2012
+</td>
+<td style="text-align:left;">
+Roberta
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Roberta Abdul-Salaam
+</td>
+<td style="text-align:left;">
+Georgia
+</td>
+<td style="text-align:left;">
+GA
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7228c
+</td>
+<td style="text-align:right;">
+1999
+</td>
+<td style="text-align:right;">
+1999
+</td>
+<td style="text-align:right;">
+2002
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1999-2002
+</td>
+<td style="text-align:left;">
+Aisha
+</td>
+<td style="text-align:left;">
+W.
+</td>
+<td style="text-align:left;">
+Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Aisha W. Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Rhode Island
+</td>
+<td style="text-align:left;">
+RI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7228c
+</td>
+<td style="text-align:right;">
+2000
+</td>
+<td style="text-align:right;">
+1999
+</td>
+<td style="text-align:right;">
+2002
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1999-2002
+</td>
+<td style="text-align:left;">
+Aisha
+</td>
+<td style="text-align:left;">
+W.
+</td>
+<td style="text-align:left;">
+Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Aisha W. Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Rhode Island
+</td>
+<td style="text-align:left;">
+RI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7228c
+</td>
+<td style="text-align:right;">
+2001
+</td>
+<td style="text-align:right;">
+1999
+</td>
+<td style="text-align:right;">
+2002
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1999-2002
+</td>
+<td style="text-align:left;">
+Aisha
+</td>
+<td style="text-align:left;">
+W.
+</td>
+<td style="text-align:left;">
+Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Aisha W. Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Rhode Island
+</td>
+<td style="text-align:left;">
+RI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7228c
+</td>
+<td style="text-align:right;">
+2002
+</td>
+<td style="text-align:right;">
+1999
+</td>
+<td style="text-align:right;">
+2002
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+1999-2002
+</td>
+<td style="text-align:left;">
+Aisha
+</td>
+<td style="text-align:left;">
+W.
+</td>
+<td style="text-align:left;">
+Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Aisha W. Abdullah-Odiase
+</td>
+<td style="text-align:left;">
+Rhode Island
+</td>
+<td style="text-align:left;">
+RI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+Black/African American
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15575c
+</td>
+<td style="text-align:right;">
+2013
+</td>
+<td style="text-align:right;">
+2013
+</td>
+<td style="text-align:right;">
+2014
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+2013-2014
+</td>
+<td style="text-align:left;">
+Theresa
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abed
+</td>
+<td style="text-align:left;">
+Theresa Abed
+</td>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:left;">
+MI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15575c
+</td>
+<td style="text-align:right;">
+2014
+</td>
+<td style="text-align:right;">
+2013
+</td>
+<td style="text-align:right;">
+2014
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+2013-2014
+</td>
+<td style="text-align:left;">
+Theresa
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abed
+</td>
+<td style="text-align:left;">
+Theresa Abed
+</td>
+<td style="text-align:left;">
+Michigan
+</td>
+<td style="text-align:left;">
+MI
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10056h
+</td>
+<td style="text-align:right;">
+1954
+</td>
+<td style="text-align:right;">
+1954
+</td>
+<td style="text-align:right;">
+1954
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+1954-1954
+</td>
+<td style="text-align:left;">
+Hazel Hempel
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Hazel Hempel Abel
+</td>
+<td style="text-align:left;">
+Nebraska
+</td>
+<td style="text-align:left;">
+NE
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+<td style="text-align:left;">
+Federal/Congress
+</td>
+<td style="text-align:left;">
+U.S. Senator
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Republican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1992
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1993
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1994
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1995
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17849g
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+1991
+</td>
+<td style="text-align:right;">
+1996
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+1991-1996
+</td>
+<td style="text-align:left;">
+Mary
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Abel
+</td>
+<td style="text-align:left;">
+Mary Abel
+</td>
+<td style="text-align:left;">
+Ohio
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+232646k
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2005
+</td>
+<td style="text-align:right;">
+2020
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:left;">
+2005-2020
+</td>
+<td style="text-align:left;">
+Catherine
+</td>
+<td style="text-align:left;">
+F.
+</td>
+<td style="text-align:left;">
+Abercrombie
+</td>
+<td style="text-align:left;">
+Catherine F. Abercrombie
+</td>
+<td style="text-align:left;">
+Connecticut
+</td>
+<td style="text-align:left;">
+CT
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+<td style="text-align:left;">
+State Legislative
+</td>
+<td style="text-align:left;">
+State Representative
+</td>
+<td style="text-align:left;">
+White
+</td>
+<td style="text-align:left;">
+Democrat
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>After cleaning up the data a bit and imputing some new columns, we have our dataset! In it, one row corresponds to a woman having held a given political office (either elected or appointed) for one year. If a woman has held a given political office for, say, five years, they will appear as five separate rows in the dataset.</p>
+<p>As part of my set-up, I took a look at the number of missing (null) values for each variable (field). Based on this, I removed the “District” column, which is entirely null in the dataset I downloaded, and thus provides us no value. Middle name, which is about 1/3 null, has been left in the dataset since it’s not an essential variable.</p>
+<p>Now that we have our data, let’s start to explore it.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/total_viz-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>In absolute terms, most of the women who have held office have done so at the state legislative level, which makes sense given that there are more seats available at that level. Interestingly enough, in U.S. Territories/D.C., a lot of women outside the two major parties have held office.</p>
+<p>This is great to see total numbers, but our data, depending on which level of government we’re talking about, can span 130 years! Let’s breakout our totals over time to look for trends.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/total_over_time-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Here are some key takeaways:<br />
+1. The number of women holding political office has been growing incredibly fast over the past few decades.<br />
+2. Most of the positions held are at the State Legislative level, which makes sense given the greater number of positions open at that level.<br />
+3. U.S. Territories and D.C. are late to the game, not having any semblance of gender representation until the 2000’s.</p>
+<p>Let’s look to see if these trends have differed based on political party.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/total_over_time_by_party-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>For female officeholders in Congress, Democrats and Republicans were in lockstep until 1990, when Democrats took off at a much faster rate.</p>
+<p>How does gender representation in political office change not by political party, but by race? Let’s take a look.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/total_over_time_by_race-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>We can see rather clearly that white women dominate across the board (except in U.S. Territories/D.C., which is dominated by women of Hispanic/Latina ethnicity). This would not be too surprising given that places like Puerto Rico are include in this group. The difference is clearest in Statewide Executive positions, which are often not elected (Secretary of State, Treasurer, Superintendent of Public Instruction, Lt. Governor, etc.) and instead appointed.</p>
+<p>Let’s take a look at how long individual female officeholders have held their respective office. We’ll do so by utilizing a density plot, which shows the distribution of the number of years a given politician has served in their respective office.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/years_of_service-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>From this, we can see the distribution of the number of years a given politician has held her respective office over the past 120 years, broken out by different levels of government. In particular, we can clearly see that the women who have held office in various U.S. Territories/D.C. have done so for a very short period of time: <strong>3 years</strong>. This makes sense given how women have only been holding office in U.S. Territories/D.C. since the early 2000’s. On the other end of the spectrum, women in Congress have held their positions for a much more uniform amount of time, averaging about <strong>21 years</strong> in office!</p>
+<p>Now let’s hone in on the Federal/Congressional piece of the puzzle. Specifically, let’s look at the proportion of women who have been members of the U.S. Senate/House of Representatives over time. Unfortunately our dataset only includes the number of women who have held political office over time, so it’s difficult to compare that to the number of men who have held office over time at all the levels of government, except for the U.S. Senate, which has had 100 members since 1959, and the U.S. House of Representatives, which has had 435 members since 1959. Thus, we’ll focus our analysis to 1959 and after.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/congress_genders_by_proportion-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>From this, we can see that in both chambers of Congress, the share of female representatives has increased steadily, with a significant bump in the 1990s and a steady increase from there on out. The next question that comes to my head is:</p>
+<p><em>When will we achieve a 50-50 parity in each chamber of Congress?</em></p>
+<div id="predictive-modeling" class="section level2">
+<h2>Predictive Modeling</h2>
+<p>In this next section, I’d like to use two predictive models to determine when each chamber of the U.S. Congress will achieve full gender parity. What does that mean in plain English? Can we use data science methods to project when the Senate will have 50 female members and the House 217 (435/2) female members?</p>
+<p>The first model I’ll use is an ARIMA (Auto Regressive Integrated Moving Average) time forecasting model.</p>
+<p>By building an ARIMA model with a trend component, we can esimate the increase in the number of female officeholders in Congress over the next 80 years:</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/senate_arima_viz-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>According to the Senate ARIMA model, the U.S. Senate will first achieve full gender parity in the year <strong>2052</strong>.</p>
+<p>Let’s now do the same thing for the House.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/house_arima_viz-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Thus, according to the House ARIMA model built, the U.S. House of Representatives will first achieve full gender parity in the year <strong>2070</strong>.</p>
+<p>Let’s plot the Senate and House graphs side-by-side, just to get a better view of the whole picture.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/congress_arima_viz-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>From these graphs, we can see that both ARIMA models took a rather linear approach, assuming a steady increase over time. This makes sense, because ARIMA usually looks for seasonality trends (which our data does NOT have) on top of the general trends (which our data does have). Obviously, this assumes that the rate of increase is steady over time and doesn’t plateau
+as women in Congress hit a certain threshold. Assuming the rate of increase is generally linear, the <strong>Senate</strong> will achieve full parity <strong>18</strong> years before the <strong>House</strong>.</p>
+<p>Because a linear approach is unrealistic (eventually, the threshold of women in each chamber will eventually exceed 100%) in the long run, let’s try to fit something that caps out at 100%. For that reason, I’d like to fit a logistic regression curve, which uses a Sigmoidal function (S-shaped) to make its estimate.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/log_mode-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>From this, we can see a much more realistic fit for the model. That is, by using a logistic model, we can safely assume that there is a ceiling to the number of women who will serve in Congress (i.e. 100% of seats being held by women). The logistic models estimate that the <strong>Senate</strong> will achieve full parity <strong>11</strong> years before the <strong>House</strong>.</p>
+<p>For interest purposes, let’s just take a look at the ARIMA and Logistic models side-by-side.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/both_models-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>It seems that the Logistic models, because of their generally steeper ascent to start, lend credence to gender parity in Congress sooner than the ARIMA models estimate.</p>
+</div>
+<div id="geographic-analysis" class="section level2">
+<h2>Geographic Analysis</h2>
+<p>Next, we’ll look into how the number of women holding certain political office varies based on location (state). This will help us understand if there are certain areas of the country where the phenomenon of women holding office is taking off, and others where it’s lagging.</p>
+<p>First, let’s take a look at our all-time leaders. Which states have had the most women state representatives in the past 120 years? To look at this, I’ve pulled state population data from the U.S. Census website to help normalize our results (so that California and New York, which are obviously larger states, don’t disproportionately dominate the graph compared to smaller states, like Connecticut and Vermont).</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/racing_bar_chart_total_by_state-1.gif" style="display: block; margin: auto;" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/animated_map_total_by_state-1.gif" style="display: block; margin: auto;" /></p>
+<p>From this we can see that certain states dominate consistently throughout the past century, specifically New Hampshire, Vermont, and Connecticut. Let’s look at the same data in map-form to give us a better sense of the geographic trends.</p>
+<div id="conclusion" class="section level3">
+<h3>Conclusion</h3>
+<p>Thanks for reading! I hope you were able to learn a bit more about the data behind women in political office across the United States. If you felt like the article was educational, interesting, or if you just want to support me, feel free to follow me on any social media platform (all are listed as icons on the homepage of my website) and stay tuned for the next post. If you have ideas on public policy/political topics that could use some data expertise, please send me your suggestions – the more ideas, the better!</p>
+</div>
+<div id="additional-resources" class="section level3">
+<h3>Additional Resources</h3>
+<p>The original blog post can be found here:<br />
+<strong><a href="https://towardsdatascience.com/women-in-politics-exploratory-data-analysis-in-r-54bfd49dcd3a" class="uri">https://towardsdatascience.com/women-in-politics-exploratory-data-analysis-in-r-54bfd49dcd3a</a></strong></p>
+<p>Interested in seeing my original code? Go to my GitHub repository here:<br />
+<strong><a href="https://github.com/jschulberg/Women-in-Politics" class="uri">https://github.com/jschulberg/Women-in-Politics</a></strong></p>
+<p>Interested in learning more about this subject or the Center for American Women and Politics? Go to:<br />
+<strong><a href="https://cawp.rutgers.edu/facts/milestones-for-women/" class="uri">https://cawp.rutgers.edu/facts/milestones-for-women/</a></strong></p>
+<p>Interested in seeing the Eagleton Institue of Politics, Center for American Women and Politics Women Elected Officials Database? Go to:<br />
+<strong><a href="https://cawpdata.rutgers.edu/" class="uri">https://cawpdata.rutgers.edu/</a></strong></p>
+</div>
+</div>

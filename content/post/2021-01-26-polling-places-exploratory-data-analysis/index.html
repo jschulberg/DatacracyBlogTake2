@@ -1,0 +1,1757 @@
+---
+title: Polling Places | Exploratory Data Analysis
+author: Justin S.
+date: '2021-01-26'
+slug: [Polling-Places]
+categories:
+  - viz
+  - public policy
+tags:
+  - R
+comments: yes
+featured_image: 'images/Voting Polls.jpg'
+share: yes
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+<p>In a democracy, the polling booth is much more than a location where an unwitting citizen fills in a bubble on a piece of paper in a make-shift booth. It is a symbol of the promise of democracy, a connector between the citizen and the government. It is the shrine that, if protected and respected, powers a democracy.</p>
+<p>This article analyzes that symbol of American democracy by taking an analytical look at a dataset of U.S. polling places, compiled by the <a href="https://publicintegrity.org/politics/elections/ballotboxbarriers/data-release-sheds-light-on-past-polling-place-changes">Center for Public Integrity</a>. Thanks to the great work done by CPI, information on polling place locations and addresses is available for over 30 states for the 2012, 2014, 2016, and 2018 elections. Using a variety of exploratory and modeling techniques, I will analyze the data to answer the following questions:</p>
+<ul>
+<li>Which states provide the most polling places?<br />
+</li>
+<li>How have the number of polling places trended over time?<br />
+</li>
+<li>Is the number of polling places proportional to the population in each state?<br />
+</li>
+<li>Do states that tend to go Republican have less polling places than do states that tend to go Democrat?</li>
+</ul>
+<p>Let’s start by taking a look at the data.</p>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+State
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Election Date
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Jurisdiction Type
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Jurisdiction
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+County Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Precinct Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Precinct Id
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Polling Place Type
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Municipality
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Name
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Address
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Year
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+County Fips
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Zip Code
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+State Abb
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Population
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Democratic Votes
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Republican Votes
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Other Votes
+</th>
+<th style="text-align:left;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Election
+</th>
+<th style="text-align:right;font-weight: bold;color: black !important;position: sticky; top:0; background-color: #FFFFFF;">
+Total Vote
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Aurora
+</td>
+<td style="text-align:left;">
+01-446
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Agricultural Museum - Fairgrounds
+</td>
+<td style="text-align:left;">
+1800 College Road, Fairbanks, AK 99101
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99101
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Aurora
+</td>
+<td style="text-align:left;">
+01-446
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Agricultural Museum - Fairgrounds
+</td>
+<td style="text-align:left;">
+1800 College Road, Fairbanks, AK 99101
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99101
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.1
+</td>
+<td style="text-align:left;">
+01-455
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+FNSB Borough Offices
+</td>
+<td style="text-align:left;">
+809 Pioneer Road, Fairbanks, AK 99707
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99707
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.1
+</td>
+<td style="text-align:left;">
+01-455
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+FNSB Borough Offices
+</td>
+<td style="text-align:left;">
+809 Pioneer Road, Fairbanks, AK 99707
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99707
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.2
+</td>
+<td style="text-align:left;">
+01-465
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Golden Towers
+</td>
+<td style="text-align:left;">
+330 3rd Avenue, Fairbanks, AK 99701
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99701
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.2
+</td>
+<td style="text-align:left;">
+01-465
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Golden Towers
+</td>
+<td style="text-align:left;">
+330 3rd Avenue, Fairbanks, AK 99701
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99701
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.3
+</td>
+<td style="text-align:left;">
+01-470
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Noel Wien Library
+</td>
+<td style="text-align:left;">
+1215 Cowles Street, Fairbanks, AK 99701
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99701
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.3
+</td>
+<td style="text-align:left;">
+01-470
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Noel Wien Library
+</td>
+<td style="text-align:left;">
+1215 Cowles Street, Fairbanks, AK 99701
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99701
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.4
+</td>
+<td style="text-align:left;">
+01-475
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+National Guard Armory
+</td>
+<td style="text-align:left;">
+202 Wien Street, Fairbanks, AK 99701
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99701
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.4
+</td>
+<td style="text-align:left;">
+01-475
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+National Guard Armory
+</td>
+<td style="text-align:left;">
+202 Wien Street, Fairbanks, AK 99701
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99701
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.5
+</td>
+<td style="text-align:left;">
+01-480
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Pioneer Park Centennial Center
+</td>
+<td style="text-align:left;">
+2300 Airport Way, Fairbanks, AK 99707
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99707
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.5
+</td>
+<td style="text-align:left;">
+01-480
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Pioneer Park Centennial Center
+</td>
+<td style="text-align:left;">
+2300 Airport Way, Fairbanks, AK 99707
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99707
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.6
+</td>
+<td style="text-align:left;">
+01-485
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Shopper’s Forum Mall
+</td>
+<td style="text-align:left;">
+1255 Airport Way, Fairbanks, AK 99707
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99707
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.6
+</td>
+<td style="text-align:left;">
+01-485
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Shopper’s Forum Mall
+</td>
+<td style="text-align:left;">
+1255 Airport Way, Fairbanks, AK 99707
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99707
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.7
+</td>
+<td style="text-align:left;">
+01-490
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+JP Jones Community Dev Center
+</td>
+<td style="text-align:left;">
+2400 Rickert Street, Fairbanks, AK 99707
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99707
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.7
+</td>
+<td style="text-align:left;">
+01-490
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+JP Jones Community Dev Center
+</td>
+<td style="text-align:left;">
+2400 Rickert Street, Fairbanks, AK 99707
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99707
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.10
+</td>
+<td style="text-align:left;">
+01-495
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Pioneer Park Centennial Center
+</td>
+<td style="text-align:left;">
+2300 Airport Way, Fairbanks, AK 99707
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99707
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.10
+</td>
+<td style="text-align:left;">
+01-495
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Pioneer Park Centennial Center
+</td>
+<td style="text-align:left;">
+2300 Airport Way, Fairbanks, AK 99707
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99707
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Badger No.2
+</td>
+<td style="text-align:left;">
+02-345
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Badger Plaza
+</td>
+<td style="text-align:left;">
+771 Badger Road, Fairbanks, AK 99711
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99711
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Badger No.2
+</td>
+<td style="text-align:left;">
+02-345
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Badger Plaza
+</td>
+<td style="text-align:left;">
+771 Badger Road, Fairbanks, AK 99711
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99711
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.8
+</td>
+<td style="text-align:left;">
+02-355
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Frontier Outfitters/Gavora Mall
+</td>
+<td style="text-align:left;">
+250 Third Street, Suite 6, Fairbanks, AK 99701
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99701
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.8
+</td>
+<td style="text-align:left;">
+02-355
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Frontier Outfitters/Gavora Mall
+</td>
+<td style="text-align:left;">
+250 Third Street, Suite 6, Fairbanks, AK 99701
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99701
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.9
+</td>
+<td style="text-align:left;">
+02-365
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Tanana Middle School
+</td>
+<td style="text-align:left;">
+600 Trainor Gate Road, Fairbanks, AK 99701
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99701
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fairbanks No.9
+</td>
+<td style="text-align:left;">
+02-365
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Tanana Middle School
+</td>
+<td style="text-align:left;">
+600 Trainor Gate Road, Fairbanks, AK 99701
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99701
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+122640
+</td>
+<td style="text-align:right;">
+164676
+</td>
+<td style="text-align:right;">
+13179
+</td>
+<td style="text-align:left;">
+President
+</td>
+<td style="text-align:right;">
+300495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:left;">
+2012-11-06
+</td>
+<td style="text-align:left;">
+borough
+</td>
+<td style="text-align:left;">
+Fairbanks North Star
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Fort Wainwright
+</td>
+<td style="text-align:left;">
+02-375
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Last Frontier Community Activity Center
+</td>
+<td style="text-align:left;">
+1044 Apple Street, Fort Wainwright, AK 99703
+</td>
+<td style="text-align:right;">
+2012
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+99703
+</td>
+<td style="text-align:left;">
+AK
+</td>
+<td style="text-align:right;">
+730443
+</td>
+<td style="text-align:right;">
+82927
+</td>
+<td style="text-align:right;">
+185296
+</td>
+<td style="text-align:right;">
+21581
+</td>
+<td style="text-align:left;">
+House
+</td>
+<td style="text-align:right;">
+289804
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In the dataset we can see quite a bit of information! Each row corresponds to a polling place available during a given election. So in 2012 at the <em>Agricultural Museum - Fairgrounds</em> polling place, there were two elections: one for House races and one for President, thus resulting in two rows of our dataset. For each polling place we can see a few things of interest, including the location of the site, the number of people who voted in that state election (NOT the number of people who voted at that site), the population of the state, and so on.</p>
+<p>Using this data, let’s try to understand trends in the number of polling places in each state. We’ll start by looking at the relationship between the number of polling places and the population of each state.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/top_10_states-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>As population increases, the number of polling sites also increases. This trend holds steadily true for each election, regardless of whether there was a Presidential election (2012 + 2016) or just House/Senate elections (2014 + 2018).</p>
+<p>Let’s get a better look at which states had proportionally more polling places than they did general population (the per capita rate).</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/map_and_bar-1.png" width="864" style="display: block; margin: auto;" />
+Above I’ve stacked a bar chart showing the top 10 states by polling sites per capita on top of a map-based visualization showing the same. Although there isn’t much of a geographic differentiation in the number of polling sites per capita by state (it definitely hurts that CPI has only collected this data for 32 states), I do notice that the numbers <strong>aren’t skewed by Northeast vs. South</strong>, which would have been my initial assumption. It’s also clear that states commission more public polling sites during Presidential election years than off-cycle years.</p>
+<div id="elections-correlation" class="section level2">
+<h2>Elections Correlation</h2>
+<p>In this next section, I’d like to leverage elections data to look at the relationship between the number of polling places in a state and which party won elections in that state. The elections data have been pulled from <a href="https://www.fec.gov/introduction-campaign-finance/election-and-voting-information/">FEC.gov</a>. In the data, I look at the breakdown, by party, of the House, Senate, and Presidential races and the total number of votes for each in every general election between
+2012 and 2018, using that data to match onto the polling places data.</p>
+<p>I’ll do so by determining a new variable defined by the overall races won by a political party in a given state. For example, if in New Jersey 2018, Democrats won the House and Senate races, Democrats controlled that election year in NJ. If in Wisconsin, a Republican (Trump) won the Presidential election in 2016, but Democrats overall won the House races, then it’s a “Split Ticket” state.</p>
+<p>Let’s start by getting a sense of this new variable. Which party won each state in the past 4 elections?</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/elections-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Now that we better understand how this variable works, let’s correlate this against the number of polling sites available to voters in that state. Now that we have our dataset, we’ll build 4 scatter plots (one for each year) of polling places by number of total votes.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/votes_scatter-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Let’s take another look at our top 10 counts from earlier to see if there’s a correlation with which party won a given state.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/top_10_by_party-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Interestingly enough, in the most notable election covered by our dataset – the 2016 election – states that ended up going full Republican had the most polling places per capita. The state with the most polling places per capita in 2016 – Wisconsin – was notable in that it swung for Trump, much to the Hillary campaign’s surprise.</p>
+<p>To be honest, this finding surprises me a bit, especially given a lot of the rhetoric that Republican states go out of their way to make it more difficult for individuals to vote. Obviously this doesn’t tell the full story. Just because there are more polling places does not mean that they are accessible, or that there are a lot of people eligible to vote (because of difficulties in the voter registration process). Still it is a metric that helps understand the fuller picture.</p>
+<p>Let’s take a look at our “worst” 10 states to see if this trend reverses.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/bottom_10-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>Looking at the bottom polling places makes the argument a bit more muddled. It’s overall a healthier mix of states that went full-Democrat and full-Republican (along with a fair share that had mixed results).</p>
+<p>Let’s take a closer look at our <strong>House</strong> races. Specifically, let’s tie together all three measures we’ve previously been discussing:<br />
+1. Number of Polling Sites<br />
+2. Number of Votes Cast<br />
+3. Total Population</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/house_winners-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>In terms of trend, I can’t see much distinction between states where Republicans won the House versus Democrats. Let’s test this formally using regression. In particular, let’s fit a regression model for House elections, using party, number of votes cast, and population as predictors. We expect, based on the plot above, to see highly correlative relationships between number of votes cast, population, and number of polling places. The real question lies in party.</p>
+<p>Here are the results from running a basic regression:</p>
+<table style="width:100%;">
+<colgroup>
+<col width="37%" />
+<col width="14%" />
+<col width="16%" />
+<col width="14%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">-5509</td>
+<td align="center">145184</td>
+<td align="center">-0.03794</td>
+<td align="center">0.9698</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>votes_per_million</strong></td>
+<td align="center">143</td>
+<td align="center">353.6</td>
+<td align="center">0.4044</td>
+<td align="center">0.6867</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>pop_per_million</strong></td>
+<td align="center">577.6</td>
+<td align="center">140.5</td>
+<td align="center">4.112</td>
+<td align="center">0.00007687</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>party_winnerRepublican</strong></td>
+<td align="center">291.1</td>
+<td align="center">323</td>
+<td align="center">0.9013</td>
+<td align="center">0.3694</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>year</strong></td>
+<td align="center">2.594</td>
+<td align="center">72.04</td>
+<td align="center">0.03601</td>
+<td align="center">0.9713</td>
+</tr>
+</tbody>
+</table>
+<table style="width:88%;">
+<caption>Fitting linear model: polling_sites ~ votes_per_million + pop_per_million + party_winner + year</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="12%" />
+<col width="23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">113</td>
+<td align="center">1691</td>
+<td align="center">0.6776</td>
+<td align="center">0.6656</td>
+</tr>
+</tbody>
+</table>
+<p>Looking at the model summary, there are a few interesting things to point out about trends in the number of polling sites in a given state.</p>
+<ol style="list-style-type: decimal">
+<li><strong>Population |</strong> The most important thing to note is that there is <strong>only one factor that adequately predicts the number of polling sites: population</strong>. The model states that for every <em>additional</em> million people in a state, there will be 577 additional polling sites.<br />
+</li>
+<li><strong>Total Votes Cast |</strong> Now, if you look back at the bubble plot above, you’d probably (like me) assume that the number of total votes cast is also a strong predictor for number of polling sites. As one increases, so does the other. Why then is the p-value (<em>denoted in the model output as PR(&gt;|t|)</em> ) .6867 – much higher than the usual .05 threshold used to determine statistical significance? Well, it’s also true that <strong>the number of total votes cast is highly correlated with the population of a state</strong>. States with larger populations naturally have more people turn out to vote. Thus, using both features as predictors is redundant.<br />
+</li>
+<li><strong>Party |</strong> The question we’ve all been waiting for. Is it true that the party that wins the House elections in a given state is determinate of the number of polling sites in that state? Turns out, not so much. <strong>The p-value for party winner</strong> (denoted <em>party_winnerRepublican</em>, representing the base case in which a state goes Republican) <strong>is .3694, well above the usual threshold of .05</strong>. Thus, we cannot reject our initial null hypothesis that party winner predicts number of polling sites.</li>
+</ol>
+</div>
+<div id="future-analysis" class="section level2">
+<h2>Future Analysis</h2>
+<p>This article really is just a small look at one facet of elections: polling places. Where else should this article go? Well, if I could get my hands on elections data smaller at the county-level or even more granular, I could run a lot of the previous analyses on a much more robust dataset. Unfortunately, that data is expensive.</p>
+<p>Otherwise, a good route for this analysis would be to compare the availability of polling places with demographic data on a zip code or county level. The hypothesis here would be that white Americans have better (i.e. more) access to polling places.</p>
+<p>Where else should I go with this? Leave your thoughts in the comments.</p>
+<p>Blog Post Available on Medium:<br />
+<a href="https://jschulberg.medium.com/u-s-polling-places-389ca5ed7960" class="uri">https://jschulberg.medium.com/u-s-polling-places-389ca5ed7960</a></p>
+</div>
