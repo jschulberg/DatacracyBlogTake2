@@ -16,3 +16,48 @@ description: '<Insert description here>'
 ---
 
 Next word generation using Markov Chains...
+
+
+
+```{r fig.align='center', fig.height=6, fig.width=6, message=FALSE, warning=FALSE, include=FALSE}
+# Set our plot and code block specifications for the rest of the document.
+knitr::opts_chunk$set(fig.width = 9,
+                      fig.height = 6,
+                      fig.align = "center",
+                      # Set our code specifications for the rest of the document
+                      echo = F,
+                      warning = F,
+                      message = F)
+
+# Turn off scientific notation
+options(scipen=999)
+
+# install.packages("pacman")
+# Use pacman to load packages. This'll check to see if a package is already installed; if not, it'll install it. If it is installed, it'll run the library() function.
+library(pacman)
+pacman::p_load(
+  readxl, # Used for reading in Excel packages
+  tidyverse, # Used for easy data manipulation
+  here, # Used for navigating project structures
+  kableExtra, # Used for RMarkdown formatting
+  DataExplorer, # Used for easy EDA
+  corrplot, # Used for correlation plotting
+  forcats, # Used for ordering ggplot variables
+  ggplot2, # Used for plotting
+  gridExtra, # Used for side-by-side plotting
+  # reticulate, # Used for Python programming
+  pander # Pretty printing
+  )
+
+
+# Set our ggplot formats so we don't have to re-type the same code over-and-over again.
+theme_set(theme_classic())
+theme_update(plot.title = element_text(hjust = 0, color = "slateblue4", size = 20),
+  plot.subtitle = element_text(hjust = 0, color = "slateblue2", size = 12),
+  plot.caption = element_text(color = "dark gray", size = 10, face = "italic"),
+  axis.title.x = element_text(size = 14),
+  axis.title.y = element_text(size = 14),
+  axis.text.y = element_text(size = 10),
+  axis.text.x = element_text(size = 10))
+
+```
