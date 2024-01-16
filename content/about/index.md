@@ -14,4 +14,6 @@ This site blends public policy, law, government, and politics with analytics. It
 I use R, a bit of Python, and hope to use Tableau/R Shiny for the vast majority of the posts published on this site. I hope you enjoy it!
 
 The code for this site can be found here:  
-**https://github.com/jschulberg/DatacracyBlog**
+**https://github.com/jschulberg/DatacracyBlogTake2**
+
+*Note: This site is built in R using [blogdown](https://bookdown.org/yihui/blogdown/).*
