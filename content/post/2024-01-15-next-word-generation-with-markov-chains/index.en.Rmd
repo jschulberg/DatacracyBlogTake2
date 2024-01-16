@@ -1,0 +1,17 @@
+---
+title: Next Word Generation with Markov Chains
+author: Justin S.
+date: '2024-01-15'
+slug: [Markov-Chain]
+categories:
+  - nlp
+  - markov
+tags:
+  - Python
+comments: yes
+featured_image: ''
+share: yes
+draft: True
+---
+
+Next word generation using Markov Chains...
