@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bikes on Datacracy</title>
+    <link>https://datacracy.netlify.app/categories/bikes/</link>
+    <description>Recent content in Bikes on Datacracy</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 05 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/categories/bikes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mountain Bike Categorization Analysis</title>
+      <link>https://datacracy.netlify.app/post/2022-05-05-mtb-categorization-analysis/</link>
+      <pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://datacracy.netlify.app/post/2022-05-05-mtb-categorization-analysis/</guid>
+      <description>Introduction  Overview The Data  EDA  Label (Mountainbike Category) Categorical Variables Continuous Variables  ~Normally Distributed Variables: Skewed Variables: Multi-Modal Distributed Variables:  Average bikes by flip-chip setting  Methodology Variation Amongst Featureset  1. Correlation 2. Principal Component Analysis (PCA)  Clustering  K-Means Gaussian Mixture Model (GMM)  GMM - 3 Clusters GMM - 6 Clusters  Multi-class SVM  Conclusions  Findings Opportunities for Improved Analysis    Introduction Overview For this post, I worked with Mike Czerwinski to determine whether the specifications of mountain bikes (MTB) are enough to differentiate between the different types of mountain bike categories.</description>
+    </item>
+    
+  </channel>
+</rss>

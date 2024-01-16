@@ -12,6 +12,12 @@ comments: yes
 featured_image: ''
 share: yes
 draft: false
+description: 'The goal of this analysis is to determine how many, if any, discrete categories should exist for mountain bikes.'
+output:
+  blogdown::html_page:
+    toc: true
+comments: yes
+
 ---
 
 Next word generation using Markov Chains...

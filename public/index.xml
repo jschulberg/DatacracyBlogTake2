@@ -6,7 +6,16 @@
     <description>Recent content on Datacracy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 10 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mountain Bike Categorization Analysis</title>
+      <link>https://datacracy.netlify.app/post/2022-05-05-mtb-categorization-analysis/</link>
+      <pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://datacracy.netlify.app/post/2022-05-05-mtb-categorization-analysis/</guid>
+      <description>Introduction  Overview The Data  EDA  Label (Mountainbike Category) Categorical Variables Continuous Variables  ~Normally Distributed Variables: Skewed Variables: Multi-Modal Distributed Variables:  Average bikes by flip-chip setting  Methodology Variation Amongst Featureset  1. Correlation 2. Principal Component Analysis (PCA)  Clustering  K-Means Gaussian Mixture Model (GMM)  GMM - 3 Clusters GMM - 6 Clusters  Multi-class SVM  Conclusions  Findings Opportunities for Improved Analysis    Introduction Overview For this post, I worked with Mike Czerwinski to determine whether the specifications of mountain bikes (MTB) are enough to differentiate between the different types of mountain bike categories.</description>
+    </item>
+    
     <item>
       <title>The Federalist Papers | NLP Analysis (Part 1)</title>
       <link>https://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/</link>
@@ -66,7 +75,7 @@ Following the deluge of information from news stations and social media, I canâ€
       
       <guid>https://datacracy.netlify.app/aboutme/</guid>
       <description>Hello!
-I am currently a Data Scientist working in Government Consulting, with more than three years of hands-on analytics experience. At work, I am an avid developer and problem solver, primarily focused on data analytics and data science projects in the national security and intelligence sectors. I most recently completed a Data Analytics MicroMasters program through the Georgia Institute of Technology.
+I am currently a Senior Data Scientist working in Government Consulting/Contracting, with more than six years of hands-on analytics experience. At work, I am an avid developer and problem solver, primarily focused on data analytics and data science projects in the national security and intelligence sectors. After four long and painstaking years,I most recently completed my Master of Science in Analytics at Georgia Institute of Technology.
 I graduated Magna Cum Laude from the Rutgers University SAS Honors Program, with a double major in Mathematics and Political Science, and a minor in Spanish.</description>
     </item>
     
@@ -77,8 +86,8 @@ I graduated Magna Cum Laude from the Rutgers University SAS Honors Program, with
       
       <guid>https://datacracy.netlify.app/about/</guid>
       <description>&amp;ldquo;Speak softly and carry a big script&amp;rdquo; &amp;ndash; Teddy Roosevelt &amp;ndash; Justin Schulberg
-This site blends public policy, law, government, and politics with analytics. It applies cutting-edge analytical techniques to shine light on public datasets. I use R (and hope to use Python and Tableau) for the vast majority of the posts published on this site. I hope you enjoy it!
-The code for this site can be found here:</description>
+This site blends public policy, law, government, and politics with analytics. Its purpose is two-fold:
+ Apply cutting-edge analytical techniques to shine light on public datasets. Hopefully this helps with discourse on pressing (and sometimes not-so-pressing) public matters in the U.S. Act as a personal portfolio of the kind of work I do in the analytics realm.  I use R, a bit of Python, and hope to use Tableau/R Shiny for the vast majority of the posts published on this site.</description>
     </item>
     
   </channel>
