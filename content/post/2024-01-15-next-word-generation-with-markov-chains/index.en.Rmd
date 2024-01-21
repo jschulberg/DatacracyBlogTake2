@@ -100,8 +100,71 @@ theme_update(plot.title = element_text(hjust = 0, color = "slateblue4", size = 2
 
 ```{python}
 # reticulate::use_virtualenv('blog_v')
-# import pandas as pd
+import pandas as pd
 import os
 
-os.getcwd()
+text = '''
+I am so excited to graduate from Georgia Tech! 
+I have loved my time studying at Georgia Tech and cannot wait to graduate.
+'''
+
+print(text)
+
+
 ```
+
+## Word Bi-gram Co-occurrence Matrix
+To start, I'll tokenize the text into words and split it into bigrams. Using the bigrams, I'll create a co-occurence matrix, $P_{ij}$ where $i$ represents the $i^{\text{th}}$ word and $j$ represents the $j^{\text{th}}$ word. The value of $P_{ij}$ then is the probability that word $j$ occurs immediately after word $i$.
+
+```{python}
+
+import nltk
+import string
+import pandas as pd
+from sklearn.preprocessing import normalize
+from tqdm import tqdm
+from IPython.display import display, Math, Latex
+from nltk.corpus import stopwords
+import numpy as np
+
+stop_words = stopwords.words('english')
+
+def create_markov_matrix(text, order = 1):
+    # Get a list of the tokenized words without punctuation
+    tokens = [word.lower() for word in nltk.word_tokenize(text) if word not in string.punctuation]
+    unique_tokens = list(dict.fromkeys(tokens))
+    # print(unique_tokens)
+
+    bigrams = list(nltk.bigrams(tokens))
+    # print(bigrams)
+
+    # Create a DataFrame where the rows are words and the columns are words
+    df = pd.DataFrame(0, columns=unique_tokens, index=unique_tokens)
+
+    # Loop through each of the bigrams (tuples), locate them in the DF, and add 1
+    for i in bigrams:
+        df.loc[i[0],i[1]] += 1
+
+    # Convert the DataFrame from raw word counts to probabilities
+    w_normalized = normalize(df, norm='l1', axis=1)
+
+    if order > 1:
+        w_normalized = np.linalg.matrix_power(w_normalized, order)
+        
+    df_normalized = pd.DataFrame(w_normalized, columns=unique_tokens, index=unique_tokens)
+
+    return df_normalized
+
+df_normalized = create_markov_matrix(text, order = 1)
+
+display(df_normalized)
+```
+
+In the Markov transition matrix above we can see how, in the first row, given the word `I` (our current state), there are two words that could appear (our next state):
+
+$$
+P(\text{am } | \text{ I}) = .5 \\
+P(\text{have } | \text{ I}) = .5
+$$
+
+It's important to note that these probabilities will **always** add up to 1; an important property of a [*row stochastic*](https://acme.byu.edu/00000179-af25-d5e1-a97b-bf6512fd0000/markov2020-pdf#:~:text=Thus%2C%20each%20of%20the%20columns,transition%20matrix%20sum%20to%201.&text=A%20transition%20matrix%20where%20the,stochastic%20(or%20left%20stochastic).) Markov chain.
