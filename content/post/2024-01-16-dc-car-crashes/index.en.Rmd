@@ -23,7 +23,8 @@ Every year, car accidents are always among the top causes of death in Washington
 
 # Expected Innovation
 Although D.C.’s Vision Zero website includes numerous data visualizations and analytical products, they
-lack the following features, that this analysis aims to improve upon:
+lack the following features, that this analysis aims to improve upon:  
+
 - **Disjointed Visualizations** - Even though all of the visualizations are built in Tableau and portray
 insightful information, they are not connected in one seamless dashboard, allowing users to see
 relationships across multiple features at once.  
@@ -70,7 +71,7 @@ pacman::p_load(
   forcats, # Used for ordering ggplot variables
   ggplot2, # Used for plotting
   gridExtra, # Used for side-by-side plotting
-  # reticulate, # Used for Python programming
+  reticulate, # Used for Python programming
   pander # Pretty printing
   )
 

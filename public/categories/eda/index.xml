@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>EDA on Datacracy</title>
+    <link>https://datacracy.netlify.app/categories/eda/</link>
+    <description>Recent content in EDA on Datacracy</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 16 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/categories/eda/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>D.C. Car Crash Analysis</title>
+      <link>https://datacracy.netlify.app/post/dc-car-crashes/</link>
+      <pubDate>Tue, 16 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://datacracy.netlify.app/post/dc-car-crashes/</guid>
+      <description>Problem Definition Every year, car accidents are always among the top causes of death in Washington, D.C. In response, the city has launched its Vision Zero Initiative, an effort to reduce vehicle-related crashes to zero by 2024. The analysis, first created as a project for Georgia Tech’s OMSA, will determine the root causes of car accidents in Washington, D.C. by analyzing patterns, seasonality, and trends in the data collected from the Vision Zero website and other sources.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -46,8 +46,6 @@ Let's start simple. We'll take some text and tokenize it into words. I'll then c
 Markov chain analysis is a mathematical framework used to model and analyze systems that undergo transitions between different states over time. A Markov chain is a stochastic process where the future state depends only on the current state and not on the sequence of events that preceded it. In this case our "state" is the current word being observed. We will use the current state (word) to predict the next state (word).
 
 
-
-
 ```{r fig.align='center', fig.height=6, fig.width=6, message=FALSE, warning=FALSE, include=FALSE}
 # Set our plot and code block specifications for the rest of the document.
 knitr::opts_chunk$set(fig.width = 9,
@@ -56,7 +54,9 @@ knitr::opts_chunk$set(fig.width = 9,
                       # Set our code specifications for the rest of the document
                       echo = F,
                       warning = F,
-                      message = F)
+                      message = F,
+                      engine.path = list(python = '/Users/justinschulberg/.virtualenvs/blog_v/bin/python')
+                      ) 
 
 # Turn off scientific notation
 options(scipen=999)
@@ -95,14 +95,13 @@ theme_update(plot.title = element_text(hjust = 0, color = "slateblue4", size = 2
 # reticulate::use_python('/Users/justinschulberg/opt/anaconda3/bin/python3', require = TRUE)
 # reticulate::use_condaenv(condaenv = 'bayes')
 
-
 ```
 
 
 ```{python}
-use_virtualenv('blog_v')
-import pandas as pd
-import os
-
-os.getcwd()
+# reticulate::use_virtualenv('blog_v')
+# import pandas as pd
+# import os
+# 
+# os.getcwd()
 ```

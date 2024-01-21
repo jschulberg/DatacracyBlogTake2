@@ -21,3 +21,4 @@ options(
 
 # fix Hugo version
 options(blogdown.hugo.version = "0.82.0")
+# Sys.setenv(RETICULATE_PYTHON = '/Users/justinschulberg/opt/anaconda3/bin/python3')

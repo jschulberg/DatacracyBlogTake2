@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>markov on Datacracy</title>
+    <link>https://datacracy.netlify.app/categories/markov/</link>
+    <description>Recent content in markov on Datacracy</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 15 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/categories/markov/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Next Word Generation with Markov Chains</title>
+      <link>https://datacracy.netlify.app/post/2024-01-15-next-word-generation-with-markov-chains/</link>
+      <pubDate>Mon, 15 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://datacracy.netlify.app/post/2024-01-15-next-word-generation-with-markov-chains/</guid>
+      <description>This article leverages some work I did for my grad program’s Bayesian Statistics Course. Specifically, it uses Bayesian inference for the task of next word prediction.
+Next Word Prediction A common task that language models try to solve is next word prediction. Given a series of words in a sentence, can the language model predict the next word that should appear? Ideally, the model would use understanding of the prior words that appeared</description>
+    </item>
+    
+  </channel>
+</rss>

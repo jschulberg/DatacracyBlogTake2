@@ -6,7 +6,26 @@
     <description>Recent content in python on Datacracy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 10 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://datacracy.netlify.app/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>D.C. Car Crash Analysis</title>
+      <link>https://datacracy.netlify.app/post/dc-car-crashes/</link>
+      <pubDate>Tue, 16 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://datacracy.netlify.app/post/dc-car-crashes/</guid>
+      <description>Problem Definition Every year, car accidents are always among the top causes of death in Washington, D.C. In response, the city has launched its Vision Zero Initiative, an effort to reduce vehicle-related crashes to zero by 2024. The analysis, first created as a project for Georgia Tech’s OMSA, will determine the root causes of car accidents in Washington, D.C. by analyzing patterns, seasonality, and trends in the data collected from the Vision Zero website and other sources.</description>
+    </item>
+    
+    <item>
+      <title>Next Word Generation with Markov Chains</title>
+      <link>https://datacracy.netlify.app/post/2024-01-15-next-word-generation-with-markov-chains/</link>
+      <pubDate>Mon, 15 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://datacracy.netlify.app/post/2024-01-15-next-word-generation-with-markov-chains/</guid>
+      <description>This article leverages some work I did for my grad program’s Bayesian Statistics Course. Specifically, it uses Bayesian inference for the task of next word prediction.
+Next Word Prediction A common task that language models try to solve is next word prediction. Given a series of words in a sentence, can the language model predict the next word that should appear? Ideally, the model would use understanding of the prior words that appeared</description>
+    </item>
+    
     <item>
       <title>The Federalist Papers | NLP Analysis (Part 1)</title>
       <link>https://datacracy.netlify.app/post/2021-03-10-federalist-papers-nlp-analysis/</link>
