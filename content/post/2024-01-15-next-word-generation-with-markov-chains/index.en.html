@@ -36,7 +36,11 @@ p(\theta|y) = \frac{p(y|\theta)*p(\theta)}{p(y)}
 <div id="a-simple-application-of-bayes-for-next-word-prediction" class="section level2">
 <h2>A Simple Application of Bayes for Next Word Prediction</h2>
 <p>Let’s start simple. We’ll take some text and tokenize it into words. I’ll then create a matrix that shows the probability that a word appears given the word that comes directly before it. Again, this is a naive approach because I will <em>only</em> look at the word that comes immediately before. That makes the approach act more like a <a href="https://www.jstor.org/stable/2584334">Markovian transition matrix</a>, since it’s just looking at the state immediately before to make a prediction, rather than all the events that led up to the prediction.</p>
-<p><img src="images/markov.png" /></p>
+<div class="float">
+<img src="images/markov.png" alt="markov" />
+<div class="figcaption">markov</div>
+</div>
 <p>Markov chain analysis is a mathematical framework used to model and analyze systems that undergo transitions between different states over time. A Markov chain is a stochastic process where the future state depends only on the current state and not on the sequence of events that preceded it. In this case our “state” is the current word being observed. We will use the current state (word) to predict the next state (word).</p>
+<pre><code>## &#39;/Users/justinschulberg/Documents/Blog/DatacracyBlogTake2/content/post/2024-01-15-next-word-generation-with-markov-chains&#39;</code></pre>
 </div>
 </div>

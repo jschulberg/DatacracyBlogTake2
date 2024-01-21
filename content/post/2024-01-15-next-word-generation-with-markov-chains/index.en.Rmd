@@ -41,7 +41,7 @@ where $p(\theta|y)$ represents the posterior probability: the probability after 
 ## A Simple Application of Bayes for Next Word Prediction
 Let's start simple. We'll take some text and tokenize it into words. I'll then create a matrix that shows the probability that a word appears given the word that comes directly before it. Again, this is a naive approach because I will *only* look at the word that comes immediately before. That makes the approach act more like a [Markovian transition matrix](https://www.jstor.org/stable/2584334), since it's just looking at the state immediately before to make a prediction, rather than all the events that led up to the prediction.
 
-![](images/markov.png)
+![markov](images/markov.png)
 
 Markov chain analysis is a mathematical framework used to model and analyze systems that undergo transitions between different states over time. A Markov chain is a stochastic process where the future state depends only on the current state and not on the sequence of events that preceded it. In this case our "state" is the current word being observed. We will use the current state (word) to predict the next state (word).
 
@@ -101,7 +101,7 @@ theme_update(plot.title = element_text(hjust = 0, color = "slateblue4", size = 2
 ```{python}
 # reticulate::use_virtualenv('blog_v')
 # import pandas as pd
-# import os
-# 
-# os.getcwd()
+import os
+
+os.getcwd()
 ```
