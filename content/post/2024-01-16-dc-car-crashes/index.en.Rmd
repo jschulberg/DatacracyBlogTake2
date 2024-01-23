@@ -11,7 +11,7 @@ tags:
 comments: yes
 featured_image: ''
 share: yes
-draft: false
+draft: true
 description: "Analysis of transportation-related crashes (car, motorcycle, pedestrian, bike) in the Washington, D.C. area. This project is in-line with D.C.'s Vision Zero goal. This project was completed with a group of students for Georgia Tech's [CSE 6242 Data and Visual Analtytics](https://omscs.gatech.edu/cse-6242-data-visual-analytics)."
 ---
 
