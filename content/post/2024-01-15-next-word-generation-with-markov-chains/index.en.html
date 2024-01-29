@@ -12,7 +12,7 @@ comments: yes
 featured_image: ''
 share: yes
 draft: true
-description: '<Insert description here>'
+description: 'Building a unique Presidential Inaugural address using Markov Chains and next word generation.'
 ---
 
 
@@ -76,5 +76,14 @@ P(\text{am } | \text{ I}) = .5 \\
 P(\text{have } | \text{ I}) = .5
 \]</span></p>
 <p>It’s important to note that these probabilities will <strong>always</strong> add up to 1; an important property of a <a href="https://acme.byu.edu/00000179-af25-d5e1-a97b-bf6512fd0000/markov2020-pdf#:~:text=Thus%2C%20each%20of%20the%20columns,transition%20matrix%20sum%20to%201.&amp;text=A%20transition%20matrix%20where%20the,stochastic%20(or%20left%20stochastic)."><em>row stochastic</em></a> Markov chain.</p>
+<pre><code>## Selected `have` as the next word to follow `I` with probability 0.500.</code></pre>
+</div>
+<div id="broader-example" class="section level2">
+<h2>Broader Example</h2>
+<p>Let’s apply this training mechanism to help write something even longer. For example, I’ll load in the Georgia Tech student code of conduct and see if I can generate a new sentence based on it. I’ll show a few sentence examples to better understand how the algorithm probabilistically builds sentences – so that way each time it consults the Markov transition matrix, it selects a new word. I’ll also try to define stop words so the sentence doesn’t end with a stop word and flows a bit more naturally.</p>
+<div id="training-data" class="section level3">
+<h3>Training Data</h3>
+<p>Our training data in this example is the text of interest. Using the training data, we’ll build a Markov transition matrix. It’s important to note that the more training data we have, the better our next word prediction will be.</p>
+</div>
 </div>
 </div>

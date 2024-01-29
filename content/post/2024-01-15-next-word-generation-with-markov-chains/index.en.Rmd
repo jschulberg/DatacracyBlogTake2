@@ -1,18 +1,18 @@
 ---
-title: Next Word Generation with Markov Chains
-author: Justin S.
-date: '2024-01-15'
-slug: [Markov-Chain]
+title: "Next Word Generation with Markov Chains"
+author: "Justin S."
+date: "2024-01-15"
+slug: "Markov-Chain"
 categories:
-  - nlp
-  - markov
-tags:
-  - Python
-comments: yes
+- nlp
+- markov
+tags: Python
+comments: true
 featured_image: ''
-share: yes
+share: true
 draft: true
-description: '<Insert description here>'
+description: Building a unique Presidential Inaugural address using Markov Chains
+  and next word generation.
 ---
 
 This article leverages some work I did for my grad program's Bayesian Statistics Course. Specifically, it uses Bayesian inference for the task of [*next word prediction*](https://arxiv.org/abs/2306.17184).
@@ -46,7 +46,7 @@ Let's start simple. We'll take some text and tokenize it into words. I'll then c
 Markov chain analysis is a mathematical framework used to model and analyze systems that undergo transitions between different states over time. A Markov chain is a stochastic process where the future state depends only on the current state and not on the sequence of events that preceded it. In this case our "state" is the current word being observed. We will use the current state (word) to predict the next state (word).
 
 
-```{r fig.align='center', fig.height=6, fig.width=6, message=FALSE, warning=FALSE, include=FALSE}
+```{r setup fig.align='center', fig.height=6, fig.width=6, message=FALSE, warning=FALSE, include=FALSE}
 # Set our plot and code block specifications for the rest of the document.
 knitr::opts_chunk$set(fig.width = 9,
                       fig.height = 6,
@@ -93,16 +93,13 @@ theme_update(plot.title = element_text(hjust = 0, color = "slateblue4", size = 2
   axis.text.x = element_text(size = 10))
 
 # reticulate::use_python('/Users/justinschulberg/opt/anaconda3/bin/python3', require = TRUE)
-# reticulate::use_condaenv(condaenv = 'bayes')
+
+# reticulate::use_virtualenv('blog_v')
 
 ```
 
 
-```{python}
-# reticulate::use_virtualenv('blog_v')
-import pandas as pd
-import os
-
+```{python text_example}
 text = '''
 I am so excited to graduate from Georgia Tech! 
 I have loved my time studying at Georgia Tech and cannot wait to graduate.
@@ -116,10 +113,10 @@ print(text)
 ## Word Bi-gram Co-occurrence Matrix
 To start, I'll tokenize the text into words and split it into bigrams. Using the bigrams, I'll create a co-occurence matrix, $P_{ij}$ where $i$ represents the $i^{\text{th}}$ word and $j$ represents the $j^{\text{th}}$ word. The value of $P_{ij}$ then is the probability that word $j$ occurs immediately after word $i$.
 
-```{python}
 
+```{python load_packages}
 import nltk
-import string
+import re
 import pandas as pd
 from sklearn.preprocessing import normalize
 from tqdm import tqdm
@@ -128,10 +125,12 @@ from nltk.corpus import stopwords
 import numpy as np
 
 stop_words = stopwords.words('english')
+```
 
+```{python basic_markov_matrix}
 def create_markov_matrix(text, order = 1):
     # Get a list of the tokenized words without punctuation
-    tokens = [word.lower() for word in nltk.word_tokenize(text) if word not in string.punctuation]
+    tokens = [re.sub(r'[^\w\s]', '', word.lower()) for word in nltk.word_tokenize(text)]
     unique_tokens = list(dict.fromkeys(tokens))
     # print(unique_tokens)
 
@@ -168,3 +167,115 @@ P(\text{have } | \text{ I}) = .5
 $$
 
 It's important to note that these probabilities will **always** add up to 1; an important property of a [*row stochastic*](https://acme.byu.edu/00000179-af25-d5e1-a97b-bf6512fd0000/markov2020-pdf#:~:text=Thus%2C%20each%20of%20the%20columns,transition%20matrix%20sum%20to%201.&text=A%20transition%20matrix%20where%20the,stochastic%20(or%20left%20stochastic).) Markov chain.
+
+
+```{python find_next_word}
+def reshape_mm(mat):
+    df_reshaped = mat.reset_index() \
+                .rename(columns = {'index': 'first_word'}) \
+                .melt(id_vars = 'first_word',
+                    var_name = 'second_word',
+                    value_name = 'p') \
+                .sort_values('first_word')
+
+    # Only keep actual words
+    df_reshaped = df_reshaped[df_reshaped['first_word'].apply(lambda word: word.isalpha())]
+    df_reshaped = df_reshaped[df_reshaped['second_word'].apply(lambda word: word.isalpha())]
+
+    return df_reshaped.loc[(df_reshaped['p'] > 0)]
+
+
+def find_next_word(mat, word, print_ = True):
+    df_reshaped = reshape_mm(mat)
+
+    # Filter our dataframe to the word of interest
+    # Also make sure the second word is actually a word and not some punctuation that snuck in
+    df_word = df_reshaped.loc[(df_reshaped['first_word'].str.lower() == word.lower()) & (df_reshaped['second_word'].str.isalpha())]
+
+    # Sample using the probability column
+    next_word_df = df_word.sample(1, weights = 'p')
+    next_word = next_word_df['second_word'].iloc[0]
+    p = next_word_df['p'].iloc[0]
+
+
+    if print_:
+        print(f'Selected `{next_word}` as the next word to follow `{word}` with probability {p:.3f}.')
+
+    return next_word
+
+next_word = find_next_word(df_normalized, word = 'I')
+
+
+```
+
+## Broader Example
+Let's apply this training mechanism to help write something even longer. For example, I'll load in every Presidential Inaugural Address and see if I can generate a new sentence based on it. I'll show a few sentence examples to better understand how the algorithm probabilistically builds sentences -- so that way each time it consults the Markov transition matrix, it selects a new word. I'll also try to define stop words so the sentence doesn't end with a stop word and flows a bit more naturally.
+
+### Training Data
+Our training data in this example is the text of interest. Using the training data, we'll build a Markov transition matrix. It's important to note that the more training data we have, the better our next word prediction will be.
+
+
+```{python load_speeches}
+from nltk.corpus import inaugural
+
+new_text = inaugural.raw()
+
+# new_text = open('honor_code.txt', 'r').read()
+
+print(new_text[:100], '...')
+
+# Build our Markov transition matrix
+mm = create_markov_matrix(new_text)
+
+print(f"The probability that we see the word `the` given that the word `of` appears, based on our training dataset and Markov Transition matrix is {mm.loc['of', 'the']:.3f}")
+```
+
+
+I've also included in the text above what should be a very common phrase -- of the -- to show $P(\text{the } | \text{ of}) = .247$. That is, given the word `of` appears, there's a 70.3% chance that the word `the` appears directly after, regardless of any words that come before `of`.
+
+
+```{python build_sentences}
+n_sent = 2
+min_words = 8
+
+def build_sents(mm, n_sent = 3, min_words = 8):
+    for i, sent in enumerate(range(n_sent)):
+        if i == 0:
+            starting_word = 'students'
+        else:
+            starting_word = new_word
+
+        sentence = [starting_word.title()]
+        
+        # Create boolean conditions for our while loop
+        keep_going = True
+        idx = 0
+
+        while (keep_going) or (len(sentence) < min_words):
+        # for idx, word in enumerate(range(n_words)):
+            if idx == 0:
+                new_word = starting_word
+
+            new_word = find_next_word(mm, word = new_word, print_ = False)
+            # print(f'{new_word=}')
+            sentence.append(new_word)
+
+            # If our final word is a stop word or we're over the minimum number of words
+            # stop building our sentence and get rid of the stop word
+            if new_word in stop_words:
+                keep_going = False
+                sentence.pop()
+                new_word = find_next_word(mm, word = new_word, print_ = False)
+
+            idx += 1
+
+        print(f"{' '.join(sentence)}.")
+
+build_sents(mm, n_sent = n_sent, min_words = min_words)
+```
+
+
+And now we've managed to create brand new, never-before-seen sentences using a Markov transition matrix trained on every Presidential Inaugural Address in history! We could even give something like this to the speech writing committee for the next President to help them out a bit (maybe not that far).
+
+While the sentences might not exactly make sense, we can begin to understand what the sentence is trying to say. But how can we actually make these human-readable? In the next section, I'll explore various methods for improving the quality of these sentences.
+
